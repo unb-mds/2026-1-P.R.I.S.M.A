@@ -1,4 +1,4 @@
-# Sprint N
+# Sprint 1
 Período: 12/04/2026 a 18/04/2026
 
 ## Descrição
