@@ -13,7 +13,7 @@ Atua como como uma ponte ou intermediário, permitindo que um sistema solicite i
 Analogicamente, a API seria um garçom: Ele permite que os clientes façam pedidos, leva-os até a cozinha de forma que os cozinheiros entendam e traz a resposta (o prato) de volta aos clientes. 
 A cozinha seria o servidor/banco de dados que é onde ocorre o processamento dos dados solicitados no pedido.
 
-> É uma forma de comunicação que permite trafegar infamações entre diferentes sistemas.
+> É uma forma de comunicação que permite trafegar informações entre diferentes sistemas.
 
 ### Representação Prática de uma Requisição (Request)
 
