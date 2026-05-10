@@ -54,4 +54,4 @@ Traduz textos, cria textos de preenchimento condizentes com o contexto da aplica
 ## Ecossistema Complementar
 
 ### FigJam: 
-Ferramenta adjacente que funciona como um quadro branco virtual. É ideal para dinâmicas de brainstorming, desenho de fluxogramas, criação de arquitetura de informação e metodologias ágeis (Kanban, Crazy 8s, etc.) usando post-its e conectores.
+Ferramenta adjacente que funciona como um quadro branco virtual. É ideal para dinâmicas de brainstorming, desenho de fluxogramas, criação de arquitetura de informação e metodologias ágeis (Kanban, Crazy 8s, etc.) usando post-its e conectores. 
