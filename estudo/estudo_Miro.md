@@ -51,4 +51,4 @@ O Miro oferece diversas opções de planos para se adequar a diferentes necessid
 *   **Free (Gratuito):** Funcionalidades básicas ideais para usuários individuais ou equipes pequenas.
 *   **Team:** Ferramentas de colaboração aprimoradas para times de pequeno e médio porte.
 *   **Business:** Funcionalidades mais avançadas focadas em equipes maiores e processos complexos.
-*   **Enterprise:** Soluções personalizadas com segurança extra, governança avançada e suporte dedicado.
+*   **Enterprise:** Soluções personalizadas com segurança extra, governança avançada e suporte dedicado. 
