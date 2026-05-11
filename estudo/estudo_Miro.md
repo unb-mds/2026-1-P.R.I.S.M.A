@@ -2,7 +2,7 @@
 
 **Miro** é uma plataforma colaborativa online projetada para apoiar o planejamento e a execução de tarefas por equipes em diferentes locais e fusos horários.
 
-## O que é o miro
+## O que é o Miro?
 
 Fundado em 2011 sob o nome *RealtimeBoard*, o Miro evoluiu de uma simples ferramenta de quadro branco visual para um espaço de trabalho de inovação completo. Atualmente, a plataforma é utilizada por mais de 90 milhões de usuários e mais de 250.000 organizações em todo o mundo para realizar brainstorming, planejamento ágil, design de produtos e mapeamento de jornada do cliente.
 
@@ -44,7 +44,7 @@ Para pessoas que desejam estender as capacidades da plataforma, o Miro oferece u
 *   **Live Embed:** Permite a incorporação de um quadro do Miro em aplicações web ou sites por meio de um iFrame.
 *   **Integração com IAs via MCP:** O servidor *Model Context Protocol* (MCP) do Miro permite que você conecte o quadro a ferramentas de IA para desenvolvimento (como Cursor, Claude Code, GitHub Copilot e Replit). Com isso, a IA consegue gerar código se baseando diretamente nos seus diagramas de arquitetura visual e regras de negócios.
 
-## Planos e Preços do Miro
+## Preços e Planos do Miro
 
 O Miro oferece diversas opções de planos para se adequar a diferentes necessidades:
 
