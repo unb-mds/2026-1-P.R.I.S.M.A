@@ -1,8 +1,7 @@
 # Miro: O Workspace de Inovação Colaborativa
 
 **Miro** é uma plataforma colaborativa online projetada para apoiar o planejamento e a execução de tarefas por equipes em diferentes locais e fusos horários.
-
-## O que é o Miro?
+## O que é o miro?
 
 Fundado em 2011 sob o nome *RealtimeBoard*, o Miro evoluiu de uma simples ferramenta de quadro branco visual para um espaço de trabalho de inovação completo. Atualmente, a plataforma é utilizada por mais de 90 milhões de usuários e mais de 250.000 organizações em todo o mundo para realizar brainstorming, planejamento ágil, design de produtos e mapeamento de jornada do cliente.
 
