@@ -12,10 +12,14 @@ import { WeeklyTimeline } from './components/WeeklyTimeline';
 import { CollaboratorStats } from './components/CollaboratorStats';
 import { CommitLog } from './components/CommitLog';
 import { DiffSection } from './components/DiffSection';
-import { RefreshCw, GitBranch, AlertCircle, CheckCircle2, Github, LayoutDashboard, Calendar, Flame, Users } from 'lucide-react';
+import { LandingPage } from './components/LandingPage';
+import { RefreshCw, GitBranch, AlertCircle, CheckCircle2, Github, LayoutDashboard, Calendar, Flame, Users, GitCompare, Home } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
+type ViewMode = 'home' | 'dashboard';
+
 export default function App() {
+  const [viewMode, setViewMode] = useState<ViewMode>('home');
   const [commits, setCommits] = useState<GitHubCommit[]>([]);
   const [issues, setIssues] = useState<GitHubIssue[]>([]);
   const [loading, setLoading] = useState(true);
@@ -56,16 +60,27 @@ export default function App() {
 
   const openIssues = issues.filter(i => i.state === 'open').length;
 
+  if (viewMode === 'home') {
+    return <LandingPage onEnterDashboard={() => setViewMode('dashboard')} />;
+  }
+
   return (
     <div className="min-h-screen flex flex-col font-sans bg-[#0f172a] text-slate-200">
       {/* Header */}
       <header className="bg-[#1e293b]/80 backdrop-blur-md border-b border-slate-800 px-6 py-4 flex flex-col md:flex-row items-center justify-between shadow-lg shrink-0 sticky top-0 z-20 transition-all">
         <div className="flex items-center gap-4">
-          <div className="bg-cyan-500 text-slate-900 p-2 rounded shadow-[0_0_15px_rgba(34,211,238,0.4)]">
+          <button 
+            onClick={() => setViewMode('home')}
+            className="p-2 hover:bg-slate-800 rounded-lg transition-colors text-slate-400 hover:text-cyan-400 group"
+            title="Voltar para Home"
+          >
+            <Home size={20} className="group-hover:scale-110 transition-transform" />
+          </button>
+          <div className="bg-cyan-500 text-slate-900 p-2 rounded shadow-[0_0_15px_rgba(34,211,238,0.4)] cursor-pointer" onClick={() => setViewMode('home')}>
             <Github size={20} />
           </div>
           <div>
-            <h1 className="text-lg font-black tracking-tight text-white leading-none uppercase italic">PRISMA Insight</h1>
+            <h1 className="text-lg font-black tracking-tight text-white leading-none uppercase italic cursor-pointer" onClick={() => setViewMode('home')}>PRISMA Insight</h1>
             <p className="text-[10px] text-cyan-500/70 mt-1 font-mono uppercase tracking-widest font-bold">unb-mds / 2026-1-P.R.I.S.M.A</p>
           </div>
         </div>
@@ -114,7 +129,7 @@ export default function App() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <div className="bg-[#1e293b] border border-slate-800 rounded-2xl p-6 flex flex-col justify-between shadow-xl relative overflow-hidden group">
             <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-500/5 blur-3xl -mr-16 -mt-16 group-hover:bg-cyan-500/10 transition-all"></div>
-            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4">Frequência de Commits</span>
+            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4">Volume de Entregas</span>
             <div className="flex items-baseline gap-2">
               <span className="text-4xl font-black text-white">{commits.length}</span>
               <span className="text-xs text-cyan-500 font-bold uppercase tracking-tighter">Total</span>
@@ -132,7 +147,7 @@ export default function App() {
 
           <div className="bg-[#1e293b] border border-slate-800 rounded-2xl p-6 flex flex-col justify-between shadow-xl relative overflow-hidden group">
             <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 blur-3xl -mr-16 -mt-16 group-hover:bg-amber-500/10 transition-all"></div>
-            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4">Issues Abertas</span>
+            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4">Demandas Ativas</span>
             <div className="flex items-baseline gap-2">
               <span className="text-4xl font-black text-white">{openIssues}</span>
               <span className="text-xs text-amber-500 font-bold uppercase tracking-tighter">Pendentes</span>
@@ -181,9 +196,9 @@ export default function App() {
                 </div>
                 <h2 className="text-xs font-black uppercase tracking-[0.2em] text-slate-300">Monitoramento Analítico</h2>
               </div>
-              <div className="flex gap-6 text-[9px] font-bold uppercase tracking-widest">
-                <div className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-cyan-500 shadow-[0_0_8px_rgba(34,211,238,0.6)]"></span> Commits</div>
-                <div className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-cyan-800"></span> Issues</div>
+            <div className="flex gap-6 text-[9px] font-bold uppercase tracking-widest">
+                <div className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-cyan-500 shadow-[0_0_8px_rgba(34,211,238,0.6)]"></span> Entregas</div>
+                <div className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-cyan-800"></span> Demandas</div>
               </div>
             </div>
             <StatsCharts commits={commits} issues={issues} />

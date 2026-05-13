@@ -92,7 +92,7 @@ export const StatsCharts: React.FC<ChartProps> = ({ commits, issues }) => {
               <Line 
                 type="monotone" 
                 dataKey="count" 
-                name="Commits"
+                name="Entregas"
                 stroke="#22d3ee" 
                 strokeWidth={3} 
                 dot={{ fill: '#22d3ee', r: 4, strokeWidth: 2, stroke: '#0f172a' }}

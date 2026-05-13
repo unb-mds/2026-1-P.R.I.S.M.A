@@ -93,14 +93,14 @@ export const CollaboratorStats: React.FC<CollaboratorStatsProps> = ({ commits, i
             <div className="bg-slate-900/60 p-3 rounded-xl border border-slate-800/50">
               <div className="flex items-center justify-center gap-1.5 text-slate-500 mb-1">
                 <GitCommit size={12} />
-                <span className="text-[9px] font-black uppercase tracking-tighter">Commits</span>
+                <span className="text-[9px] font-black uppercase tracking-tighter">Entregas</span>
               </div>
               <div className="text-xl font-black text-white text-center">{user.commitCount}</div>
             </div>
             <div className="bg-slate-900/60 p-3 rounded-xl border border-slate-800/50">
               <div className="flex items-center justify-center gap-1.5 text-slate-500 mb-1">
                 <MessageSquare size={12} />
-                <span className="text-[9px] font-black uppercase tracking-tighter">Issues</span>
+                <span className="text-[9px] font-black uppercase tracking-tighter">Demandas</span>
               </div>
               <div className="text-xl font-black text-white text-center">{user.issueCount}</div>
             </div>
