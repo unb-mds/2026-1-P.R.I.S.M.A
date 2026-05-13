@@ -10,6 +10,7 @@ import {
   Bot, 
   FastForward, 
   BarChart3, 
+  LayoutDashboard,
   Zap, 
   Settings, 
   Users, 
@@ -58,33 +59,74 @@ export function LandingPage({ onEnterDashboard }: LandingPageProps) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
+            <div className="inline-flex items-center gap-2 mb-6 bg-cyan-500/10 px-4 py-2 rounded-full border border-cyan-500/20">
+              <Zap size={14} className="text-cyan-400" />
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-cyan-400">Inteligência Legislativa 2.0</span>
+            </div>
             <h1 className="text-7xl md:text-9xl font-black italic tracking-tighter mb-6 text-white leading-none">
               PRISMA
             </h1>
             <p className="text-cyan-400 font-mono text-xs md:text-sm uppercase tracking-[0.5em] mb-8 font-bold leading-relaxed px-4">
-              Plataforma de rastreio, inteligência artificial e síntese de marcos e atos
+              A clareza que o processo legislativo precisava
             </p>
-            <p className="text-slate-400 max-w-2xl mx-auto mb-12 text-lg">
-              Transformando dados legislativos em decisões mais rápidas, transparentes e informadas.
+            <p className="text-slate-400 max-w-2xl mx-auto mb-12 text-lg md:text-xl font-medium">
+              Transformamos a complexidade burocrática em <span className="text-white">insights estratégicos</span>. Identifique gargalos, preveja prazos e monitore a eficiência parlamentar com precisão cirúrgica.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a 
                 href="#visao" 
-                className="px-8 py-4 bg-cyan-500 text-slate-900 font-black uppercase tracking-widest text-xs rounded-lg shadow-[0_0_20px_rgba(34,211,238,0.3)] hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2"
+                className="px-8 py-4 bg-cyan-500 text-slate-900 font-black uppercase tracking-widest text-xs rounded-lg shadow-[0_0_30px_rgba(34,211,238,0.4)] hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2"
               >
-                Conhecer a Plataforma
+                Explorar Solução
                 <ArrowRight size={16} />
               </a>
               <button 
                 onClick={onEnterDashboard}
                 className="px-8 py-4 bg-[#1e293b] border border-slate-800 font-black uppercase tracking-widest text-xs rounded-lg hover:bg-slate-800 transition-all"
               >
-                Ver Dashboard de Dev
+                Acessar Monitoramento
               </button>
             </div>
           </motion.div>
         </div>
       </header>
+
+      {/* Como Começar Section */}
+      <section className="py-24 px-6 bg-slate-900/50">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-xs font-black uppercase tracking-[0.4em] text-cyan-500 mb-4">Guia Rápido</h2>
+            <h3 className="text-3xl font-black text-white">Como começar a usar o PRISMA</h3>
+          </div>
+          <div className="grid md:grid-cols-3 gap-12">
+            {[
+              {
+                icon: <Settings className="text-cyan-500" />,
+                title: "1. Configure o Acesso",
+                desc: "Insira seu Token de Acesso do Github no painel de desenvolvimento para sincronizar os dados em tempo real."
+              },
+              {
+                icon: <LayoutDashboard className="text-cyan-500" />,
+                title: "2. Explore o Dashboard",
+                desc: "Acesse a visão analítica para ver o volume de entregas, demandas ativas e o status de saúde do sistema."
+              },
+              {
+                icon: <BarChart3 className="text-cyan-500" />,
+                title: "3. Analise Trends",
+                desc: "Use o mapa de calor e os logs de atividade para identificar padrões de produtividade e possíveis gargalos."
+              }
+            ].map((step, i) => (
+              <div key={i} className="flex flex-col items-center text-center">
+                <div className="w-16 h-16 bg-slate-900 border border-slate-800 rounded-2xl flex items-center justify-center mb-6 shadow-inner">
+                  {step.icon}
+                </div>
+                <h4 className="text-white font-bold mb-4 uppercase text-sm tracking-widest">{step.title}</h4>
+                <p className="text-slate-400 text-sm leading-relaxed">{step.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* Visão do Produto */}
       <section id="visao" className="py-32 px-6 border-y border-slate-800/50 bg-slate-900/30">

@@ -1,20 +1,41 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# PRISMA Insight
 
-# Run and deploy your AI Studio app
+> **Corte o ruído legislativo. O PRISMA transforma a opacidade da burocracia em inteligência estratégica em tempo real.**
 
-This contains everything you need to run your app locally.
+![Status do Build](https://img.shields.io/badge/Status-Ativo-cyan?style=for-the-badge)
+![Deploy](https://img.shields.io/badge/GitHub_Pages-Sincronizado-blue?style=for-the-badge)
 
-View your app in AI Studio: https://ai.studio/apps/ffb2b36a-ba98-417f-8522-ad3dcbe0147c
+## 🚀 O Projeto
 
-## Run Locally
+O **PRISMA** (Plataforma de Rastreio, Inteligência Artificial e Síntese de Marcos e Atos) é uma solução voltada para a transparência legislativa no contexto do projeto de software **MDS UnB 2026-1**. Ele analisa o fluxo de trabalho git e de issues para fornecer uma visão clara de produtividade e gargalos institucionais.
 
-**Prerequisites:**  Node.js
+## 🔗 Acesso Rápido
 
+Acesse a plataforma em produção aqui:
+👉 **[https://ais-pre-y3oiij3ykistnvyvmaanr4-270890002062.us-east5.run.app](https://ais-pre-y3oiij3ykistnvyvmaanr4-270890002062.us-east5.run.app)** (URL de demonstração no ambiente AI Studio)
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## ✨ Funcionalidades Principais
+
+- **Volume de Entregas:** Monitoramento em tempo real da frequência de commits.
+- **Demandas Ativas:** Acompanhamento de issues abertas e pendentes.
+- **Mapa de Calor:** Visualização de picos de atividade nos últimos 90 dias.
+- **Log de Atividade:** Histórico detalhado de mudanças no código.
+- **Monitoramento Analítico:** Gráficos interativos de séries temporais.
+
+## 🛠️ Tecnologias
+
+- **Frontend:** React 19 + Vite + Tailwind CSS
+- **Animações:** Motion (Framer Motion)
+- **Ícones:** Lucide React
+- **Gráficos:** Recharts
+- **Análise:** Integração com Github API v3
+
+## 📖 Guia de Início Rápido
+
+1. Acesse o Dashboard.
+2. No cabeçalho, insira um **Github Access Token** válido (apenas leitura de repo público é suficiente).
+3. Clique em **Sincronizar**.
+4. Explore as métricas de performance da equipe.
+
+---
+© 2026 Projeto Prisma - Engenharia de Software - MDS UnB

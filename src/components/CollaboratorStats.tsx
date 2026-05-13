@@ -8,6 +8,15 @@ interface CollaboratorStatsProps {
   issues: GitHubIssue[];
 }
 
+interface UserStat {
+  login: string;
+  name: string;
+  avatar?: string;
+  commitCount: number;
+  issueCount: number;
+  recentMsg: string;
+}
+
 export const CollaboratorStats: React.FC<CollaboratorStatsProps> = ({ commits, issues }) => {
   // Aggregate stats by user
   // First pass: build email to login mapping
@@ -42,7 +51,7 @@ export const CollaboratorStats: React.FC<CollaboratorStatsProps> = ({ commits, i
 
     acc[login].commitCount++;
     return acc;
-  }, {} as Record<string, any>);
+  }, {} as Record<string, UserStat>);
 
   // Add issue stats
   issues.forEach(issue => {
@@ -52,11 +61,11 @@ export const CollaboratorStats: React.FC<CollaboratorStatsProps> = ({ commits, i
     }
   });
 
-  const sortedUsers = Object.values(userStats).sort((a, b) => b.commitCount - a.commitCount);
+  const sortedUsers: UserStat[] = (Object.values(userStats) as UserStat[]).sort((a: UserStat, b: UserStat) => b.commitCount - a.commitCount);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 p-6">
-      {sortedUsers.map((user, i) => (
+      {sortedUsers.map((user: UserStat, i: number) => (
         <motion.div 
           key={user.login}
           initial={{ opacity: 0, y: 10 }}
