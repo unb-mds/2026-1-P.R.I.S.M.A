@@ -1,0 +1,6 @@
+{
+  "name": "Remix: PRISMA Insight",
+  "description": "Dashboard de monitoramento para o projeto P.R.I.S.M.A da UnB/MDS, acompanhando commits, issues e diffs.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
