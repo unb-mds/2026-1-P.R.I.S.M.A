@@ -103,7 +103,7 @@ export function LandingPage({ onEnterDashboard }: LandingPageProps) {
               {
                 icon: <Settings className="text-cyan-500" />,
                 title: "1. Configure o Acesso",
-                desc: "Insira seu Token de Acesso do Github no painel de desenvolvimento para sincronizar os dados em tempo real."
+                desc: "Crie seu usuário e senha para acessar o sistema."
               },
               {
                 icon: <LayoutDashboard className="text-cyan-500" />,
@@ -113,7 +113,7 @@ export function LandingPage({ onEnterDashboard }: LandingPageProps) {
               {
                 icon: <BarChart3 className="text-cyan-500" />,
                 title: "3. Analise Trends",
-                desc: "Use o mapa de calor e os logs de atividade para identificar padrões de produtividade e possíveis gargalos."
+                desc: "Explore os filtros e funcionalidades para entender as tendências do processo legislativo."
               }
             ].map((step, i) => (
               <div key={i} className="flex flex-col items-center text-center">
