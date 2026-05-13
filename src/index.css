@@ -1,0 +1,56 @@
+@import "tailwindcss";
+
+@theme {
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+:root {
+  --bg: #0f172a;
+  --bg-card: #1e293b;
+  --ink: #f8fafc;
+  --ink-dim: #94a3b8;
+  --line: #334155;
+  --accent: #22d3ee;
+  --accent-dim: #0891b2;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--ink);
+  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Base Dashboard Styles */
+.data-row {
+  display: grid;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--line);
+  transition: all 0.2s ease;
+}
+
+.col-header {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--ink-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 0.75rem 1rem;
+}
+
+.data-value {
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+pre {
+  font-family: var(--font-mono);
+}
+
+.card-dark {
+  background-color: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
