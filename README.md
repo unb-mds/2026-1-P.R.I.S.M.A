@@ -51,7 +51,7 @@ As instruções abaixo mostram como executar o projeto localmente sem Docker, us
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
 # Carregar o helper do `uv` no shell (bash):
-source $HOME/.local/bin/env            //(bash)
+source $HOME/.local/bin/env
 
 # Sincronizar dependências e ambiente definido em uv
 uv sync
@@ -59,7 +59,7 @@ uv sync
 
 2) Preparar PostgreSQL local
 
-Assegure que o PostgreSQL esteja instalado e em execução. Em muitas distros Linux você pode usar:
+Assegure que o PostgreSQL esteja instalado e em execução. Neste ambiente local, ele está disponível na porta `5433`. Em muitas distros Linux você pode usar:
 
 ```bash
 # Debian/Ubuntu (exemplo):
