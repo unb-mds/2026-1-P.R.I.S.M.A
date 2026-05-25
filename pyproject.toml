@@ -1,0 +1,12 @@
+[project]
+name = "2026-1-p-r-i-s-m-a"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "asgiref==3.11.1",
+    "django==6.0.4",
+    "psycopg[binary]>=3.3.4",
+    "sqlparse==0.5.5",
+]
