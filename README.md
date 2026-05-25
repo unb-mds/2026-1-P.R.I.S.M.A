@@ -19,7 +19,7 @@ Rodando com Docker (recomendado)
 
 ```bash
 # Copiar variáveis de ambiente
-cp .env.example .env
+cp .env_docker.exemplo .env
 ```
 
 2) Subir com Docker Compose (recomendado)
