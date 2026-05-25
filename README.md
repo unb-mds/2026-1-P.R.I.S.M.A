@@ -40,32 +40,61 @@ docker compose -f compose.yml exec django-web python src/manage.py migrate
 docker compose -f compose.yml down
 ```
 
-## Rodando sem Docker (usando `uv` para dependências)
+## Rodando sem Docker (PostgreSQL local, usando `uv`)
 
-Copie o exemplo e ajuste valores sensíveis:
+As instruções abaixo mostram como executar o projeto localmente sem Docker, usando um PostgreSQL local e `uv` para gerenciar dependências e ambiente.
 
-```bash
-# Copiar variáveis de ambiente
-cp .env_local.exemplo .env
-```
-
-Instale o `uv`:
+1) Instalar e preparar `uv`
 
 ```bash
+# Instalar `uv` (se ainda não tiver):
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
+# Carregar o helper do `uv` no shell (bash):
 source $HOME/.local/bin/env            //(bash)
-```
 
-Sincronize as dependências:
-
-```bash
+# Sincronizar dependências e ambiente definido em uv
 uv sync
 ```
 
-Rode o servidor django:
+2) Preparar PostgreSQL local
+
+Assegure que o PostgreSQL esteja instalado e em execução. Em muitas distros Linux você pode usar:
 
 ```bash
-uv run src/manage.py runserver
+# Debian/Ubuntu (exemplo):
+sudo apt update && sudo apt install -y postgresql postgresql-contrib
+
+# Criar usuário e banco com os valores padrão do .env_local.exemplo:
+sudo -u postgres psql -c "CREATE USER myprojectuser WITH PASSWORD 'password';"
+sudo -u postgres psql -c "CREATE DATABASE polls OWNER myprojectuser;"
 ```
+
+Se já tiver um superuser PostgreSQL (ex.: `postgres`) use esse usuário para criar o DB.
+
+3) Copiar o arquivo de ambiente pronto
+
+Copie o arquivo de exemplo para `.env`:
+
+```bash
+cp .env_local.exemplo .env
+```
+
+4) Aplicar migrations e criar superuser (usando `uv`)
+
+```bash
+uv run src/manage.py migrate
+uv run src/manage.py createsuperuser
+```
+
+5) Executar o servidor (usando `uv`)
+
+```bash
+uv run src/manage.py runserver 0.0.0.0:8000
+```
+
+Observações
+
+- Nos passos acima assumimos que `src/manage.py` é o comando de gerenciamento do Django (arquivo presente no repositório). Ajuste caminhos se necessário.
+- Para desenvolvimento local, mantenha `DEBUG=True` apenas em ambientes seguros.
 
