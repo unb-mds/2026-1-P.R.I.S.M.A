@@ -11,7 +11,7 @@
     
     <link href="../../public/css/global.css" rel="stylesheet" />
   </head>
-  <body class="bg-brand-surface text-brand-text flex h-screen">
+  <body class="bg-[#f6fafe] text-[#171c1f] flex h-screen overflow-hidden">
     
     <div id="sidebar-container"></div>
 
@@ -20,38 +20,264 @@
       <div id="header-container"></div>
       
       <main class="flex-1 overflow-auto relative" id="main-content">
-        
-        <div class="p-8 max-w-container-max mx-auto space-y-6">
-          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div class="bg-white p-5 rounded-md border border-brand-outline shadow-sm">
-              <p class="text-[10px] font-display font-semibold uppercase tracking-wider text-slate-500 mb-2">Total Aprovadas (Ano)</p>
-              <div class="flex items-baseline gap-2">
-                <span class="text-3xl font-display font-bold text-brand-text">142</span>
-                <span class="text-brand-success text-sm font-medium">+12%</span>
-              </div>
-            </div>
-            <div class="bg-white p-5 rounded-md border border-brand-outline shadow-sm">
-              <p class="text-[10px] font-display font-semibold uppercase tracking-wider text-slate-500 mb-2">Média de Tramitação</p>
-              <div class="flex items-baseline gap-2">
-                <span class="text-3xl font-display font-bold text-brand-text">84</span>
-                <span class="text-slate-500 text-sm font-medium">dias</span>
-              </div>
-            </div>
-            <div class="bg-white p-5 rounded-md border border-brand-outline shadow-sm">
-              <p class="text-[10px] font-display font-semibold uppercase tracking-wider text-slate-500 mb-2">Impacto Econômico Est.</p>
-              <div class="flex items-baseline gap-2">
-                <span class="text-3xl font-display font-bold text-brand-text">R$ 2.4B</span>
-              </div>
-            </div>
-            <div class="bg-white p-5 rounded-md border border-brand-success border-l-4 shadow-sm">
-              <p class="text-[10px] font-display font-semibold uppercase tracking-wider text-slate-500 mb-2">Conformidade Técnica</p>
-              <div class="flex items-baseline gap-2">
-                <span class="text-3xl font-display font-bold text-brand-text">98.2%</span>
-              </div>
-            </div>
-          </div>
+        <div class="p-8 max-w-[1440px] mx-auto space-y-6 bg-[#f6fafe] min-h-full">
           
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="bg-white p-6 rounded border border-[#c3c6ce] shadow-sm flex flex-col justify-center">
+              <p class="text-[10px] font-bold text-[#74777e] uppercase tracking-widest mb-3 font-display">Total Aprovadas (Ano)</p>
+              <div class="flex items-baseline gap-2">
+                <span class="text-[40px] leading-none font-display font-bold text-[#00152a]">142</span>
+                <span class="text-[#00a472] text-sm font-bold">+12%</span>
+              </div>
+            </div>
+            
+            <div class="bg-white p-6 rounded border border-[#c3c6ce] shadow-sm flex flex-col justify-center">
+              <p class="text-[10px] font-bold text-[#74777e] uppercase tracking-widest mb-3 font-display">Média de Tramitação</p>
+              <div class="flex items-baseline gap-2">
+                <span class="text-[40px] leading-none font-display font-bold text-[#00152a]">84</span>
+                <span class="text-[#43474d] text-sm font-medium">dias</span>
+              </div>
+            </div>
+            
+            <div class="bg-white p-6 rounded border border-[#c3c6ce] shadow-sm flex flex-col justify-center">
+              <p class="text-[10px] font-bold text-[#74777e] uppercase tracking-widest mb-3 font-display">Impacto Econômico Est.</p>
+              <div class="flex items-baseline gap-2">
+                <span class="text-[40px] leading-none font-display font-bold text-[#00152a]">R$ 2.4B</span>
+              </div>
+            </div>
+            
+            <div class="bg-white p-6 rounded border border-[#c3c6ce] border-l-[6px] border-l-[#00a472] shadow-sm flex flex-col justify-center">
+              <p class="text-[10px] font-bold text-[#74777e] uppercase tracking-widest mb-3 font-display">Conformidade Técnica</p>
+              <div class="flex items-baseline gap-2">
+                <span class="text-[40px] leading-none font-display font-bold text-[#00152a]">98.2%</span>
+              </div>
+            </div>
           </div>
+
+          <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+            
+            <div class="xl:col-span-2 space-y-4">
+              
+              <div class="flex justify-between items-center mb-2">
+                <h3 class="font-display text-xl font-bold text-[#00152a]">Recém Concluídas</h3>
+                <div class="flex gap-2">
+                  <button class="px-4 py-1.5 border border-[#c3c6ce] bg-white rounded text-xs font-bold text-[#43474d] uppercase tracking-widest hover:bg-slate-50 transition-colors">
+                    Filtrar por Comissão
+                  </button>
+                  <button class="px-4 py-1.5 border border-[#c3c6ce] bg-white rounded text-xs font-bold text-[#43474d] uppercase tracking-widest hover:bg-slate-50 transition-colors">
+                    Exportar Relatório
+                  </button>
+                </div>
+              </div>
+              
+              <div class="bg-white border border-[#c3c6ce] rounded p-6 shadow-sm">
+                <div class="flex justify-between items-start mb-6">
+                  <div class="space-y-3">
+                    <span class="inline-block bg-[#d1fae5] text-[#00a472] text-[10px] px-2 py-0.5 font-bold uppercase tracking-widest rounded">
+                      Aprovada em Definitivo
+                    </span>
+                    <h4 class="font-display text-2xl font-bold text-[#00152a] leading-tight max-w-2xl">PL 2453/2023 - Marco Legal da Inteligência Artificial</h4>
+                    <p class="text-[#43474d] text-sm max-w-2xl">Estabelece diretrizes para o desenvolvimento e uso de sistemas de IA no setor público e institucional.</p>
+                  </div>
+                  <div class="text-right flex flex-col items-end gap-2">
+                    <p class="font-mono text-sm text-[#43474d]">Sancionada em:<br><span class="font-bold text-[#00152a]">15/10/2023</span></p>
+                    <i data-lucide="check-circle-2" class="w-6 h-6 text-[#00a472] fill-[#00a472] text-white"></i>
+                  </div>
+                </div>
+                
+                <div class="grid grid-cols-3 gap-4 pt-4 border-t border-[#dfe3e7]">
+                  <div>
+                    <p class="text-[10px] font-bold text-[#74777e] uppercase tracking-widest mb-1 font-display">Relator</p>
+                    <p class="text-sm font-semibold text-[#00152a]">Dep. Ricardo Salles</p>
+                  </div>
+                  <div>
+                    <p class="text-[10px] font-bold text-[#74777e] uppercase tracking-widest mb-2 font-display">Impacto Legislativo</p>
+                    <div class="flex items-center gap-3">
+                      <div class="h-1.5 w-32 bg-[#dfe3e7] rounded-full overflow-hidden">
+                        <div class="h-full bg-[#00152a] w-[85%]"></div>
+                      </div>
+                      <span class="text-xs font-bold text-[#00152a]">ALTO</span>
+                    </div>
+                  </div>
+                  <div class="flex justify-end items-center">
+                    <button class="flex items-center gap-2 text-[#00152a] font-bold text-xs uppercase tracking-widest hover:underline font-display">
+                      Ver Íntegra do Texto <i data-lucide="external-link" class="w-4 h-4"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-white border border-[#c3c6ce] rounded p-6 shadow-sm">
+                <div class="flex justify-between items-start mb-6">
+                  <div class="space-y-3">
+                    <span class="inline-block bg-[#e0f2fe] text-[#0284c7] text-[10px] px-2 py-0.5 font-bold uppercase tracking-widest rounded">
+                      Aprovada em Comissão (CCJ)
+                    </span>
+                    <h4 class="font-display text-2xl font-bold text-[#00152a] leading-tight max-w-2xl">PEC 45/2019 - Reforma Tributária Institucional</h4>
+                    <p class="text-[#43474d] text-sm max-w-2xl">Simplificação do sistema de impostos e taxas para instituições de fomento tecnológico.</p>
+                  </div>
+                  <div class="text-right flex flex-col items-end gap-2">
+                    <p class="font-mono text-sm text-[#43474d]">Aprovada em:<br><span class="font-bold text-[#00152a]">12/10/2023</span></p>
+                    <i data-lucide="user-check" class="w-5 h-5 text-[#44617d]"></i>
+                  </div>
+                </div>
+                
+                <div class="grid grid-cols-3 gap-4 pt-4 border-t border-[#dfe3e7]">
+                  <div>
+                    <p class="text-[10px] font-bold text-[#74777e] uppercase tracking-widest mb-1 font-display">Relator</p>
+                    <p class="text-sm font-semibold text-[#00152a]">Sen. Marcio Bittar</p>
+                  </div>
+                  <div>
+                    <p class="text-[10px] font-bold text-[#74777e] uppercase tracking-widest mb-2 font-display">Unanimidade</p>
+                    <div class="flex items-center gap-3">
+                      <div class="h-1.5 w-32 bg-[#dfe3e7] rounded-full overflow-hidden">
+                        <div class="h-full bg-[#00a472] w-full"></div>
+                      </div>
+                      <span class="text-xs font-bold text-[#00152a]">100%</span>
+                    </div>
+                  </div>
+                  <div class="flex justify-end items-center">
+                    <button class="flex items-center gap-2 text-[#00152a] font-bold text-xs uppercase tracking-widest hover:underline font-display">
+                      Histórico de Votos <i data-lucide="history" class="w-4 h-4"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-white border border-[#c3c6ce] rounded p-6 shadow-sm">
+                <div class="flex justify-between items-start mb-6">
+                  <div class="space-y-3">
+                    <span class="inline-block bg-[#d1fae5] text-[#00a472] text-[10px] px-2 py-0.5 font-bold uppercase tracking-widest rounded">
+                      Aprovada em Definitivo
+                    </span>
+                    <h4 class="font-display text-2xl font-bold text-[#00152a] leading-tight max-w-2xl">PL 560/2023 - Incentivo à Transparência Pública</h4>
+                    <p class="text-[#43474d] text-sm max-w-2xl">Obrigatoriedade de publicação em tempo real de dados de execução orçamentária via API.</p>
+                  </div>
+                  <div class="text-right flex flex-col items-end gap-2">
+                    <p class="font-mono text-sm text-[#43474d]">Sancionada em:<br><span class="font-bold text-[#00152a]">08/10/2023</span></p>
+                    <div class="w-5 h-5"></div>
+                  </div>
+                </div>
+                
+                <div class="grid grid-cols-3 gap-4 pt-4 border-t border-[#dfe3e7]">
+                  <div>
+                    <p class="text-[10px] font-bold text-[#74777e] uppercase tracking-widest mb-1 font-display">Relator</p>
+                    <p class="text-sm font-semibold text-[#00152a]">Dep. Tábata Amaral</p>
+                  </div>
+                  <div>
+                    <p class="text-[10px] font-bold text-[#74777e] uppercase tracking-widest mb-2 font-display">Impacto Legislativo</p>
+                    <div class="flex items-center gap-3">
+                      <div class="h-1.5 w-32 bg-[#dfe3e7] rounded-full overflow-hidden">
+                        <div class="h-full bg-[#00152a] w-[60%]"></div>
+                      </div>
+                      <span class="text-xs font-bold text-[#00152a]">MÉDIO</span>
+                    </div>
+                  </div>
+                  <div class="flex justify-end items-center">
+                    <button class="flex items-center gap-2 text-[#00152a] font-bold text-xs uppercase tracking-widest hover:underline font-display">
+                      Ver Íntegra do Texto <i data-lucide="external-link" class="w-4 h-4"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="space-y-6">
+              <h3 class="font-display text-xl font-bold text-[#00152a] mb-2 mt-1">Tendências de Sucesso</h3>
+              
+              <div class="bg-white border border-[#c3c6ce] rounded p-6 shadow-sm">
+                <p class="text-[10px] font-bold text-[#74777e] uppercase tracking-widest mb-6 font-display">Eficácia por Comissão</p>
+                
+                <div class="space-y-4 mb-6">
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm font-medium text-[#43474d]">CCJ - Justiça</span>
+                    <div class="w-32 h-2.5 bg-[#00152a] rounded-sm"></div>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm font-medium text-[#43474d]">CFT - Finanças</span>
+                    <div class="w-32 h-2.5 bg-[#102a43] rounded-sm"></div>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm font-medium text-[#43474d]">CDE - Desenvolvimento</span>
+                    <div class="w-32 h-2.5 bg-[#74777e] rounded-sm"></div>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm font-medium text-[#43474d]">CAS - Social</span>
+                    <div class="w-32 h-2.5 bg-[#c3c6ce] rounded-sm"></div>
+                  </div>
+                </div>
+                
+                <div class="pt-4 border-t border-[#dfe3e7] flex justify-between items-center">
+                  <span class="text-sm font-bold text-[#00152a] font-display">Índice Geral</span>
+                  <span class="text-2xl font-bold text-[#00152a] font-display">72%</span>
+                </div>
+              </div>
+
+              <div class="bg-[#00152a] rounded p-6 shadow-sm">
+                <div class="flex items-center gap-2 mb-4">
+                  <i data-lucide="sparkles" class="w-4 h-4 text-[#00a472]"></i>
+                  <p class="text-[10px] font-bold text-white uppercase tracking-widest font-display">Inteligência Preditiva</p>
+                </div>
+                <p class="text-white text-sm leading-relaxed mb-6">
+                  O tempo médio de aprovação em matérias de <span class="font-bold text-[#00a472]">Tecnologia</span> reduziu em 14 dias após a implementação do novo regimento interno.
+                </p>
+                <button class="w-full py-2.5 bg-[#2c4964] hover:bg-[#44617d] transition-colors text-white text-[10px] font-bold uppercase tracking-widest rounded font-display">
+                  Gerar Relatório Executivo
+                </button>
+              </div>
+
+              <div class="bg-white border border-[#c3c6ce] rounded shadow-sm overflow-hidden">
+                <div class="p-4 bg-[#f8fafc] border-b border-[#dfe3e7]">
+                  <p class="text-[10px] font-bold text-[#00152a] uppercase tracking-widest font-display">Votações Decisivas (Próx. 48h)</p>
+                </div>
+                <div class="divide-y divide-[#dfe3e7]">
+                  <div class="p-4 flex items-center justify-between bg-white">
+                    <div>
+                      <p class="font-bold text-[#00152a] text-sm">PEC 22/2023</p>
+                      <p class="text-xs text-[#74777e] mt-0.5">Reforma Administrativa</p>
+                    </div>
+                    <span class="bg-[#fee2e2] text-[#b91c1c] text-[9px] font-bold px-2 py-1 uppercase tracking-widest rounded">Alto Risco</span>
+                  </div>
+                  <div class="p-4 flex items-center justify-between bg-white">
+                    <div>
+                      <p class="font-bold text-[#00152a] text-sm">PL 120/2023</p>
+                      <p class="text-xs text-[#74777e] mt-0.5">Incentivos ao Agro</p>
+                    </div>
+                    <span class="bg-[#d1fae5] text-[#00a472] text-[9px] font-bold px-2 py-1 uppercase tracking-widest rounded">Consensus</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="bg-white border border-[#c3c6ce] rounded p-6 shadow-sm mt-6">
+            <div class="flex justify-between items-start mb-16">
+              <p class="text-sm text-[#43474d]">Volume de aprovações mensais comparado ao ano anterior.</p>
+              <div class="flex items-center gap-4 text-xs text-[#43474d] font-medium">
+                <div class="flex items-center gap-1.5"><div class="w-2.5 h-2.5 rounded-full bg-[#00152a]"></div> 2023</div>
+                <div class="flex items-center gap-1.5"><div class="w-2.5 h-2.5 rounded-full bg-[#c3c6ce]"></div> 2022</div>
+              </div>
+            </div>
+            
+            <div class="h-10"></div>
+          
+            <div class="flex justify-between px-4 text-[10px] font-bold text-[#74777e] uppercase tracking-widest font-display">
+              <span>Jan</span>
+              <span>Fev</span>
+              <span>Mar</span>
+              <span>Abr</span>
+              <span>Mai</span>
+              <span>Jun</span>
+              <span>Jul</span>
+              <span>Ago</span>
+              <span>Set</span>
+              <span>Out</span>
+            </div>
+          </div>
+
+        </div>
       </main>
     </div>
     
