@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>P.R.I.S.M.A - Usuário</title>
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+    <script src="../../public/js/tailwind-config.js"></script>
+    
+    <link href="../../public/css/global.css" rel="stylesheet" />
+  </head>
+  <body class="bg-brand-surface text-brand-text flex h-screen">
+    
+    <div id="sidebar-container"></div>
+
+    <div class="flex-1 ml-64 flex flex-col h-screen overflow-hidden">
+      
+      <div id="header-container"></div>
+      
+      <main class="flex-1 overflow-auto relative" id="main-content">
+        <div class="p-8 max-w-container-max mx-auto space-y-6">
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+             <div class="lg:col-span-2 space-y-6">
+                <div class="bg-white border border-brand-outline rounded-md p-6 shadow-sm flex items-start gap-6">
+                   <div class="w-24 h-24 rounded-md bg-slate-200 overflow-hidden shrink-0 relative border border-slate-300">
+                      <div class="absolute inset-0 bg-brand-primary flex items-center justify-center text-white text-3xl font-display font-bold">
+                         RS
+                      </div>
+                      <button class="absolute bottom-1 right-1 w-6 h-6 bg-brand-text text-white rounded-full flex items-center justify-center border-2 border-white hover:bg-brand-primary">
+                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+                      </button>
+                   </div>
+                   
+                   <div class="flex-1">
+                      <h2 class="font-display font-bold text-2xl text-brand-text">Dr. Ricardo Silva</h2>
+                      <p class="text-sm text-slate-500 mb-4 flex items-center gap-2">
+                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/><path d="M12 10h.01"/><path d="M12 14h.01"/><path d="M16 10h.01"/><path d="M16 14h.01"/><path d="M8 10h.01"/><path d="M8 14h.01"/></svg>
+                         Consultoria Legislativa • Brasília, DF
+                      </p>
+                      <div class="flex gap-2">
+                         <span class="bg-emerald-100 text-emerald-800 text-xs font-bold uppercase tracking-wider px-3 py-1 rounded">Assinante Premium</span>
+                         <span class="bg-blue-100 text-blue-800 text-xs font-bold uppercase tracking-wider px-3 py-1 rounded">Nível 4 - Especialista</span>
+                      </div>
+                   </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                   <div class="bg-white border border-brand-outline rounded-md p-6 shadow-sm">
+                      <div class="flex items-center justify-between mb-6">
+                         <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Segurança da Conta</p>
+                         <i data-lucide="shield" class="w-4 h-4 text-emerald-600"></i>
+                      </div>
+                      <h3 class="font-semibold text-brand-text text-lg">Acesso e Credenciais</h3>
+                      <p class="text-xs text-slate-500 mt-1 mb-6">Último login: Hoje, 08:42 • Brasília, BR</p>
+                      <div class="space-y-3">
+                         <button class="w-full flex justify-between items-center p-3 border border-slate-200 rounded text-sm font-medium text-brand-text hover:bg-slate-50 transition-colors">
+                            Alterar Senha <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+                         </button>
+                         <button class="w-full flex justify-between items-center p-3 border border-slate-200 bg-slate-50 rounded text-sm font-medium text-brand-text hover:bg-slate-100 transition-colors">
+                            Autenticação de Dois Fatores <span class="text-[10px] text-emerald-600 font-bold uppercase">Ativo</span>
+                         </button>
+                     </div>
+                   </div>
+
+                   <div class="bg-[#00152a] text-white border border-[#102a43] rounded-md p-6 shadow-sm relative overflow-hidden">
+                      <div class="absolute top-0 right-0 p-4 opacity-20"><i data-lucide="key" class="w-8 h-8"></i></div>
+                      <div class="relative z-10">
+                         <p class="text-[10px] font-bold uppercase tracking-wider text-blue-300 mb-6">Desenvolvedor</p>
+                         <h3 class="font-semibold text-white text-lg">Gestão de API</h3>
+                         <p class="text-xs text-slate-300 mt-1 mb-6">Consumo: 4.2k / 10k requisições este mês</p>
+                         <div class="w-full bg-[#102a43] border border-blue-900 rounded p-3 text-sm font-mono text-slate-300 mb-4 truncate select-all">
+                            sk_live_51M...8p2q
+                         </div>
+                         <button class="w-full bg-emerald-400 hover:bg-emerald-300 text-[#00152a] text-xs font-bold uppercase tracking-wider py-2.5 rounded transition-colors">
+                            Gerar Nova Chave
+                         </button>
+                      </div>
+                   </div>
+                </div>
+
+                <div class="bg-white border border-brand-outline rounded-md p-0 shadow-sm overflow-hidden">
+                   <div class="p-6 border-b border-slate-100">
+                      <h3 class="font-display font-semibold text-lg text-brand-text">Preferências de Notificação</h3>
+                   </div>
+                   
+                   <table class="w-full text-left">
+                      <thead>
+                         <tr class="bg-slate-50 border-b border-slate-100">
+                            <th class="p-4 text-[10px] font-bold uppercase tracking-wider text-slate-500 w-1/2">Evento Legislativo</th>
+                            <th class="p-4 text-[10px] font-bold uppercase tracking-wider text-slate-500 text-center">E-mail</th>
+                            <th class="p-4 text-[10px] font-bold uppercase tracking-wider text-slate-500 text-center">Push Mobile</th>
+                            <th class="p-4 text-[10px] font-bold uppercase tracking-wider text-slate-500 text-center">SMS</th>
+                         </tr>
+                      </thead>
+                      <tbody class="divide-y divide-slate-100">
+                         <tr>
+                            <td class="p-4">
+                               <p class="text-sm font-medium text-brand-text">Novas Proposições Favoritas</p>
+                               <p class="text-xs text-slate-500">Alertar quando um projeto marcado for pautado</p>
+                            </td>
+                            <td class="p-4 text-center"><div class="w-5 h-5 rounded mx-auto border flex items-center justify-center transition-colors cursor-pointer bg-[#102a43] border-[#102a43]"><i data-lucide="check" class="w-3 h-3 text-white"></i></div></td>
+                            <td class="p-4 text-center"><div class="w-5 h-5 rounded mx-auto border flex items-center justify-center transition-colors cursor-pointer bg-[#102a43] border-[#102a43]"><i data-lucide="check" class="w-3 h-3 text-white"></i></div></td>
+                            <td class="p-4 text-center"><div class="w-5 h-5 rounded mx-auto border flex items-center justify-center transition-colors cursor-pointer bg-white border-slate-300"></div></td>
+                         </tr>
+                         <tr class="bg-slate-50/50">
+                            <td class="p-4">
+                               <p class="text-sm font-medium text-brand-text">Relatórios de Inteligência</p>
+                               <p class="text-xs text-slate-500">Sumário semanal de tendências de votação</p>
+                            </td>
+                            <td class="p-4 text-center"><div class="w-5 h-5 rounded mx-auto border flex items-center justify-center transition-colors cursor-pointer bg-[#102a43] border-[#102a43]"><i data-lucide="check" class="w-3 h-3 text-white"></i></div></td>
+                            <td class="p-4 text-center"><div class="w-5 h-5 rounded mx-auto border flex items-center justify-center transition-colors cursor-pointer bg-white border-slate-300"></div></td>
+                            <td class="p-4 text-center"><div class="w-5 h-5 rounded mx-auto border flex items-center justify-center transition-colors cursor-pointer bg-white border-slate-300"></div></td>
+                         </tr>
+                         <tr>
+                            <td class="p-4">
+                               <p class="text-sm font-medium text-brand-text">Alteração de Status em Bloco</p>
+                               <p class="text-xs text-slate-500">Movimentações em massa em filtros salvos</p>
+                            </td>
+                            <td class="p-4 text-center"><div class="w-5 h-5 rounded mx-auto border flex items-center justify-center transition-colors cursor-pointer bg-[#102a43] border-[#102a43]"><i data-lucide="check" class="w-3 h-3 text-white"></i></div></td>
+                            <td class="p-4 text-center"><div class="w-5 h-5 rounded mx-auto border flex items-center justify-center transition-colors cursor-pointer bg-white border-slate-300"></div></td>
+                            <td class="p-4 text-center"><div class="w-5 h-5 rounded mx-auto border flex items-center justify-center transition-colors cursor-pointer bg-[#102a43] border-[#102a43]"><i data-lucide="check" class="w-3 h-3 text-white"></i></div></td>
+                         </tr>
+                      </tbody>
+                   </table>
+                </div>
+
+                <div class="flex items-center justify-between pt-4 pb-8">
+                   <div class="flex items-center gap-6 text-sm">
+                      <button class="text-brand-error font-medium hover:underline flex items-center gap-1">
+                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                         Encerrar Sessão
+                      </button>
+                      <button class="text-slate-500 hover:text-brand-text">Termos de Uso</button>
+                      <button class="text-slate-500 hover:text-brand-text">Privacidade</button>
+                   </div>
+                   <div class="flex gap-4">
+                      <button class="px-6 py-2 border border-slate-300 rounded font-medium text-sm hover:bg-slate-50 transition-colors text-brand-text">
+                         Descartar Alterações
+                      </button>
+                      <button class="px-6 py-2 bg-brand-primary text-white rounded font-medium text-sm hover:bg-[#102a43] transition-colors">
+                         Salvar Configurações
+                      </button>
+                   </div>
+                </div>
+             </div>
+
+             <div class="space-y-6">
+                <div class="bg-white border border-brand-outline rounded-md p-6 shadow-sm">
+                   <div class="flex justify-between items-center mb-6">
+                      <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Filtros Inteligentes</p>
+                      <button class="text-xs font-bold text-brand-primary hover:underline">Ver Todos</button>
+                   </div>
+                   
+                   <div class="space-y-3">
+                      <div class="border border-slate-200 rounded p-3 flex justify-between items-center bg-slate-50 cursor-move text-sm font-medium text-brand-text">
+                         <div class="flex items-center gap-2"><div class="w-1.5 h-1.5 bg-brand-primary rounded-full"></div> Reforma Tributária 2024</div>
+                         <svg width="14" height="14" class="text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                      </div>
+                      <div class="border border-slate-200 rounded p-3 flex justify-between items-center bg-slate-50 cursor-move text-sm font-medium text-brand-text">
+                         <div class="flex items-center gap-2"><div class="w-1.5 h-1.5 bg-brand-primary rounded-full"></div> Direito Digital & IA</div>
+                         <svg width="14" height="14" class="text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                      </div>
+                      <div class="border border-slate-200 rounded p-3 flex justify-between items-center bg-slate-50 cursor-move text-sm font-medium text-brand-text">
+                         <div class="flex items-center gap-2"><div class="w-1.5 h-1.5 bg-brand-primary rounded-full"></div> Saúde - Orçamento União</div>
+                         <svg width="14" height="14" class="text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                      </div>
+                      
+                      <button class="w-full border-2 border-dashed border-slate-300 rounded p-3 text-slate-400 text-sm font-medium hover:border-brand-primary hover:text-brand-primary transition-colors flex justify-center items-center gap-2">
+                         <i data-lucide="plus" class="w-4 h-4"></i> Novo Filtro Dinâmico
+                      </button>
+                   </div>
+                </div>
+
+                <div class="bg-white border border-brand-outline rounded-md p-6 shadow-sm">
+                   <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-6">Logs de Atividade</p>
+                   <div class="relative border-l border-slate-200 ml-2 space-y-6 pb-2">
+                      <div class="relative pl-6">
+                         <div class="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-brand-text"></div>
+                         <p class="text-[10px] font-bold uppercase text-slate-400 mb-1">Hoje, 10:15</p>
+                         <p class="text-sm font-semibold text-brand-text">Exportação de Relatório PDF</p>
+                         <p class="text-xs text-slate-500">PEC 45/2019 - Análise de Impacto</p>
+                      </div>
+                      <div class="relative pl-6">
+                         <div class="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
+                         <p class="text-[10px] font-bold uppercase text-slate-400 mb-1">Ontem, 16:40</p>
+                         <p class="text-sm font-semibold text-brand-text">Atualização de Filtro</p>
+                         <p class="text-xs text-slate-500">Keyword "Agronegócio" adicionada</p>
+                      </div>
+                      <div class="relative pl-6">
+                         <div class="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-brand-text"></div>
+                         <p class="text-[10px] font-bold uppercase text-slate-400 mb-1">02 Jan, 09:22</p>
+                         <p class="text-sm font-semibold text-brand-text">Mudança de Senha</p>
+                         <p class="text-xs text-slate-500">Segurança da conta atualizada</p>
+                      </div>
+                   </div>
+                </div>
+
+                <div class="bg-slate-100 border border-slate-200 rounded-md p-5 flex items-center gap-4 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]">
+                   <div class="w-10 h-10 rounded bg-[#00152a] text-white flex items-center justify-center shrink-0">
+                      <i data-lucide="hard-drive" class="w-5 h-5"></i>
+                   </div>
+                   <div>
+                      <p class="text-xs text-slate-500 font-semibold mb-0.5">Sincronização</p>
+                      <p class="text-lg font-display font-bold text-brand-text">100% Estável</p>
+                   </div>
+                </div>
+             </div>
+          </div>
+        </div>
+      </main>
+    </div>
+    
+    <script src="../../public/js/app.js"></script>
+  </body>
+</html>
