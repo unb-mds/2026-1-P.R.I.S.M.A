@@ -15,25 +15,22 @@ O P.R.I.S.M.A utiliza a arquitetura **MTV (Model-Template-View)** nativa do Djan
 | **Curva de aprendizado** | A equipe já estudou Django (issue #3) |
 
 ## Estrutura Adotada
-┌─────────────────────────────────────────────────────┐
-│ Template (HTML) │
-│ Interface com o usuário │
-└───────────────────────┬─────────────────────────────┘
+
+ Template (HTML) │
+ Interface com o usuário │
+
 ↓ (requisição HTTP)
-┌─────────────────────────────────────────────────────┐
-│ View (views.py) │
-│ Lógica de negócio + controle │
-└───────────────────────┬─────────────────────────────┘
+
+ View (views.py) │
+ Lógica de negócio + controle │
 ↓ (consulta)
-┌─────────────────────────────────────────────────────┐
-│ Model (models.py) │
-│ Acesso ao banco de dados │
-└───────────────────────┬─────────────────────────────┘
+
+ Model (models.py) │
+ Acesso ao banco de dados │
 ↓
-┌─────────────────────────────────────────────────────┐
-│ PostgreSQL │
-│ Banco de Dados │
-└─────────────────────────────────────────────────────┘
+ PostgreSQL │
+ Banco de Dados │
+
 
 ## Comparação com outras arquiteturas
 
