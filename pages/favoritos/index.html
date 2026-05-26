@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>P.R.I.S.M.A - Favoritos</title>
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+    <script src="../../public/js/tailwind-config.js"></script>
+    
+    <link href="../../public/css/global.css" rel="stylesheet" />
+  </head>
+  <body class="bg-brand-surface text-brand-text flex h-screen">
+    
+    <div id="sidebar-container"></div>
+
+    <div class="flex-1 ml-64 flex flex-col h-screen overflow-hidden">
+      
+      <div id="header-container"></div>
+      
+      <main class="flex-1 overflow-auto relative" id="main-content">
+        <div class="p-8 max-w-container-max mx-auto space-y-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm text-brand-text-muted mt-1">Gerencie suas proposições favoritadas e receba inteligência em tempo real.</p>
+            </div>
+            <div class="flex gap-3">
+              <button class="flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-md text-sm font-semibold text-brand-text transition-colors uppercase tracking-wider text-[11px]">
+                <i data-lucide="download" class="w-3.5 h-3.5"></i> Exportar Relatório
+              </button>
+              <button class="flex items-center gap-2 px-4 py-2 bg-brand-primary hover:bg-[#102a43] rounded-md text-white font-semibold transition-colors uppercase tracking-wider text-[11px]">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i> Novo Monitoramento
+              </button>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2 overflow-x-auto pb-2">
+            <button class="px-5 py-2 bg-brand-primary text-white text-xs font-bold uppercase tracking-wider rounded-md shrink-0">Tudo (12)</button>
+            <button class="px-5 py-2 bg-slate-200 text-slate-600 text-xs font-bold uppercase tracking-wider rounded-md shrink-0 hover:bg-slate-300 transition-colors">Tributário (4)</button>
+            <button class="px-5 py-2 bg-slate-200 text-slate-600 text-xs font-bold uppercase tracking-wider rounded-md shrink-0 hover:bg-slate-300 transition-colors">Saúde (3)</button>
+            <button class="px-5 py-2 bg-slate-200 text-slate-600 text-xs font-bold uppercase tracking-wider rounded-md shrink-0 hover:bg-slate-300 transition-colors">Educação (2)</button>
+            <button class="px-5 py-2 bg-slate-200 text-slate-600 text-xs font-bold uppercase tracking-wider rounded-md shrink-0 hover:bg-slate-300 transition-colors">Infraestrutura (3)</button>
+            <button class="p-2 border border-slate-300 text-slate-500 rounded-md shrink-0 hover:bg-slate-50 transition-colors"><i data-lucide="plus" class="w-4 h-4"></i></button>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-2 space-y-4">
+              <div class="bg-white border-2 border-brand-primary rounded-md p-6 shadow-sm">
+                <div class="flex justify-between items-start mb-4">
+                  <div class="flex items-center gap-2">
+                    <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">PL 2345/2023 • Tributário</span>
+                    <span class="text-[10px] font-bold bg-[#d1fae5] text-[#065f46] px-2 py-0.5 rounded uppercase tracking-wider border border-[#a7f3d0]">Alta Prioridade</span>
+                  </div>
+                  <i data-lucide="star" class="text-brand-primary fill-brand-primary w-5 h-5"></i>
+                </div>
+                
+                <h3 class="font-display font-semibold text-xl text-brand-text mb-6">Reforma da Tributação sobre Consumo e Serviços Digitais</h3>
+                
+                <div class="grid grid-cols-3 gap-4 mb-6">
+                  <div>
+                    <p class="text-[10px] uppercase font-semibold text-slate-500 tracking-wider mb-1">Situação</p>
+                    <p class="text-sm font-medium flex items-center gap-1.5"><div class="w-2 h-2 rounded-full bg-brand-success"></div> Em tramitação (CCJ)</p>
+                  </div>
+                  <div>
+                    <p class="text-[10px] uppercase font-semibold text-slate-500 tracking-wider mb-1">Relator</p>
+                    <p class="text-sm font-medium text-brand-text">Dep. Roberto Silva</p>
+                  </div>
+                  <div>
+                    <p class="text-[10px] uppercase font-semibold text-slate-500 tracking-wider mb-1">Última Atualização</p>
+                    <p class="text-sm font-medium text-brand-text">Hoje, às 14:30</p>
+                  </div>
+                </div>
+
+                <div class="bg-slate-50 border border-slate-100 rounded-md p-4 mb-6 flex gap-3">
+                   <i data-lucide="history" class="text-slate-400 mt-0.5 shrink-0 w-[18px] h-[18px]"></i>
+                   <div>
+                      <p class="text-xs font-bold text-slate-600 uppercase tracking-wider mb-1">Histórico Recente</p>
+                      <p class="text-sm text-slate-700">Relatório favorável apresentado na Comissão de Constituição e Justiça. Previsão de votação para a próxima terça-feira (24/10).</p>
+                   </div>
+                </div>
+
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center">
+                     <div class="flex -space-x-2">
+                        <div class="w-8 h-8 rounded-full bg-slate-200 border-2 border-white flex items-center justify-center text-xs font-bold">R</div>
+                        <div class="w-8 h-8 rounded-full bg-slate-300 border-2 border-white flex items-center justify-center text-xs font-bold">M</div>
+                        <div class="w-8 h-8 rounded-full bg-slate-100 border-2 border-white flex items-center justify-center text-xs font-bold text-slate-500">+3</div>
+                     </div>
+                  </div>
+                  <div class="flex gap-3">
+                     <button class="text-xs font-bold uppercase tracking-wider text-brand-text hover:text-brand-primary">Ver Detalhes</button>
+                     <button class="text-xs font-bold uppercase tracking-wider text-white bg-brand-primary hover:bg-[#102a43] px-4 py-2 rounded">Configurar Alertas</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-4">
+                 <div class="bg-white border border-brand-outline rounded-md p-5 shadow-sm hover:border-brand-primary transition-colors cursor-pointer group">
+                    <div class="flex justify-between items-start mb-3">
+                      <span class="text-[9px] font-bold text-slate-500 uppercase tracking-wider">PEC 45/2023 • Saúde</span>
+                      <i data-lucide="star" class="text-brand-primary fill-brand-primary w-4 h-4"></i>
+                    </div>
+                    <h4 class="font-display font-semibold text-brand-text leading-tight mb-4 min-h-[40px]">Financiamento do Piso Nacional da Enfermagem</h4>
+                    
+                    <div class="space-y-2 mb-4">
+                      <div class="flex justify-between text-xs">
+                         <span class="text-slate-500">Próximo Passo</span>
+                         <span class="font-semibold text-brand-text">Comissão de Finanças</span>
+                      </div>
+                    </div>
+                    
+                    <div class="pt-3 border-t border-slate-100">
+                      <p class="text-xs text-brand-error flex items-center gap-1 font-medium"><i data-lucide="alert-triangle" class="w-3 h-3"></i> Prazo de emendas encerra em 2 dias</p>
+                    </div>
+                 </div>
+
+                 <div class="bg-white border border-brand-outline rounded-md p-5 shadow-sm hover:border-brand-primary transition-colors cursor-pointer group">
+                    <div class="flex justify-between items-start mb-3">
+                      <span class="text-[9px] font-bold text-slate-500 uppercase tracking-wider">PL 121/2023 • Educação</span>
+                      <i data-lucide="star" class="text-brand-primary fill-brand-primary w-4 h-4"></i>
+                    </div>
+                    <h4 class="font-display font-semibold text-brand-text leading-tight mb-4 min-h-[40px]">Implementação de Tecnologias de IA na Educação Básica</h4>
+                    <div class="space-y-2 mb-4">
+                      <div class="flex justify-between text-xs">
+                         <span class="text-slate-500">Status</span>
+                         <span class="font-semibold text-brand-text">Aprovado na Câmara</span>
+                      </div>
+                    </div>
+                    <div class="pt-3 border-t border-slate-100">
+                      <p class="text-xs text-brand-success flex items-center gap-1 font-medium"><div class="w-1.5 h-1.5 rounded-full bg-brand-success"></div> Enviado ao Senado Federal</p>
+                    </div>
+                 </div>
+
+                 <div class="bg-white border border-brand-outline rounded-md p-5 shadow-sm hover:border-brand-primary transition-colors cursor-pointer group">
+                    <div class="flex justify-between items-start mb-3">
+                      <span class="text-[9px] font-bold text-slate-500 uppercase tracking-wider">PL 882/2021 • Infra</span>
+                      <i data-lucide="star" class="text-slate-300 w-4 h-4"></i>
+                    </div>
+                    <h4 class="font-display font-semibold text-brand-text leading-tight mb-4 min-h-[40px]">Marco Legal das Ferrovias de Curta Distância</h4>
+                    <div class="space-y-2 mb-4">
+                      <div class="flex justify-between text-xs">
+                         <span class="text-slate-500">Movimentação</span>
+                         <span class="font-semibold text-brand-text">Designação de Relator</span>
+                      </div>
+                    </div>
+                    <div class="pt-3 border-t border-slate-100">
+                      <p class="text-xs text-slate-500 flex items-center gap-1 font-medium"><i data-lucide="history" class="w-3 h-3"></i> Sem novas ações em 15 dias</p>
+                    </div>
+                 </div>
+
+                  <div class="bg-slate-50 border-2 border-dashed border-slate-300 rounded-md p-5 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] flex flex-col items-center justify-center hover:bg-slate-100 transition-colors cursor-pointer text-slate-400 hover:text-brand-primary hover:border-brand-primary min-h-[160px]">
+                     <i data-lucide="plus" class="w-6 h-6 mb-2"></i>
+                     <span class="text-sm font-semibold">Adicionar ao Monitoramento</span>
+                  </div>
+              </div>
+            </div>
+
+            <div class="space-y-6">
+               <div class="bg-[#00152a] text-white rounded-md p-6 shadow-md border border-[#102a43]">
+                  <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-4">Resumo dos Favoritos</p>
+                  <div class="flex justify-between items-end mb-8">
+                     <p class="text-sm text-slate-300">Projetos Ativos</p>
+                     <p class="text-4xl font-display font-bold text-white">12</p>
+                  </div>
+                  <div class="mb-8">
+                     <p class="text-[10px] uppercase font-semibold text-slate-400 mb-2">Distribuição por Tema</p>
+                     <div class="w-full h-2 bg-[#102a43] rounded-full overflow-hidden flex">
+                        <div class="h-full bg-emerald-400 w-[35%]"></div>
+                        <div class="h-full bg-blue-400 w-[25%] opacity-80"></div>
+                     </div>
+                     <div class="flex gap-4 mt-3 text-xs text-slate-300 font-medium">
+                        <div class="flex items-center gap-1.5"><div class="w-2 h-2 rounded-full bg-emerald-400"></div> Tributário</div>
+                        <div class="flex items-center gap-1.5"><div class="w-2 h-2 rounded-full bg-blue-400"></div> Saúde</div>
+                     </div>
+                  </div>
+                  <div class="bg-white/5 border border-white/10 rounded p-4 relative overflow-hidden">
+                     <div class="absolute top-0 right-0 p-2 opacity-20"><i data-lucide="trending-up" class="w-10 h-10"></i></div>
+                     <p class="text-xs font-bold uppercase tracking-wider text-emerald-300 mb-2 flex items-center gap-1.5">
+                        <i data-lucide="sparkles" class="w-3 h-3"></i> Métrica de Impacto
+                     </p>
+                     <p class="text-sm text-slate-300 mb-4 relative z-10 leading-relaxed">
+                        4 dos seus projetos favoritados estão com movimentação atípica nas últimas 48h.
+                     </p>
+                     <button class="w-full bg-emerald-400 text-[#00152a] hover:bg-emerald-300 text-xs font-bold uppercase tracking-wider py-2 rounded transition-colors relative z-10">
+                        Gerar Análise IA
+                     </button>
+                  </div>
+               </div>
+
+               <div class="grid grid-cols-1 gap-4">
+                  <div class="bg-white border border-brand-outline rounded-md p-5 flex items-center justify-between shadow-sm">
+                     <div>
+                        <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">Relatórios Disponíveis</p>
+                        <p class="text-2xl font-display font-bold text-brand-text">08</p>
+                        <p class="text-[10px] text-slate-500 mt-1 max-w-[150px]">Documentos técnicos gerados automaticamente</p>
+                     </div>
+                     <div class="w-12 h-12 rounded bg-blue-50 text-brand-primary flex items-center justify-center shrink-0">
+                        <i data-lucide="file-text" class="w-5 h-5"></i>
+                     </div>
+                  </div>
+
+                  <div class="bg-white border border-brand-outline rounded-md p-5 flex items-center justify-between shadow-sm">
+                     <div>
+                        <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">Colaboradores</p>
+                        <p class="text-2xl font-display font-bold text-brand-text">03</p>
+                        <p class="text-[10px] text-slate-500 mt-1 max-w-[150px]">Membros da sua equipe compartilhando</p>
+                     </div>
+                     <div class="w-12 h-12 rounded bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
+                        <i data-lucide="users" class="w-5 h-5"></i>
+                     </div>
+                  </div>
+               </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+    
+    <script src="../../public/js/app.js"></script>
+  </body>
+</html>
