@@ -11,7 +11,7 @@
     
     <link href="../../public/css/global.css" rel="stylesheet" />
   </head>
-  <body class="bg-brand-surface text-brand-text flex h-screen">
+  <body class="bg-brand-surface text-brand-text flex h-screen overflow-hidden">
     
     <div id="sidebar-container"></div>
 
@@ -23,6 +23,7 @@
         <div class="p-8 max-w-container-max mx-auto space-y-6">
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
              <div class="lg:col-span-2 space-y-6">
+                
                 <div class="bg-white border border-brand-outline rounded-md p-6 shadow-sm flex items-start gap-6">
                    <div class="w-24 h-24 rounded-md bg-slate-200 overflow-hidden shrink-0 relative border border-slate-300">
                       <div class="absolute inset-0 bg-brand-primary flex items-center justify-center text-white text-3xl font-display font-bold">
@@ -40,13 +41,12 @@
                          Consultoria Legislativa • Brasília, DF
                       </p>
                       <div class="flex gap-2">
-                         <span class="bg-emerald-100 text-emerald-800 text-xs font-bold uppercase tracking-wider px-3 py-1 rounded">Assinante Premium</span>
                          <span class="bg-blue-100 text-blue-800 text-xs font-bold uppercase tracking-wider px-3 py-1 rounded">Nível 4 - Especialista</span>
                       </div>
                    </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 gap-6">
                    <div class="bg-white border border-brand-outline rounded-md p-6 shadow-sm">
                       <div class="flex items-center justify-between mb-6">
                          <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Segurança da Conta</p>
@@ -62,21 +62,6 @@
                             Autenticação de Dois Fatores <span class="text-[10px] text-emerald-600 font-bold uppercase">Ativo</span>
                          </button>
                      </div>
-                   </div>
-
-                   <div class="bg-[#00152a] text-white border border-[#102a43] rounded-md p-6 shadow-sm relative overflow-hidden">
-                      <div class="absolute top-0 right-0 p-4 opacity-20"><i data-lucide="key" class="w-8 h-8"></i></div>
-                      <div class="relative z-10">
-                         <p class="text-[10px] font-bold uppercase tracking-wider text-blue-300 mb-6">Desenvolvedor</p>
-                         <h3 class="font-semibold text-white text-lg">Gestão de API</h3>
-                         <p class="text-xs text-slate-300 mt-1 mb-6">Consumo: 4.2k / 10k requisições este mês</p>
-                         <div class="w-full bg-[#102a43] border border-blue-900 rounded p-3 text-sm font-mono text-slate-300 mb-4 truncate select-all">
-                            sk_live_51M...8p2q
-                         </div>
-                         <button class="w-full bg-emerald-400 hover:bg-emerald-300 text-[#00152a] text-xs font-bold uppercase tracking-wider py-2.5 rounded transition-colors">
-                            Gerar Nova Chave
-                         </button>
-                      </div>
                    </div>
                 </div>
 
@@ -206,6 +191,7 @@
                       <p class="text-lg font-display font-bold text-brand-text">100% Estável</p>
                    </div>
                 </div>
+
              </div>
           </div>
         </div>
