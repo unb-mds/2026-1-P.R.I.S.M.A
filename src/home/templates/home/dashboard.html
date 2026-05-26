@@ -1,0 +1,35 @@
+{% extends 'home/base.html' %}
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+{% block content %}
+<div class="p-8 max-w-container-max mx-auto space-y-6">
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+    <div class="bg-white p-5 rounded-md border border-brand-outline shadow-sm">
+      <p class="text-[10px] font-display font-semibold uppercase tracking-wider text-slate-500 mb-2">Total Aprovadas (Ano)</p>
+      <div class="flex items-baseline gap-2">
+        <span class="text-3xl font-display font-bold text-brand-text">142</span>
+        <span class="text-brand-success text-sm font-medium">+12%</span>
+      </div>
+    </div>
+    <div class="bg-white p-5 rounded-md border border-brand-outline shadow-sm">
+      <p class="text-[10px] font-display font-semibold uppercase tracking-wider text-slate-500 mb-2">Média de Tramitação</p>
+      <div class="flex items-baseline gap-2">
+        <span class="text-3xl font-display font-bold text-brand-text">84</span>
+        <span class="text-slate-500 text-sm font-medium">dias</span>
+      </div>
+    </div>
+    <div class="bg-white p-5 rounded-md border border-brand-outline shadow-sm">
+      <p class="text-[10px] font-display font-semibold uppercase tracking-wider text-slate-500 mb-2">Impacto Econômico Est.</p>
+      <div class="flex items-baseline gap-2">
+        <span class="text-3xl font-display font-bold text-brand-text">R$ 2.4B</span>
+      </div>
+    </div>
+    <div class="bg-white p-5 rounded-md border border-brand-success border-l-4 shadow-sm">
+      <p class="text-[10px] font-display font-semibold uppercase tracking-wider text-slate-500 mb-2">Conformidade Técnica</p>
+      <div class="flex items-baseline gap-2">
+        <span class="text-3xl font-display font-bold text-brand-text">98.2%</span>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,31 @@
+<!doctype html>
+{% load static %}
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>P.R.I.S.M.A - {% block title %}{% endblock %}</title>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+    <script src="{% static 'home/js/tailwind-config.js' %}"></script>
+
+    <link href="{% static 'home/css/global.css' %}" rel="stylesheet" />
+    {% block extra_head %}{% endblock %}
+  </head>
+  <body class="bg-brand-surface text-brand-text flex h-screen">
+
+    {% include 'home/components/sidebar.html' %}
+
+    <div class="flex-1 ml-64 flex flex-col h-screen overflow-hidden">
+
+      {% include 'home/components/header.html' %}
+
+      <main class="flex-1 overflow-auto relative" id="main-content">
+        {% block content %}{% endblock %}
+      </main>
+    </div>
+
+    <script src="{% static 'home/js/app.js' %}"></script>
+  </body>
+</html>

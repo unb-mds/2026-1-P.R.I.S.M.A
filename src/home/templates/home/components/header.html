@@ -1,0 +1,27 @@
+<header class="h-[72px] bg-white border-b border-brand-outline flex items-center justify-between px-8 sticky top-0 z-10 shrink-0 w-full">
+  <div class="flex items-center gap-8 flex-1">
+    <h2 id="topnav-title" class="font-display font-semibold text-2xl text-brand-text truncate max-w-md capitalize">
+      {% block page_title %}{% endblock %}
+    </h2>
+
+    <div class="relative max-w-md w-full ml-4 hidden md:block">
+      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+        <i data-lucide="search" class="w-[18px] h-[18px] text-slate-400"></i>
+      </div>
+      <input
+        type="text"
+        class="block w-full pl-10 pr-3 py-2 border border-slate-200 rounded-md leading-5 bg-slate-50 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-1 focus:ring-brand-primary focus:border-brand-primary sm:text-sm transition-colors"
+        placeholder="Pesquisar matérias, autores ou temas..."
+      />
+    </div>
+  </div>
+
+  <div class="flex items-center gap-4 ml-4">
+    <button class="text-slate-400 hover:text-brand-primary transition-colors">
+      <i data-lucide="settings" class="w-5 h-5"></i>
+    </button>
+    <button class="text-slate-400 hover:text-brand-primary transition-colors">
+      <i data-lucide="help-circle" class="w-5 h-5"></i>
+    </button>
+  </div>
+</header>
