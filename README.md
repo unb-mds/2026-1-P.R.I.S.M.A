@@ -5,6 +5,9 @@
 - Projeto: P.R.I.S.M.A
 - Objetivo: código e material referente às entregas do time (aplicação Django).
 
+## Gitpage
+- Link: (https://unb-mds.github.io/2026-1-P.R.I.S.M.A/)
+
 ## Foco deste README
 
 - Prioriza instruções para rodar o projeto com Docker (recomendado). Inclui também comandos rápidos locais.
