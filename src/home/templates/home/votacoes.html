@@ -1,0 +1,191 @@
+{% extends 'home/base.html' %}
+{% block title %}Votações{% endblock %}
+{% block page_title %}Votações{% endblock %}
+{% block content %}
+<div class="p-8 max-w-container-max mx-auto space-y-6">
+  <div class="bg-red-50 border border-red-200 rounded-md p-4 flex items-center justify-between shadow-sm">
+    <div class="flex items-center gap-3">
+      <i data-lucide="alert-triangle" class="text-red-600 w-6 h-6"></i>
+      <div>
+        <h3 class="text-red-800 font-display font-semibold text-sm uppercase tracking-wider">Alerta de Quórum Crítico</h3>
+        <p class="text-red-700 text-sm mt-0.5">PL 2630/2020 requer quórum qualificado (257 presentes). Quórum atual: 218.</p>
+      </div>
+    </div>
+    <div class="text-red-600 font-bold bg-white px-3 py-1 rounded border border-red-200 shadow-sm">
+      -39 Faltantes
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="lg:col-span-2 bg-white border border-brand-outline rounded-md p-6 shadow-sm">
+      <div class="flex items-start justify-between mb-8">
+        <div>
+          <h3 class="text-brand-text font-display font-semibold text-lg">Câmara dos Deputados</h3>
+          <p class="text-brand-text font-display font-bold text-3xl mt-1">384 <span class="text-sm font-medium text-slate-500 font-sans">/ 513 Presentes</span></p>
+        </div>
+        <div class="text-right">
+          <span class="inline-block bg-[#d1fae5] text-[#065f46] text-xs font-bold uppercase tracking-wider px-3 py-1 rounded">Quórum Garantido</span>
+          <p class="text-[10px] text-slate-400 mt-2 font-mono">ATUALIZADO: 14:32:15</p>
+        </div>
+      </div>
+
+      <div class="w-full h-4 bg-slate-100 rounded-full overflow-hidden flex mb-8">
+        <div class="h-full bg-brand-primary w-[35%] border-r border-[#102a43]"></div>
+        <div class="h-full bg-brand-secondary w-[28%] border-r border-[#102a43]"></div>
+        <div class="h-full bg-slate-300 w-[11%]"></div>
+      </div>
+
+      <div class="grid grid-cols-3 gap-8 pt-4 border-t border-slate-100">
+        <div>
+          <p class="text-xs font-semibold text-slate-500 mb-1">Base do Governo</p>
+          <p class="text-2xl font-bold font-display text-brand-text">182</p>
+          <div class="w-full h-1 bg-brand-primary mt-2"></div>
+        </div>
+        <div>
+          <p class="text-xs font-semibold text-slate-500 mb-1">Oposição</p>
+          <p class="text-2xl font-bold font-display text-brand-text">145</p>
+          <div class="w-full h-1 bg-brand-secondary mt-2"></div>
+        </div>
+        <div>
+          <p class="text-xs font-semibold text-slate-500 mb-1">Independentes</p>
+          <p class="text-2xl font-bold font-display text-brand-text">57</p>
+          <div class="w-full h-1 bg-slate-300 mt-2"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white border border-brand-outline rounded-md p-6 shadow-sm flex flex-col">
+      <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-6">Quórum em Comissões (Ativas)</h3>
+
+      <div class="space-y-4 flex-1">
+        <div class="flex items-center justify-between p-3 bg-slate-50 rounded border border-slate-100">
+          <div>
+            <p class="font-display font-bold text-brand-text">CCJC</p>
+            <p class="text-[10px] text-slate-500 mt-0.5">Constituição e Justiça</p>
+          </div>
+          <div class="text-right">
+            <p class="font-bold text-brand-success text-lg">42/66</p>
+            <p class="text-[9px] font-bold uppercase tracking-wider text-emerald-600 mt-0.5">Sessão Iniciada</p>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between p-3 bg-red-50 rounded border border-red-100 border-l-2 border-l-brand-error">
+          <div>
+            <p class="font-display font-bold text-brand-text">CFAE</p>
+            <p class="text-[10px] text-slate-500 mt-0.5">Assuntos Econômicos</p>
+          </div>
+          <div class="text-right">
+            <p class="font-bold text-brand-error text-lg">12/48</p>
+            <p class="text-[9px] font-bold uppercase tracking-wider text-red-600 mt-0.5">Sem Quórum</p>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between p-3 bg-slate-50 rounded border border-slate-100">
+          <div>
+            <p class="font-display font-bold text-brand-text">CAS</p>
+            <p class="text-[10px] text-slate-500 mt-0.5">Assuntos Sociais</p>
+          </div>
+          <div class="text-right">
+            <p class="font-bold text-brand-text text-lg">28/50</p>
+            <p class="text-[9px] font-bold uppercase tracking-wider text-slate-500 mt-0.5">Aguardando</p>
+          </div>
+        </div>
+      </div>
+
+      <button class="w-full mt-6 py-2 text-xs font-bold uppercase tracking-wider text-brand-text border border-brand-outline rounded hover:bg-slate-50 transition-colors">
+        Ver Todas Comissões
+      </button>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="lg:col-span-2 bg-white border border-brand-outline rounded-md p-6 shadow-sm">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500">Origem dos Parlamentares Presentes</h3>
+        <div class="flex items-center gap-2 text-[10px] text-slate-400">
+          <span>0-20%</span>
+          <div class="w-24 h-2 bg-gradient-to-r from-slate-100 to-brand-primary rounded"></div>
+          <span>80-100%</span>
+        </div>
+      </div>
+
+      <div class="bg-[#f1f5f9] h-64 rounded-md border border-slate-200 flex items-center justify-center relative overflow-hidden">
+        <div class="absolute inset-0 opacity-20 pointer-events-none" style="background-image: radial-gradient(circle, #00152a 1px, transparent 1px); background-size: 20px 20px"></div>
+        <div class="text-center">
+          <i data-lucide="map-pin" class="mx-auto text-brand-primary mb-2 opacity-50 w-8 h-8"></i>
+          <p class="text-sm font-medium text-slate-400">Visualização de Mapa do Brasil</p>
+          <p class="text-xs text-slate-400 mt-1">Dados de geolocalização carregando...</p>
+        </div>
+
+        <div class="absolute top-1/4 left-1/3 bg-brand-primary text-white text-[10px] font-bold px-2 py-0.5 rounded">AM: 85%</div>
+        <div class="absolute bottom-1/3 right-1/4 bg-brand-primary text-white text-[10px] font-bold px-2 py-0.5 rounded">BA: 74%</div>
+        <div class="absolute bottom-1/4 right-[20%] bg-brand-primary text-white text-[10px] font-bold px-2 py-0.5 rounded">SP: 98%</div>
+        <div class="absolute bottom-[15%] right-1/3 bg-brand-primary text-white text-[10px] font-bold px-2 py-0.5 rounded">RS: 12%</div>
+      </div>
+    </div>
+
+    <div class="bg-white border border-brand-outline rounded-md p-6 shadow-sm">
+      <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-6">Presença por Bloco Partidário</h3>
+
+      <div class="space-y-6">
+        <div>
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-sm font-semibold text-brand-text">União Brasil / PP / Republicanos</span>
+            <div class="text-right">
+              <span class="text-sm text-brand-text font-medium">148/162</span>
+              <span class="text-xs text-slate-500 block">(91%)</span>
+            </div>
+          </div>
+          <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+            <div class="h-full bg-brand-primary w-[91%]"></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-sm font-semibold text-brand-text">MDB / PSD / Podemos</span>
+            <div class="text-right">
+              <span class="text-sm text-brand-text font-medium">112/144</span>
+              <span class="text-xs text-slate-500 block">(77%)</span>
+            </div>
+          </div>
+          <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+            <div class="h-full bg-brand-secondary w-[77%]"></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-sm font-semibold text-brand-text">Federação Brasil da Esperança</span>
+            <div class="text-right">
+              <span class="text-sm text-brand-text font-medium">72/81</span>
+              <span class="text-xs text-slate-500 block">(88%)</span>
+            </div>
+          </div>
+          <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+            <div class="h-full bg-[#102a43] w-[88%]"></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-sm font-semibold text-brand-text">PL (Partido Liberal)</span>
+            <div class="text-right">
+              <span class="text-sm text-brand-text font-medium">52/96</span>
+              <span class="text-xs text-slate-500 block">(54%)</span>
+            </div>
+          </div>
+          <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+            <div class="h-full bg-brand-error opacity-80 w-[54%]"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
+        <span class="text-sm text-slate-600">Média da Casa: <strong class="text-brand-text">75.2%</strong></span>
+        <span class="text-xs text-brand-success font-medium flex items-center gap-1"><div class="w-1.5 h-1.5 rounded-full bg-brand-success"></div> Tendência Estável</span>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
