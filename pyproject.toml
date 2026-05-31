@@ -9,5 +9,6 @@ dependencies = [
     "django==6.0.4",
     "dotenv>=0.9.9",
     "psycopg[binary]>=3.3.4",
+    "requests>=2.34.2",
     "sqlparse==0.5.5",
 ]
