@@ -20,6 +20,28 @@ dotenv.load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+def _running_inside_container() -> bool:
+    return Path("/.dockerenv").exists() or Path("/run/.containerenv").exists()
+
+
+def _database_host() -> str:
+    host = os.getenv("DATABASE_HOST", "127.0.0.1")
+
+    if host == "db" and not _running_inside_container():
+        return os.getenv("DATABASE_HOST_LOCAL", "127.0.0.1")
+
+    return host
+
+
+def _database_port() -> int:
+    port = os.getenv("DATABASE_PORT")
+
+    if os.getenv("DATABASE_HOST") == "db" and not _running_inside_container():
+        return int(os.getenv("DATABASE_PORT_LOCAL", "5432"))
+
+    return int(port) if port else 5432
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
@@ -81,14 +103,23 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
      'default': {
-         'ENGINE': 'django.db.backends.{}'.format(
-             os.getenv('DATABASE_ENGINE', 'sqlite3')
+         **(
+             {
+                 'ENGINE': 'django.db.backends.sqlite3',
+                 'NAME': BASE_DIR / 'db.sqlite3',
+             }
+             if os.getenv('DATABASE_HOST') == 'db' and not _running_inside_container()
+             else {
+                 'ENGINE': 'django.db.backends.{}'.format(
+                     os.getenv('DATABASE_ENGINE', 'sqlite3')
+                 ),
+                 'NAME': os.getenv('DATABASE_NAME', 'polls'),
+                 'USER': os.getenv('DATABASE_USERNAME', 'myprojectuser'),
+                 'PASSWORD': os.getenv('DATABASE_PASSWORD', 'password'),
+                 'HOST': _database_host(),
+                 'PORT': _database_port(),
+             }
          ),
-         'NAME': os.getenv('DATABASE_NAME', 'polls'),
-         'USER': os.getenv('DATABASE_USERNAME', 'myprojectuser'),
-         'PASSWORD': os.getenv('DATABASE_PASSWORD', 'password'),
-         'HOST': os.getenv('DATABASE_HOST', '127.0.0.1'),
-         'PORT': os.getenv('DATABASE_PORT', 5432),
      }
  }
 
