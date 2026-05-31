@@ -167,3 +167,13 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'home' / 'static',
 ]
+# Adiciona biblioteca 'django_crontab' documentação disponível em https://pypi.org/project/django-crontab/ para agendamento de tarefas periódicas (cron jobs)
+INSTALLED_APPS += [
+    'django_crontab',
+]
+
+# Configuração do Django Crontab
+# Exemplo: Rodar de hora em hora. Pode ser ajustado usando a sintaxe clássica do cron.
+CRONJOBS = [
+    ('0 * * * *', 'Processos.cron.sincronizar_bases_cron', '>> /tmp/sincronizar_bases.log 2>&1')
+]
