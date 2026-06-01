@@ -2,7 +2,7 @@ from django.db import models
 from django.conf import settings
 
 class ProcessoLegislativo(models.Model):
-    id_externo = models.CharField(max_length=255, unique=True)
+    id_externo = models.CharField(max_length=255)
     origem_camara_ou_senado = models.CharField(max_length=255)
     numero = models.CharField(max_length=255)
     ano = models.CharField(max_length=255)
@@ -32,6 +32,14 @@ class ProcessoLegislativo(models.Model):
     detalhes_atualizados_em = models.DateTimeField(null=True, blank=True)
     tramitacao_json = models.TextField(null=True, blank=True)
     dados_extra_json = models.TextField(null=True, blank=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["id_externo", "origem_camara_ou_senado"],
+                name="unique_id_externo_origem",
+            )
+        ]
 
 class TermoMonitorado(models.Model):
     palavra_chave = models.CharField(max_length=255, unique=True)
