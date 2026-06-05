@@ -33,6 +33,24 @@ class ProcessoLegislativo(models.Model):
     tramitacao_json = models.TextField(null=True, blank=True)
     dados_extra_json = models.TextField(null=True, blank=True)
 
+    # Campos adicionais da nova API do Senado (/dadosabertos/processo)
+    id_processo_senado = models.CharField(max_length=50, null=True, blank=True,
+                                          help_text="ID do processo na nova API do Senado")
+    tipo_conteudo = models.CharField(max_length=255, null=True, blank=True,
+                                     help_text="Ex: Norma Geral, Veto Constitucional")
+    tipo_documento = models.CharField(max_length=255, null=True, blank=True,
+                                      help_text="Ex: Medida Provisória, Projeto de Decreto Legislativo")
+    tramitando = models.BooleanField(null=True, default=None,
+                                     help_text="Se o processo está em tramitação")
+    apelido = models.CharField(max_length=500, null=True, blank=True,
+                               help_text="Nome popular da matéria")
+    casa_identificadora = models.CharField(max_length=10, null=True, blank=True,
+                                           help_text="SF, CN, CD")
+    norma_gerada = models.CharField(max_length=255, null=True, blank=True,
+                                    help_text="Lei gerada após aprovação")
+    objetivo = models.CharField(max_length=100, null=True, blank=True,
+                                help_text="Revisora, Iniciadora")
+
     class Meta:
         constraints = [
             models.UniqueConstraint(
