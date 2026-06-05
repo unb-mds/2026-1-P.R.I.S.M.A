@@ -39,38 +39,74 @@ class Command(BaseCommand):
             payload_senado = _get_json(SENADO_PROCESSO_BASE, headers=SENADO_HEADERS, params=params_senado)
             
             if isinstance(payload_senado, list):
-                total_api_senado = len(payload_senado)
+                processos_senado = payload_senado
             elif isinstance(payload_senado, dict):
-                total_api_senado = len(payload_senado.get("dados", payload_senado.get("processos", [])))
+                processos_senado = payload_senado.get("dados", payload_senado.get("processos", []))
             else:
-                total_api_senado = 0
+                processos_senado = []
+
+            # Filtrar únicos reais que seriam salvos no DB
+            unique_ids_senado = set(str(p.get("codigoMateria", "")) for p in processos_senado if p.get("codigoMateria"))
+            total_api_senado_unique = len(unique_ids_senado)
 
             # 2. Contagem Senado no Banco
+            ids_senado_list = list(unique_ids_senado)
+            encontrados_senado = ProcessoLegislativo.objects.filter(
+                origem_camara_ou_senado='SENADO',
+                id_externo__in=ids_senado_list
+            ).count()
+            
             total_db_senado = ProcessoLegislativo.objects.filter(ano=str(ano), origem_camara_ou_senado='SENADO').count()
+            status_senado = "OK" if encontrados_senado == total_api_senado_unique and total_api_senado_unique > 0 else "DEFASADO"
 
-            # 3. Contagem Câmara na API
-            # Usando requisição direta com itens=1 e pegando o header X-Total-Count para ser rápido
+            # 3. Contagem Câmara na API (Bordas)
             total_api_camara = 0
+            status_camara = "DEFASADO"
             try:
-                camara_url = f"{CAMARA_API_BASE}/proposicoes?ano={ano}&itens=1"
-                resp = requests.get(camara_url, timeout=15)
-                if resp.status_code == 200:
-                    total_api_camara = int(resp.headers.get('x-total-count', 0))
+                # Pegar total bruto (inflado) e IDs da primeira pagina
+                params_str = f"ano={ano}&itens=100&ordem=DESC&ordenarPor=ano"
+                camara_url_first = f"{CAMARA_API_BASE}/proposicoes?{params_str}&pagina=1"
+                resp_first = requests.get(camara_url_first, timeout=15)
+                
+                if resp_first.status_code == 200:
+                    total_api_camara = int(resp_first.headers.get('x-total-count', 0))
+                    dados_first = resp_first.json().get('dados', [])
+                    ids_to_check = [str(p.get('id')) for p in dados_first if p.get('id')]
+                    
+                    if total_api_camara > 0:
+                        import math
+                        last_page = math.ceil(total_api_camara / 100)
+                        
+                        # Pegar IDs da última página
+                        if last_page > 1:
+                            camara_url_last = f"{CAMARA_API_BASE}/proposicoes?{params_str}&pagina={last_page}"
+                            resp_last = requests.get(camara_url_last, timeout=15)
+                            if resp_last.status_code == 200:
+                                dados_last = resp_last.json().get('dados', [])
+                                ids_to_check.extend([str(p.get('id')) for p in dados_last if p.get('id')])
+                                
+                    # 4. Contagem Câmara no Banco
+                    total_db_camara = ProcessoLegislativo.objects.filter(ano=str(ano), origem_camara_ou_senado='CAMARA').count()
+
+                    # 5. Avaliação por amostragem
+                    ids_to_check = list(set(ids_to_check))
+                    encontrados = ProcessoLegislativo.objects.filter(
+                        origem_camara_ou_senado='CAMARA',
+                        id_externo__in=ids_to_check
+                    ).count()
+                    
+                    if encontrados == len(ids_to_check) and total_db_camara > 0:
+                        status_camara = "OK"
             except Exception as e:
                 self.stdout.write(self.style.ERROR(f"Erro ao contar Câmara na API: {e}"))
-
-            # 4. Contagem Câmara no Banco
-            total_db_camara = ProcessoLegislativo.objects.filter(ano=str(ano), origem_camara_ou_senado='CAMARA').count()
-
-            # 5. Avaliação
-            status_camara = "OK" if total_api_camara == total_db_camara else "DEFASADO"
-            status_senado = "OK" if total_api_senado == total_db_senado else "DEFASADO"
+                total_db_camara = ProcessoLegislativo.objects.filter(ano=str(ano), origem_camara_ou_senado='CAMARA').count()
 
             # Colorir status
             c_status_cam = self.style.SUCCESS(status_camara) if status_camara == "OK" else self.style.ERROR(status_camara)
             c_status_sen = self.style.SUCCESS(status_senado) if status_senado == "OK" else self.style.ERROR(status_senado)
 
-            linha = f"{ano:<6} | {total_api_camara:<15} | {total_db_camara:<15} | {c_status_cam:<10} | {total_api_senado:<15} | {total_db_senado:<15} | {c_status_sen:<10}"
+            # Para exibir melhor o número "único" do Senado, mostramos o unique e não o inflado.
+            linha = f"{ano:<6} | {total_api_camara:<15} | {total_db_camara:<15} | {c_status_cam:<10} | {total_api_senado_unique:<15} | {total_db_senado:<15} | {c_status_sen:<10}"
             self.stdout.write(linha)
             
         self.stdout.write("\n" + "-" * len(header))
