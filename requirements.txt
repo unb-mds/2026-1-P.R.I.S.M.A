@@ -3,3 +3,4 @@ Django==6.0.4
 sqlparse==0.5.5
 psycopg[binary]
 dotenv
+django-jazzmin==3.0.4
