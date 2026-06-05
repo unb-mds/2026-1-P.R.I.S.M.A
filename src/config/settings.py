@@ -106,26 +106,15 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 DATABASES = {
-     'default': {
-         **(
-             {
-                 'ENGINE': 'django.db.backends.sqlite3',
-                 'NAME': BASE_DIR / 'db.sqlite3',
-             }
-             if os.getenv('DATABASE_HOST') == 'db' and not _running_inside_container()
-             else {
-                 'ENGINE': 'django.db.backends.{}'.format(
-                     os.getenv('DATABASE_ENGINE', 'sqlite3')
-                 ),
-                 'NAME': os.getenv('DATABASE_NAME', 'polls'),
-                 'USER': os.getenv('DATABASE_USERNAME', 'myprojectuser'),
-                 'PASSWORD': os.getenv('DATABASE_PASSWORD', 'password'),
-                 'HOST': _database_host(),
-                 'PORT': _database_port(),
-             }
-         ),
-     }
- }
+    'default': {
+        'ENGINE': 'django.db.backends.{}'.format(os.getenv('DATABASE_ENGINE', 'postgresql')),
+        'NAME': os.getenv('DATABASE_NAME', 'squad11'),
+        'USER': os.getenv('DATABASE_USERNAME', 'squad11'),
+        'PASSWORD': os.getenv('DATABASE_PASSWORD', 'squad11'),
+        'HOST': _database_host(),
+        'PORT': _database_port(),
+    }
+}
 
 
 # Password validation
@@ -177,3 +166,25 @@ INSTALLED_APPS += [
 CRONJOBS = [
     ('0 * * * *', 'Processos.cron.sincronizar_bases_cron', '>> /tmp/sincronizar_bases.log 2>&1')
 ]
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'console': {
+            'format': '%(asctime)s %(levelname)s %(name)s %(message)s',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'console',
+        },
+    },
+    'loggers': {
+        'Processos': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
+    },
+}
