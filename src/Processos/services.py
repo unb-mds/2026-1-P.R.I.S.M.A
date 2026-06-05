@@ -1,27 +1,43 @@
 import datetime
 import json
 import logging
+import time
 
 import requests
 from django.utils import timezone
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 
 from Processos.models import ProcessoLegislativo
 
 
 CAMARA_API_BASE = "https://dadosabertos.camara.leg.br/api/v2"
 SENADO_API_BASE = "https://legis.senado.leg.br/dadosabertos"
+SENADO_PROCESSO_BASE = f"{SENADO_API_BASE}/processo"
 SENADO_HEADERS = {"Accept": "application/json"}
 CAMARA_PAGE_SIZE = 100
 DEFAULT_DATA_INICIO = "2000-01-01"
 DEFAULT_ANO_INICIO = 2000
-REQUEST_TIMEOUT = 15
+REQUEST_TIMEOUT = 30
 BULK_INSERT_SIZE = 1000
+RATE_LIMIT_DELAY = 0.2  # 200ms entre chamadas individuais de detalhes
 
 logger = logging.getLogger(__name__)
 
 
 def _build_session():
-    return requests.Session()
+    """Cria sessão HTTP com retry automático e exponential backoff."""
+    session = requests.Session()
+    retry = Retry(
+        total=3,
+        backoff_factor=1,  # 1s, 2s, 4s entre retries
+        status_forcelist=[429, 500, 502, 503, 504],
+        allowed_methods=["GET"],
+    )
+    adapter = HTTPAdapter(max_retries=retry)
+    session.mount("https://", adapter)
+    session.mount("http://", adapter)
+    return session
 
 
 _SESSION = _build_session()
@@ -55,27 +71,22 @@ def _parse_datetime(value: str):
 
 
 def _get_json(url, params=None, headers=None):
-    for attempt in range(2):
-        timeout = REQUEST_TIMEOUT if attempt == 1 else None
-        try:
-            response = _SESSION.get(url, params=params, headers=headers, timeout=timeout)
-        except requests.RequestException as exc:
-            logger.warning("Falha na requisicao %s (tentativa %s/2): %s", url, attempt + 1, exc)
-            if attempt == 0:
-                continue
-            return None
+    """Faz GET e retorna JSON. Retorna None em caso de falha."""
+    try:
+        response = _SESSION.get(url, params=params, headers=headers, timeout=REQUEST_TIMEOUT)
+    except requests.RequestException as exc:
+        logger.warning("Falha na requisicao %s: %s", url, exc)
+        return None
 
-        if response.status_code != 200:
-            logger.warning("Resposta %s para %s", response.status_code, url)
-            return None
+    if response.status_code != 200:
+        logger.warning("Resposta %s para %s", response.status_code, url)
+        return None
 
-        try:
-            return response.json()
-        except ValueError:
-            logger.warning("JSON invalido para %s", url)
-            return None
-
-    return None
+    try:
+        return response.json()
+    except ValueError:
+        logger.warning("JSON invalido para %s", url)
+        return None
 
 
 def _coerce_list(value):
@@ -95,18 +106,23 @@ def _extract_ano_camara(ano_raw, data_apresentacao):
     return ""
 
 
-def buscar_todas_proposicoes_camara(termo: str = None, data_inicio: str = "2000-01-01"):
+# ============================================================================
+# API da Câmara dos Deputados
+# ============================================================================
+
+def buscar_todas_proposicoes_camara(termo: str = None, ano: int = None):
     """
     Busca as proposições na API de Dados Abertos da Câmara, lidando com a paginação.
-    Se 'termo' for None, busca todas as proposições desde 'data_inicio'.
+    Se 'termo' for None, busca todas as proposições do 'ano' (se fornecido).
     """
     url = f"{CAMARA_API_BASE}/proposicoes"
     params = {
-        "dataInicio": data_inicio,
         "itens": CAMARA_PAGE_SIZE,  # Recomendado pela doc da camara (maximo 100 por pagina)
         "ordem": "DESC",
         "ordenarPor": "ano",
     }
+    if ano:
+        params["ano"] = ano
     if termo:
         params["keywords"] = termo
 
@@ -130,30 +146,6 @@ def buscar_todas_proposicoes_camara(termo: str = None, data_inicio: str = "2000-
     return todas_proposicoes
 
 
-def buscar_materias_senado(termo: str = None, ano: int = None):
-    """
-    Busca materias na API de Dados Abertos do Senado.
-    Se 'termo' for None e 'ano' for passado, busca todas do ano.
-    """
-    url = f"{SENADO_API_BASE}/materia/pesquisa/lista"
-    params = {}
-    if termo:
-        params["palavraChave"] = termo
-    if ano:
-        params["ano"] = ano
-
-    payload = _get_json(url, params=params, headers=SENADO_HEADERS)
-    if not payload:
-        return []
-
-    return (
-        payload
-        .get("PesquisaBasicaMateria", {})
-        .get("Materias", {})
-        .get("Materia", [])
-    )
-
-
 def buscar_detalhe_camara(id_externo: str):
     payload = _get_json(f"{CAMARA_API_BASE}/proposicoes/{id_externo}")
     if not payload:
@@ -166,23 +158,6 @@ def buscar_tramitacoes_camara(id_externo: str):
     if not payload:
         return []
     return payload.get("dados", [])
-
-
-def buscar_detalhe_senado(id_externo: str):
-    payload = _get_json(f"{SENADO_API_BASE}/materia/{id_externo}", headers=SENADO_HEADERS)
-    if not payload:
-        return {}
-    return payload.get("DetalheMateria", {}).get("Materia", {})
-
-
-def buscar_tramitacoes_senado(id_externo: str):
-    payload = _get_json(
-        f"{SENADO_API_BASE}/materia/movimentacoes/{id_externo}",
-        headers=SENADO_HEADERS,
-    )
-    if not payload:
-        return {}
-    return payload
 
 
 def atualizar_detalhes_camara(processo: ProcessoLegislativo, incluir_tramitacoes: bool = True):
@@ -235,59 +210,208 @@ def atualizar_detalhes_camara(processo: ProcessoLegislativo, incluir_tramitacoes
     return True
 
 
+# ============================================================================
+# API do Senado Federal (nova API /dadosabertos/processo)
+# ============================================================================
+
+def buscar_todos_processos_senado(ano=None):
+    """
+    Busca TODOS os processos em tramitação ou de um determinado ano na nova API do Senado.
+    Retorna uma lista de dicts JSON.
+    Endpoint: GET /dadosabertos/processo
+    """
+    params = {}
+    if ano:
+        params['ano'] = ano
+        
+    payload = _get_json(SENADO_PROCESSO_BASE, headers=SENADO_HEADERS, params=params)
+    if not payload:
+        logger.warning("Falha ao buscar processos do Senado na nova API")
+        return []
+    if isinstance(payload, list):
+        return payload
+    # Caso venha com wrapper
+    return payload.get("dados", payload.get("processos", []))
+
+
+def buscar_detalhe_senado(id_processo: str):
+    """
+    Busca detalhes de um processo na nova API do Senado.
+    Endpoint: GET /dadosabertos/processo/{idProcesso}
+    O idProcesso é o campo 'id' da listagem (IdentificacaoProcesso na API antiga).
+    """
+    url = f"{SENADO_PROCESSO_BASE}/{id_processo}"
+    payload = _get_json(url, headers=SENADO_HEADERS)
+    if not payload:
+        return {}
+    return payload
+
+
+def buscar_tramitacoes_senado(id_processo: str):
+    """
+    Na nova API, as tramitações fazem parte dos detalhes do processo.
+    Mantemos esta função por compatibilidade, delegando para buscar_detalhe_senado.
+    """
+    detalhes = buscar_detalhe_senado(id_processo)
+    return detalhes
+
+
+def _mapear_processo_senado_da_listagem(proc: dict) -> dict:
+    """
+    Mapeia um item da listagem /dadosabertos/processo para os campos do model.
+    Retorna dict com os defaults para get_or_create / bulk_create.
+    """
+    data_apresentacao = _parse_date(proc.get('dataApresentacao'))
+    ano_raw = proc.get('ano') or proc.get('Ano')
+    ano_str = str(ano_raw) if ano_raw else ""
+    if not ano_str and data_apresentacao:
+        ano_str = str(data_apresentacao.year)
+
+    # Extrair número e sigla da identificação (ex: "PL 3/2025")
+    identificacao = proc.get('identificacao', '')
+    sigla = proc.get('sigla') or proc.get('Sigla', '')
+    numero = proc.get('numero') or proc.get('Numero', '')
+    if not numero and identificacao:
+        # Tentar extrair de "PL 3/2025"
+        parts = identificacao.split()
+        if len(parts) >= 2:
+            num_part = parts[-1].split('/')[0] if '/' in parts[-1] else parts[-1]
+            try:
+                int(num_part)
+                numero = num_part
+            except ValueError:
+                pass
+
+    tramitando_str = proc.get('tramitando', '')
+    tramitando = True if tramitando_str == 'Sim' else (False if tramitando_str == 'Não' else None)
+
+    def _trunc(v, max_len=255):
+        if not v:
+            return ""
+        return str(v)[:max_len]
+
+    return {
+        'numero': _trunc(numero),
+        'ano': _trunc(ano_str),
+        'ementa': proc.get('ementa', ''),
+        'tipo_proposicao': _trunc(sigla),
+        'status_atual': _trunc(proc.get('situacaoAtual', '')),
+        'autor': _trunc(proc.get('autoria', '')),
+        'descricao_identificacao': _trunc(identificacao),
+        'data_apresentacao': data_apresentacao,
+        'url_detalhe': None,  # Nova API não inclui URL de detalhe na listagem
+        'id_processo_senado': _trunc(proc.get('id', ''), 50),
+        'tipo_conteudo': _trunc(proc.get('tipoConteudo', '')),
+        'tipo_documento': _trunc(proc.get('tipoDocumento', '')),
+        'tramitando': tramitando,
+        'apelido': _trunc(proc.get('apelido', ''), 500),
+        'casa_identificadora': _trunc(proc.get('casaIdentificadora', ''), 10),
+        'norma_gerada': _trunc(proc.get('normaGerada', '')),
+        'objetivo': _trunc(proc.get('objetivo', ''), 100),
+    }
+
+
 def atualizar_detalhes_senado(processo: ProcessoLegislativo, incluir_tramitacoes: bool = True):
-    materia = buscar_detalhe_senado(processo.id_externo)
-    if not materia:
+    """
+    Atualiza detalhes de um processo do Senado usando a nova API /dadosabertos/processo/{id}.
+    """
+    id_processo = processo.id_processo_senado
+    if not id_processo:
+        logger.warning("Processo %s sem id_processo_senado, impossível buscar detalhes", processo.id_externo)
         return False
 
-    identificacao = materia.get('IdentificacaoMateria', {})
-    dados_basicos = materia.get('DadosBasicosMateria', {})
-    origem = materia.get('OrigemMateria', {})
-    decisao_destino = materia.get('DecisaoEDestino', {})
-    decisao = decisao_destino.get('Decisao', {})
+    detalhes = buscar_detalhe_senado(id_processo)
+    if not detalhes:
+        return False
 
-    processo.status_atual = decisao.get('Descricao') or processo.status_atual
-    processo.data_status = _parse_datetime(decisao.get('Data'))
-    processo.despacho = decisao.get('Descricao') or processo.despacho
+    # Mapeamento dos campos da nova API
+    processo.status_atual = detalhes.get('situacaoAtual') or processo.status_atual
 
-    processo.autor = dados_basicos.get('Autor')
-    processo.ementa = dados_basicos.get('EmentaMateria') or processo.ementa
-    processo.indexacao = dados_basicos.get('IndexacaoMateria')
-    processo.casa_iniciadora = dados_basicos.get('CasaIniciadoraNoLegislativo')
-    processo.data_apresentacao = _parse_date(dados_basicos.get('DataApresentacao')) or processo.data_apresentacao
+    # Dados do conteúdo (sub-objeto) - processar antes porque ementa pode vir aqui
+    conteudo = detalhes.get('conteudo', {})
+    if conteudo:
+        ementa_conteudo = conteudo.get('ementa')
+        if ementa_conteudo:
+            processo.ementa = ementa_conteudo
+        processo.tipo_conteudo = conteudo.get('tipo') or processo.tipo_conteudo
 
-    processo.descricao_identificacao = identificacao.get('DescricaoIdentificacao')
-    processo.descricao_tipo = identificacao.get('DescricaoSubtipoMateria') or processo.descricao_tipo
+    # Ementa no nível raiz (fallback se não veio em conteudo)
+    ementa_raiz = detalhes.get('ementa')
+    if ementa_raiz and not conteudo.get('ementa'):
+        processo.ementa = ementa_raiz
 
-    numero = identificacao.get('NumeroMateria') or identificacao.get('Numero')
-    if numero is not None:
-        processo.numero = str(numero)
+    # Dados do documento (sub-objeto)
+    documento = detalhes.get('documento', {})
+    if documento:
+        data_apres = _parse_date(documento.get('dataApresentacao'))
+        if data_apres:
+            processo.data_apresentacao = data_apres
 
-    ano = identificacao.get('AnoMateria') or identificacao.get('Ano')
-    if ano is not None:
-        processo.ano = str(ano)
+        processo.indexacao = documento.get('indexacao') or processo.indexacao
+        url_doc = documento.get('url')
+        if url_doc:
+            processo.url_inteiro_teor = url_doc
 
-    sigla = (
-        identificacao.get('SiglaSubtipoMateria')
-        or identificacao.get('SiglaMateria')
-        or identificacao.get('Sigla')
-    )
+        # Autoria
+        autorias = documento.get('autoria', [])
+        if autorias and isinstance(autorias, list):
+            autores_str = ', '.join(
+                f"{a.get('autor', '')} ({a.get('siglaPartido', '')}/{a.get('uf', '')})"
+                if a.get('siglaPartido') else a.get('autor', '')
+                for a in autorias
+            )
+            processo.autor = autores_str
+
+    # Campos diretos
+    processo.tipo_documento = detalhes.get('tipoDocumento') or processo.tipo_documento
+    processo.casa_identificadora = detalhes.get('casaIdentificadora') or processo.casa_identificadora
+    processo.objetivo = detalhes.get('objetivo') or processo.objetivo
+    processo.apelido = detalhes.get('apelido') or processo.apelido
+    processo.norma_gerada = detalhes.get('normaGerada') or processo.norma_gerada
+
+    identificacao = detalhes.get('identificacao', '')
+    if identificacao:
+        processo.descricao_identificacao = identificacao
+
+    sigla = detalhes.get('sigla')
     if sigla:
         processo.tipo_proposicao = sigla
 
-    url_detalhe = origem.get('UrlDetalheMateria') or origem.get('UrlMateria')
-    if url_detalhe:
-        processo.url_detalhe = url_detalhe
+    desc_sigla = detalhes.get('descricaoSigla')
+    if desc_sigla:
+        processo.descricao_tipo = desc_sigla
 
-    processo.dados_extra_json = json.dumps(materia, ensure_ascii=True)
+    numero = detalhes.get('numero')
+    if numero is not None:
+        processo.numero = str(numero)
+
+    ano = detalhes.get('ano')
+    if ano is not None:
+        processo.ano = str(ano)
+
+    data_situacao = _parse_datetime(detalhes.get('dataSituacaoAtual'))
+    if data_situacao:
+        processo.data_status = data_situacao
+
+    tramitando_str = detalhes.get('tramitando', '')
+    if tramitando_str:
+        processo.tramitando = tramitando_str == 'Sim'
+
+    # Salvar JSON completo dos detalhes
+    processo.dados_extra_json = json.dumps(detalhes, ensure_ascii=True, default=str)
+
     if incluir_tramitacoes:
-        tramitacoes = buscar_tramitacoes_senado(processo.id_externo)
-        processo.tramitacao_json = json.dumps(tramitacoes, ensure_ascii=True)
+        # Na nova API, tramitações estão incluídas nos detalhes
+        processo.tramitacao_json = json.dumps(detalhes, ensure_ascii=True, default=str)
 
     processo.detalhes_atualizados_em = timezone.now()
     processo.save()
     return True
 
+
+# ============================================================================
+# Funções genéricas
+# ============================================================================
 
 def atualizar_detalhes_processo(processo: ProcessoLegislativo, incluir_tramitacoes: bool = True):
     if processo.origem_camara_ou_senado == 'CAMARA':
@@ -296,18 +420,27 @@ def atualizar_detalhes_processo(processo: ProcessoLegislativo, incluir_tramitaco
         return atualizar_detalhes_senado(processo, incluir_tramitacoes=incluir_tramitacoes)
     return False
 
+
+# ============================================================================
+# Sincronização incremental
+# ============================================================================
+
 def sincronizar_processos_legislativos(
     data_inicio: str = DEFAULT_DATA_INICIO,
     ano_inicio: int = DEFAULT_ANO_INICIO,
 ):
     """
-    Sincroniza processos legislativos sem depender de termos monitorados.
+    Sincroniza processos legislativos da Câmara e do Senado.
     """
     novos_processos_criados = 0
     processos_camara_atualizados = set()
     processos_senado_atualizados = set()
-    # === 1. API Camara ===
+
+    # === 1. API Câmara ===
+    logger.info("Iniciando sincronização da Câmara dos Deputados...")
     proposicoes_camara = buscar_todas_proposicoes_camara(None, data_inicio=data_inicio)
+    logger.info("Câmara: %d proposições encontradas", len(proposicoes_camara))
+
     for prop in proposicoes_camara:
         id_externo = str(prop.get('id', ''))
         if not id_externo:
@@ -335,40 +468,51 @@ def sincronizar_processos_legislativos(
         if id_externo not in processos_camara_atualizados:
             atualizar_detalhes_camara(processo, incluir_tramitacoes=True)
             processos_camara_atualizados.add(id_externo)
+            time.sleep(RATE_LIMIT_DELAY)
 
-    # === 2. API Senado ===
-    ano_atual = datetime.datetime.now().year
-    for ano in range(ano_inicio, ano_atual + 1):
-        materias_senado = _coerce_list(buscar_materias_senado(termo=None, ano=ano))
+    # === 2. API Senado (nova API /dadosabertos/processo) ===
+    logger.info("Iniciando sincronização do Senado Federal...")
+    todos_processos_senado = buscar_todos_processos_senado()
+    logger.info("Senado: %d processos encontrados", len(todos_processos_senado))
 
-        for mat in materias_senado:
-            id_externo = str(mat.get('Codigo', ''))
-            if not id_externo:
-                continue
+    # Filtrar por ano_inicio se necessário
+    for proc in todos_processos_senado:
+        codigo_materia = str(proc.get('codigoMateria', ''))
+        if not codigo_materia:
+            continue
 
-            processo, created = ProcessoLegislativo.objects.get_or_create(
-                id_externo=id_externo,
-                origem_camara_ou_senado='SENADO',
-                defaults={
-                    'numero': str(mat.get('Numero', '')),
-                    'ano': str(mat.get('Ano', '')),
-                    'ementa': mat.get('Ementa', ''),
-                    'tipo_proposicao': mat.get('Sigla', ''),
-                    'status_atual': 'Apresentada',
-                    'autor': mat.get('Autor', ''),
-                    'descricao_identificacao': mat.get('DescricaoIdentificacao', ''),
-                    'data_apresentacao': _parse_date(mat.get('Data')),
-                    'url_detalhe': mat.get('UrlDetalheMateria'),
-                }
-            )
-            if created:
-                novos_processos_criados += 1
+        # Filtrar por ano
+        ano_proc = proc.get('ano')
+        if ano_proc and isinstance(ano_proc, int) and ano_proc < ano_inicio:
+            continue
 
-            if id_externo not in processos_senado_atualizados:
-                atualizar_detalhes_senado(processo, incluir_tramitacoes=True)
-                processos_senado_atualizados.add(id_externo)
+        defaults = _mapear_processo_senado_da_listagem(proc)
 
+        processo, created = ProcessoLegislativo.objects.get_or_create(
+            id_externo=codigo_materia,
+            origem_camara_ou_senado='SENADO',
+            defaults=defaults,
+        )
+        if created:
+            novos_processos_criados += 1
+        else:
+            # Atualizar id_processo_senado se não existia
+            if not processo.id_processo_senado and defaults.get('id_processo_senado'):
+                processo.id_processo_senado = defaults['id_processo_senado']
+                processo.save(update_fields=['id_processo_senado'])
+
+        if codigo_materia not in processos_senado_atualizados and processo.id_processo_senado:
+            atualizar_detalhes_senado(processo, incluir_tramitacoes=True)
+            processos_senado_atualizados.add(codigo_materia)
+            time.sleep(RATE_LIMIT_DELAY)
+
+    logger.info("Sincronização concluída: %d novos processos criados", novos_processos_criados)
     return novos_processos_criados
+
+
+# ============================================================================
+# Carga inicial (bulk)
+# ============================================================================
 
 def popular_banco_carga_inicial(ano_inicio=2024):
     """
@@ -380,8 +524,9 @@ def popular_banco_carga_inicial(ano_inicio=2024):
     buffer = []
     
     # === 1. Câmara (permite puxar a partir de uma data paginando tudo) ===
-    data_inicio = f"{ano_inicio}-01-01"
-    proposicoes_camara = buscar_todas_proposicoes_camara(termo=None, data_inicio=data_inicio)
+    logger.info("Carga inicial Câmara: buscando proposições a partir de %d...", ano_inicio)
+    proposicoes_camara = buscar_todas_proposicoes_camara(ano=ano_inicio)
+    logger.info("Câmara: %d proposições encontradas", len(proposicoes_camara))
     
     for prop in proposicoes_camara:
         id_externo = str(prop.get('id', ''))
@@ -410,54 +555,87 @@ def popular_banco_carga_inicial(ano_inicio=2024):
             )
         )
 
+        campos_atualizacao_camara = [
+            'numero', 'ano', 'ementa', 'tipo_proposicao', 'status_atual', 
+            'data_apresentacao', 'url_detalhe'
+        ]
+
         if len(buffer) >= BULK_INSERT_SIZE:
             ProcessoLegislativo.objects.bulk_create(
                 buffer,
-                ignore_conflicts=True,
+                update_conflicts=True,
+                update_fields=campos_atualizacao_camara,
+                unique_fields=['id_externo', 'origem_camara_ou_senado'],
                 batch_size=BULK_INSERT_SIZE,
             )
             buffer.clear()
 
-    # === 2. Senado (melhor puxar ano a ano para não estourar payload/timeout) ===
-    for ano in range(ano_inicio, ano_atual + 1):
-        materias_senado = _coerce_list(buscar_materias_senado(termo=None, ano=ano))
-            
-        for mat in materias_senado:
-            id_externo = str(mat.get('Codigo', ''))
-            
-            if not id_externo:
-                continue
+    # Flush buffer da Câmara
+    if buffer:
+        ProcessoLegislativo.objects.bulk_create(
+            buffer,
+            update_conflicts=True,
+            update_fields=campos_atualizacao_camara,
+            unique_fields=['id_externo', 'origem_camara_ou_senado'],
+            batch_size=BULK_INSERT_SIZE,
+        )
+        buffer.clear()
 
-            buffer.append(
-                ProcessoLegislativo(
-                    id_externo=id_externo,
-                    origem_camara_ou_senado='SENADO',
-                    numero=str(mat.get('Numero', '')),
-                    ano=str(mat.get('Ano', '')),
-                    ementa=mat.get('Ementa', ''),
-                    tipo_proposicao=mat.get('Sigla', ''),
-                    status_atual="Apresentada",  # A listagem do senado nao traz a situacao atual.
-                    autor=mat.get('Autor', ''),
-                    descricao_identificacao=mat.get('DescricaoIdentificacao', ''),
-                    data_apresentacao=_parse_date(mat.get('Data')),
-                    url_detalhe=mat.get('UrlDetalheMateria')
-                )
+    # === 2. Senado (nova API /dadosabertos/processo) ===
+    logger.info("Carga inicial Senado: buscando todos os processos...")
+    todos_processos_senado = buscar_todos_processos_senado()
+    logger.info("Senado: %d processos encontrados", len(todos_processos_senado))
+
+    for proc in todos_processos_senado:
+        codigo_materia = str(proc.get('codigoMateria', ''))
+        if not codigo_materia:
+            continue
+
+        # Filtrar por ano_inicio
+        ano_proc = proc.get('ano')
+        if ano_proc and isinstance(ano_proc, int) and ano_proc < ano_inicio:
+            continue
+
+        defaults = _mapear_processo_senado_da_listagem(proc)
+
+        tramitando_val = defaults.pop('tramitando', None)
+
+        buffer.append(
+            ProcessoLegislativo(
+                id_externo=codigo_materia,
+                origem_camara_ou_senado='SENADO',
+                tramitando=tramitando_val,
+                **defaults,
             )
+        )
 
-            if len(buffer) >= BULK_INSERT_SIZE:
-                ProcessoLegislativo.objects.bulk_create(
-                    buffer,
-                    ignore_conflicts=True,
-                    batch_size=BULK_INSERT_SIZE,
-                )
-                buffer.clear()
+        campos_atualizacao_senado = [
+            'numero', 'ano', 'ementa', 'tipo_proposicao', 'status_atual', 'autor',
+            'descricao_identificacao', 'data_apresentacao', 'url_detalhe',
+            'id_processo_senado', 'tipo_conteudo', 'tipo_documento', 'tramitando',
+            'apelido', 'casa_identificadora', 'norma_gerada', 'objetivo'
+        ]
+
+        if len(buffer) >= BULK_INSERT_SIZE:
+            ProcessoLegislativo.objects.bulk_create(
+                buffer,
+                update_conflicts=True,
+                update_fields=campos_atualizacao_senado,
+                unique_fields=['id_externo', 'origem_camara_ou_senado'],
+                batch_size=BULK_INSERT_SIZE,
+            )
+            buffer.clear()
 
     if buffer:
         ProcessoLegislativo.objects.bulk_create(
             buffer,
-            ignore_conflicts=True,
+            update_conflicts=True,
+            update_fields=campos_atualizacao_senado,
+            unique_fields=['id_externo', 'origem_camara_ou_senado'],
             batch_size=BULK_INSERT_SIZE,
         )
 
     total_depois = ProcessoLegislativo.objects.count()
-    return total_depois - total_antes
+    total_novos = total_depois - total_antes
+    logger.info("Carga inicial concluída: %d novos processos criados", total_novos)
+    return total_novos
