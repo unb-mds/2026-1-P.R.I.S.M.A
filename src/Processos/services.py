@@ -110,7 +110,7 @@ def _extract_ano_camara(ano_raw, data_apresentacao):
 # API da Câmara dos Deputados
 # ============================================================================
 
-def buscar_todas_proposicoes_camara(termo: str = None, ano: int = None):
+def buscar_todas_proposicoes_camara(termo: str = None, ano: int = None, data_inicio: str = None):
     """
     Busca as proposições na API de Dados Abertos da Câmara, lidando com a paginação.
     Se 'termo' for None, busca todas as proposições do 'ano' (se fornecido).
@@ -125,6 +125,8 @@ def buscar_todas_proposicoes_camara(termo: str = None, ano: int = None):
         params["ano"] = ano
     if termo:
         params["keywords"] = termo
+    if data_inicio:
+        params["dataInicio"] = data_inicio
 
     todas_proposicoes = []
 
@@ -472,18 +474,13 @@ def sincronizar_processos_legislativos(
 
     # === 2. API Senado (nova API /dadosabertos/processo) ===
     logger.info("Iniciando sincronização do Senado Federal...")
-    todos_processos_senado = buscar_todos_processos_senado()
-    logger.info("Senado: %d processos encontrados", len(todos_processos_senado))
+    # Busca apenas do ano de inicio para frente para otimizar o cron
+    todos_processos_senado = buscar_todos_processos_senado(ano=ano_inicio)
+    logger.info("Senado: %d processos encontrados no ano >= %d", len(todos_processos_senado), ano_inicio)
 
-    # Filtrar por ano_inicio se necessário
     for proc in todos_processos_senado:
         codigo_materia = str(proc.get('codigoMateria', ''))
         if not codigo_materia:
-            continue
-
-        # Filtrar por ano
-        ano_proc = proc.get('ano')
-        if ano_proc and isinstance(ano_proc, int) and ano_proc < ano_inicio:
             continue
 
         defaults = _mapear_processo_senado_da_listagem(proc)
@@ -639,3 +636,36 @@ def popular_banco_carga_inicial(ano_inicio=2024):
     total_novos = total_depois - total_antes
     logger.info("Carga inicial concluída: %d novos processos criados", total_novos)
     return total_novos
+
+
+def sincronizar_processo_on_demand(processo: ProcessoLegislativo, timeout_hours: int = 1) -> bool:
+    """
+    Sincroniza um único processo legislativo sob demanda de forma inteligente (Lazy Update).
+    Só consulta a API caso a última atualização tenha sido há mais de `timeout_hours` (Cache).
+    
+    Retorna:
+        - True: Se conectou na API e atualizou dados frescos.
+        - False: Se os dados atuais já são frescos e o cache foi utilizado.
+    """
+    agora = timezone.now()
+    
+    # Se existe uma atualização anterior, verifica a idade
+    if processo.detalhes_atualizados_em:
+        idade = agora - processo.detalhes_atualizados_em
+        if idade < datetime.timedelta(hours=timeout_hours):
+            return False  # Cache válido, não bate na API
+
+    logger.info(f"Processo {processo.id_externo} desatualizado. Buscando novas tramitações na API...")
+    try:
+        if processo.origem_camara_ou_senado == 'CAMARA':
+            atualizar_detalhes_camara(processo, incluir_tramitacoes=True)
+        else:
+            atualizar_detalhes_senado(processo, incluir_tramitacoes=True)
+            
+        # O Django salva internamente em atualizar_detalhes_... mas para garantir a data:
+        processo.detalhes_atualizados_em = agora
+        processo.save(update_fields=['detalhes_atualizados_em'])
+        return True
+    except Exception as e:
+        logger.error(f"Erro ao atualizar sob demanda o processo {processo.id_externo}: {e}")
+        return False
