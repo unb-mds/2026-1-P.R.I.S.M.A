@@ -11,7 +11,7 @@ services:
      - postgres_data:/var/lib/postgresql/data
    env_file:
      - .env
- 
+
  django-web:
    build: .
    container_name: django-docker
@@ -27,7 +27,7 @@ services:
      DATABASE_ENGINE: ${DATABASE_ENGINE}
      DATABASE_NAME: ${DATABASE_NAME}
      DATABASE_USERNAME: ${DATABASE_USERNAME}
- 
+
      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
      DATABASE_HOST: ${DATABASE_HOST}
      DATABASE_PORT: ${DATABASE_PORT}

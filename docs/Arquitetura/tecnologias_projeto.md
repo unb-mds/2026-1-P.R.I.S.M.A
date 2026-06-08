@@ -135,14 +135,15 @@ Biblioteca para criação declarativa de filtros de consulta no Django.
 
 ## 8. Integrações Externas (em desenvolvimento)
 
-| API | Uso | Status |
-|-----|-----|--------|
+| API                  | Uso                                     | Status   |
+| -------------------- | --------------------------------------- | -------- |
 | Dados Abertos Câmara | Proposições, tramitações, parlamentares | issue #7 |
-| Dados Abertos Senado | Projetos de lei, votações | issue #7 |
+| Dados Abertos Senado | Projetos de lei, votações               | issue #7 |
 
 ---
 
 **Referências:**
+
 - [Estudo sobre Django](https://github.com/unb-mds/2026-1-P.R.I.S.M.A/issues/3)
 - [Estudo sobre Docker](https://github.com/unb-mds/2026-1-P.R.I.S.M.A/issues/32)
 - [Estudo sobre PostgreSQL](https://github.com/unb-mds/2026-1-P.R.I.S.M.A/issues/6)
