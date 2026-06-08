@@ -6,6 +6,7 @@
 - Objetivo: código e material referente às entregas do time (aplicação Django).
 
 ## Gitpage
+
 - Link: (https://unb-mds.github.io/2026-1-P.R.I.S.M.A/)
 
 ## Foco deste README
@@ -47,7 +48,7 @@ docker compose -f compose.yml down
 
 As instruções abaixo mostram como executar o projeto localmente sem Docker, usando um PostgreSQL local e `uv` para gerenciar dependências e ambiente.
 
-1) Instalar e preparar `uv`
+1. Instalar e preparar `uv`
 
 ```bash
 # Instalar `uv` (se ainda não tiver):
@@ -60,7 +61,7 @@ source $HOME/.local/bin/env
 uv sync
 ```
 
-2) Preparar PostgreSQL local
+2. Preparar PostgreSQL local
 
 Assegure que o PostgreSQL esteja instalado e em execução. Neste ambiente local, ele está disponível na porta `5433`. Em muitas distros Linux você pode usar:
 
@@ -75,7 +76,7 @@ sudo -u postgres psql -c "CREATE DATABASE polls OWNER myprojectuser;"
 
 Se já tiver um superuser PostgreSQL (ex.: `postgres`) use esse usuário para criar o DB.
 
-3) Copiar o arquivo de ambiente pronto
+3. Copiar o arquivo de ambiente pronto
 
 Copie o arquivo de exemplo para `.env`:
 
@@ -83,14 +84,14 @@ Copie o arquivo de exemplo para `.env`:
 cp .env_local.exemplo .env
 ```
 
-4) Aplicar migrations e criar superuser (usando `uv`)
+4. Aplicar migrations e criar superuser (usando `uv`)
 
 ```bash
 uv run src/manage.py migrate
 uv run src/manage.py createsuperuser
 ```
 
-5) Executar o servidor (usando `uv`)
+5. Executar o servidor (usando `uv`)
 
 ```bash
 uv run src/manage.py runserver 0.0.0.0:8000
@@ -100,4 +101,3 @@ Observações
 
 - Nos passos acima assumimos que `src/manage.py` é o comando de gerenciamento do Django (arquivo presente no repositório). Ajuste caminhos se necessário.
 - Para desenvolvimento local, mantenha `DEBUG=True` apenas em ambientes seguros.
-

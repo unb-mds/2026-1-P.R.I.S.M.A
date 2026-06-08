@@ -12,7 +12,7 @@ Antes do Postman, o pessoal usava o terminal com curl, ou escrevia script de tes
 
 Primeiro a interface é intuitiva. Você não precisa decorar comando. Tudo é botão, campo, menu. Qualquer programador consegue usar.
 
-Segundo porque tem uma comunidade enorme. Se você tiver dúvida, alguém já respondeu no Google. 
+Segundo porque tem uma comunidade enorme. Se você tiver dúvida, alguém já respondeu no Google.
 
 Terceiro porque ajuda na documentação. O Postman tem um recurso de documentação integrado que gera uma página bonitinha automática a partir dos seus testes.
 
@@ -45,6 +45,7 @@ Pra criar uma requisição, você precisa de algumas coisas:
 **Body**: o corpo da requisição. Onde você coloca os dados que vai enviar. O formato mais comum hoje é JSON.
 
 Exemplo de body em JSON:
+
 ```json
 {
   "nome": "João",
@@ -68,3 +69,4 @@ Time: quanto tempo demorou.
 Se a API precisa de autenticação, você configura um header chamado Authorization com o token. Por exemplo: Bearer token123456.
 
 O Postman guarda histórico de todas as requisições que você mandou. Dá pra repetir, editar, salvar como exemplo.
+```

@@ -11,3 +11,13 @@ dependencies = [
     "psycopg[binary]>=3.3.4",
     "sqlparse==0.5.5",
 ]
+
+[tool.black]
+line-length = 88
+target-version = ['py311']
+exclude = '/(\.eggs|\.git|\.venv|venv|migrations|__pycache__)/'
+
+[tool.isort]
+profile = "black"
+line_length = 88
+skip = ["venv", ".venv", "migrations"]

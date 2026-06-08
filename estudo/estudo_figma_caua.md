@@ -75,7 +75,7 @@ Figma mudou a forma como designers e desenvolvedores trabalham juntos.
 
 Antes era uma novela. Designer fazia tudo, exportava ativos, mandava por email, desenvolvedor ficava perguntando tamanho de fonte, coordenada X, cor exata.
 
-Agora o designer faz o design, publica um link, e o desenvolvedor pega tudo sozinho. 
+Agora o designer faz o design, publica um link, e o desenvolvedor pega tudo sozinho.
 
 Por isso o Figma virou padrão da indústria em poucos anos. A Adobe tentou comprar ele (e não conseguiu, a concorrência barrou).
 

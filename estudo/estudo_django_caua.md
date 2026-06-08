@@ -56,16 +56,15 @@ Model cuida do banco, View cuida da lógica, Template cuida da aparência.
 
 ## Vantagens do Django
 
-O Django já vem com um monte de coisa pronta. 
+O Django já vem com um monte de coisa pronta.
 
 ### Segurança contra ataques
 
-Django já bloqueia vários tipos de ataque comuns. Coisa de segurança web que a galera sofre pra implementar, o Django já faz automático. 
+Django já bloqueia vários tipos de ataque comuns. Coisa de segurança web que a galera sofre pra implementar, o Django já faz automático.
 
 ### Gerenciamento de migrações de banco de dados
 
 Quando você muda seu model (adiciona um campo novo, por exemplo), o Django descobre o que mudou e cria um arquivo de migração. Você roda um comando e ele altera o banco sem perder dados.
-
 
 ### Interface de administração (admin)
 

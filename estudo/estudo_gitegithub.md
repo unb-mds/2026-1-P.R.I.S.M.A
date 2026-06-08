@@ -1,6 +1,6 @@
 # Estudo sobre Git
 
-Git é um software de controle de versão. GitHub é um serviço onde você hospeda repositórios Git na nuvem. 
+Git é um software de controle de versão. GitHub é um serviço onde você hospeda repositórios Git na nuvem.
 
 ## Repositório
 
@@ -50,51 +50,51 @@ Diferente da branch, a tag não muda. Ela aponta pra um commit e fica lá pra se
 
 ## Comandos básicos
 
-`git init`  
+`git init`
 Começa um projeto novo com Git. Você roda dentro da pasta do projeto e pronto, agora o Git tá olhando tudo ali.
 
-`git add <arquivo>` ou `git add .`  
+`git add <arquivo>` ou `git add .`
 Adiciona os arquivos que você quer preparar pro commit. O ponto adiciona tudo que foi alterado.
 
-`git commit -m "mensagem aqui"`  
+`git commit -m "mensagem aqui"`
 Guarda os arquivos que você adicionou no histórico. A mensagem tem que fazer sentido, senão ninguém entende nada depois.
 
-`git log`  
+`git log`
 Mostra o histórico de commits. Quem fez, quando fez, a mensagem, o código do commit.
 
-`git status`  
+`git status`
 Mostra o estado atual. O que foi modificado, o que tá pronto pra commit, o que ainda não foi adicionado.
 
-`git diff`  
+`git diff`
 Mostra linha por linha o que mudou nos arquivos. Útil pra lembrar o que você fez antes de dar commit.
 
 ## Trabalhando com branches
 
-`git branch`  
+`git branch`
 Mostra em qual branch você está. Também lista todas as branches do projeto.
 
-`git checkout <nome-da-branch>`  
+`git checkout <nome-da-branch>`
 Troca de branch. Você sai de uma e vai pra outra.
 
-`git checkout -b <nome-da-nova-branch>`  
+`git checkout -b <nome-da-nova-branch>`
 Cria uma nova branch a partir da branch atual e já troca pra ela. É o atalho mais usado.
 
-`git merge <branch>`  
+`git merge <branch>`
 Pega o que tem na branch que você passou e junta com a branch atual. É assim que você traz o trabalho dos outros pro seu lado.
 
 ## Repositórios remotos
 
-`git remote add <nome> <url>`  
-Conecta seu repositório local com um repositório remoto. O nome mais comum é `origin`. Exemplo:  
+`git remote add <nome> <url>`
+Conecta seu repositório local com um repositório remoto. O nome mais comum é `origin`. Exemplo:
 `git remote add origin https://github.com/usuario/repo.git`
 
-`git push <nome> <branch>`  
+`git push <nome> <branch>`
 Manda seus commits locais pro repositório remoto. Exemplo: `git push origin main`
 
-`git pull <nome> <branch>`  
+`git pull <nome> <branch>`
 Pega as alterações do repositório remoto e já junta com seu código local.
 
-`git fetch`  
+`git fetch`
 Sincroniza seu histórico local com o que tem no remoto. Ele baixa as novidades mas não junta com seu código. Você pode olhar antes de resolver o que fazer.
 
 ## Sobre `origin`
@@ -121,7 +121,7 @@ Você cria o arquivo `.gitignore` na raiz do projeto, coloca o que não quer ver
 
 Merge é o ato de juntar duas branches. Pode acontecer de duas pessoas alterarem a mesma linha do mesmo arquivo. Aí dá conflito. Você precisa resolver manualmente, escolhendo qual versão fica ou fazendo um meio termo.
 
-Depois de resolver, você dá commit do merge. 
+Depois de resolver, você dá commit do merge.
 
 ## Fork
 
@@ -148,5 +148,3 @@ Git não é difícil, mas tem uns conceitos que confundem no começo. Branch, me
 Curso de Git e Github [Completo] Victor Lima - via Youtube
 Aprenda Git e Github do Zero - guia completo Fernanda Kipper - via Youtube
 https://learn.microsoft.com/pt-br/training/github/ Microsoft LEARN PARA GITHUB
-
-

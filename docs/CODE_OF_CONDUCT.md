@@ -19,6 +19,7 @@ Comprometemo-nos a agir e interagir de maneira que contribuam para uma comunidad
 ## Nossos Padrões
 
 ### Exemplos de comportamentos que contribuem para um ambiente positivo:
+
 - Demonstrar empatia e gentileza com outras pessoas;
 - Respeitar opiniões, pontos de vista e experiências diferentes;
 - Oferecer e aceitar feedback construtivo de maneira graciosa;
@@ -26,6 +27,7 @@ Comprometemo-nos a agir e interagir de maneira que contribuam para uma comunidad
 - Focar no que é melhor, não apenas para nós como indivíduos, mas para a comunidade como um todo.
 
 ### Exemplos de comportamentos inaceitáveis:
+
 - Uso de linguagem ou imagens sexualizadas, atenção ou avanços sexuais de qualquer tipo;
 - Trollagem, insultos ou comentários depreciativos, e ataques pessoais ou políticos;
 - Assédio público ou privado;
@@ -95,7 +97,6 @@ Os líderes da comunidade seguirão estas Diretrizes de Impacto na Comunidade pa
 ## Atribuição
 
 Este Código de Conduta é adaptado do [Contributor Covenant](https://www.contributor-covenant.org), versão 2.1, disponível em [https://www.contributor-covenant.org/pt-br/version/2/1/code_of_conduct.html](https://www.contributor-covenant.org/pt-br/version/2/1/code_of_conduct.html).
-
 
 This Code of Conduct is adapted from the [Contributor Covenant][homepage],
 version 2.0, available at
