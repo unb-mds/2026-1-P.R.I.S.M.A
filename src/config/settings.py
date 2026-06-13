@@ -50,8 +50,8 @@ def _database_port() -> int:
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY") or os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(os.environ.get("DEBUG", default=0))
-
+# DEBUG = bool(os.environ.get("DEBUG", default=0))
+DEBUG = True
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "127.0.0.1").split(",")
 
 
@@ -162,3 +162,8 @@ STATIC_URL = "static/"
 STATICFILES_DIRS = [
     BASE_DIR / "home" / "static",
 ]
+
+LOGIN_URL = "/accounts/login/"
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/accounts/login/"
+
