@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>P.R.I.S.M.A - Configurações do Sistema</title>
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+    <script src="../../public/js/tailwind-config.js"></script>
+    
+    <link href="../../public/css/global.css" rel="stylesheet" />
+  </head>
+  <body class="bg-brand-surface text-brand-text flex h-screen overflow-hidden">
+    
+    <div id="sidebar-container"></div>
+
+    <div class="flex-1 ml-64 flex flex-col h-screen overflow-hidden">
+      
+      <div id="header-container"></div>
+      
+      <main class="flex-1 overflow-auto relative" id="main-content">
+        <div class="p-8 max-w-container-max mx-auto space-y-6">
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+             <div class="lg:col-span-2 space-y-6">
+                
+                <div class="bg-white border border-brand-outline rounded-md p-6 shadow-sm flex items-start gap-6">
+                   <div class="w-24 h-24 rounded-md bg-slate-200 overflow-hidden shrink-0 relative border border-slate-300">
+                      <div class="absolute inset-0 bg-[#00152a] flex items-center justify-center text-white text-3xl font-display font-bold">
+                         ML
+                      </div>
+                      <button class="absolute bottom-1 right-1 w-6 h-6 bg-brand-text text-white rounded-full flex items-center justify-center border-2 border-white hover:bg-brand-primary">
+                         <i data-lucide="settings-2" class="w-3 h-3"></i>
+                      </button>
+                   </div>
+                   
+                   <div class="flex-1">
+                      <h2 class="font-display font-bold text-2xl text-brand-text">Matheus</h2>
+                      <p class="text-sm text-slate-500 mb-4 flex items-center gap-2">
+                         <i data-lucide="code-2" class="w-4 h-4"></i>
+                         Projeto Prisma • Engenharia de Software (UnB) • Brasília, DF
+                      </p>
+                      <div class="flex gap-2">
+                         <span class="bg-emerald-100 text-emerald-800 border border-emerald-200 text-xs font-bold uppercase tracking-wider px-3 py-1 rounded">Administrador / Desenvolvedor Core</span>
+                      </div>
+                   </div>
+                </div>
+
+                <div class="grid grid-cols-1 gap-6">
+                   <div class="bg-white border border-brand-outline rounded-md p-6 shadow-sm">
+                      <div class="flex items-center justify-between mb-6">
+                         <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Controle do Banco de Dados</p>
+                         <i data-lucide="database" class="w-4 h-4 text-emerald-600"></i>
+                      </div>
+                      <h3 class="font-semibold text-brand-text text-lg">Sincronização de Tempos</h3>
+                      <p class="text-xs text-slate-500 mt-1 mb-6">Último pull da API da Câmara: Hoje, 08:42 • Latência: 42ms</p>
+                      <div class="space-y-3">
+                         <button class="w-full flex justify-between items-center p-3 border border-slate-200 rounded text-sm font-medium text-brand-text hover:bg-slate-50 transition-colors">
+                            Forçar Recálculo de Prazos <i data-lucide="refresh-cw" class="w-4 h-4 text-slate-400"></i>
+                         </button>
+                         <button class="w-full flex justify-between items-center p-3 border border-slate-200 bg-slate-50 rounded text-sm font-medium text-brand-text hover:bg-slate-100 transition-colors">
+                            Worker de Contagem de Dias <span class="text-[10px] text-emerald-600 font-bold uppercase">Online</span>
+                         </button>
+                     </div>
+                   </div>
+                </div>
+
+                <div class="bg-white border border-brand-outline rounded-md p-0 shadow-sm overflow-hidden">
+                   <div class="p-6 border-b border-slate-100">
+                      <h3 class="font-display font-semibold text-lg text-brand-text">Roteamento de Alertas de Tempo</h3>
+                   </div>
+                   
+                   <table class="w-full text-left">
+                      <thead>
+                         <tr class="bg-slate-50 border-b border-slate-100">
+                            <th class="p-4 text-[10px] font-bold uppercase tracking-wider text-slate-500 w-1/2">Gatilho de Trâmite</th>
+                            <th class="p-4 text-[10px] font-bold uppercase tracking-wider text-slate-500 text-center">Logs do Sistema</th>
+                            <th class="p-4 text-[10px] font-bold uppercase tracking-wider text-slate-500 text-center">Dashboard</th>
+                            <th class="p-4 text-[10px] font-bold uppercase tracking-wider text-slate-500 text-center">Webhook</th>
+                         </tr>
+                      </thead>
+                      <tbody class="divide-y divide-slate-100">
+                         <tr>
+                            <td class="p-4">
+                               <p class="text-sm font-medium text-brand-text">Alertas de Prazos Críticos</p>
+                               <p class="text-xs text-slate-500">Quando a relatoria ultrapassar 80% do tempo regimental</p>
+                            </td>
+                            <td class="p-4 text-center"><div class="w-5 h-5 rounded mx-auto border flex items-center justify-center transition-colors cursor-pointer bg-[#102a43] border-[#102a43]"><i data-lucide="check" class="w-3 h-3 text-white"></i></div></td>
+                            <td class="p-4 text-center"><div class="w-5 h-5 rounded mx-auto border flex items-center justify-center transition-colors cursor-pointer bg-[#102a43] border-[#102a43]"><i data-lucide="check" class="w-3 h-3 text-white"></i></div></td>
+                            <td class="p-4 text-center"><div class="w-5 h-5 rounded mx-auto border flex items-center justify-center transition-colors cursor-pointer bg-white border-slate-300"></div></td>
+                         </tr>
+                         <tr class="bg-slate-50/50">
+                            <td class="p-4">
+                               <p class="text-sm font-medium text-brand-text">Relatórios de Estagnação</p>
+                               <p class="text-xs text-slate-500">Notificar proposições estagnadas por mais de 30 dias na fila</p>
+                            </td>
+                            <td class="p-4 text-center"><div class="w-5 h-5 rounded mx-auto border flex items-center justify-center transition-colors cursor-pointer bg-[#102a43] border-[#102a43]"><i data-lucide="check" class="w-3 h-3 text-white"></i></div></td>
+                            <td class="p-4 text-center"><div class="w-5 h-5 rounded mx-auto border flex items-center justify-center transition-colors cursor-pointer bg-white border-slate-300"></div></td>
+                            <td class="p-4 text-center"><div class="w-5 h-5 rounded mx-auto border flex items-center justify-center transition-colors cursor-pointer bg-[#102a43] border-[#102a43]"><i data-lucide="check" class="w-3 h-3 text-white"></i></div></td>
+                         </tr>
+                         <tr>
+                            <td class="p-4">
+                               <p class="text-sm font-medium text-brand-text">Mudança de Velocidade</p>
+                               <p class="text-xs text-slate-500">Identificação de alteração para regime de urgência</p>
+                            </td>
+                            <td class="p-4 text-center"><div class="w-5 h-5 rounded mx-auto border flex items-center justify-center transition-colors cursor-pointer bg-[#102a43] border-[#102a43]"><i data-lucide="check" class="w-3 h-3 text-white"></i></div></td>
+                            <td class="p-4 text-center"><div class="w-5 h-5 rounded mx-auto border flex items-center justify-center transition-colors cursor-pointer bg-white border-slate-300"></div></td>
+                            <td class="p-4 text-center"><div class="w-5 h-5 rounded mx-auto border flex items-center justify-center transition-colors cursor-pointer bg-[#102a43] border-[#102a43]"><i data-lucide="check" class="w-3 h-3 text-white"></i></div></td>
+                         </tr>
+                      </tbody>
+                   </table>
+                </div>
+
+                <div class="flex items-center justify-between pt-4 pb-8">
+                   <div class="flex items-center gap-6 text-sm">
+                      <button class="text-brand-error font-medium hover:underline flex items-center gap-1">
+                         <i data-lucide="log-out" class="w-4 h-4"></i>
+                         Encerrar Sessão
+                      </button>
+                   </div>
+                   <div class="flex gap-4">
+                      <button class="px-6 py-2 bg-brand-primary text-white rounded font-medium text-sm hover:bg-[#102a43] transition-colors">
+                         Salvar Preferências
+                      </button>
+                   </div>
+                </div>
+             </div>
+
+             <div class="space-y-6">
+                <div class="bg-white border border-brand-outline rounded-md p-6 shadow-sm">
+                   <div class="flex justify-between items-center mb-6">
+                      <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Filtros Frequentes de Tempo</p>
+                      <button class="text-xs font-bold text-brand-primary hover:underline">Ver Todos</button>
+                   </div>
+                   
+                   <div class="space-y-3">
+                      <div class="border border-slate-200 rounded p-3 flex justify-between items-center bg-slate-50 cursor-move text-sm font-medium text-brand-text">
+                         <div class="flex items-center gap-2"><i data-lucide="clock" class="w-3 h-3 text-brand-primary"></i> Prazos Curtos (< 15 dias)</div>
+                         <i data-lucide="grip-horizontal" class="w-4 h-4 text-slate-400"></i>
+                      </div>
+                      <div class="border border-slate-200 rounded p-3 flex justify-between items-center bg-slate-50 cursor-move text-sm font-medium text-brand-text">
+                         <div class="flex items-center gap-2"><i data-lucide="timer-off" class="w-3 h-3 text-brand-primary"></i> Estagnados (> 90 dias)</div>
+                         <i data-lucide="grip-horizontal" class="w-4 h-4 text-slate-400"></i>
+                      </div>
+                      <div class="border border-slate-200 rounded p-3 flex justify-between items-center bg-slate-50 cursor-move text-sm font-medium text-brand-text">
+                         <div class="flex items-center gap-2"><i data-lucide="fast-forward" class="w-3 h-3 text-brand-primary"></i> Ciclos Rápidos 2024</div>
+                         <i data-lucide="grip-horizontal" class="w-4 h-4 text-slate-400"></i>
+                      </div>
+                      
+                      <button class="w-full border-2 border-dashed border-slate-300 rounded p-3 text-slate-400 text-sm font-medium hover:border-brand-primary hover:text-brand-primary transition-colors flex justify-center items-center gap-2">
+                         <i data-lucide="plus" class="w-4 h-4"></i> Criar View de Tempo
+                      </button>
+                   </div>
+                </div>
+
+                <div class="bg-white border border-brand-outline rounded-md p-6 shadow-sm">
+                   <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-6">Logs do Motor de Prazos</p>
+                   <div class="relative border-l border-slate-200 ml-2 space-y-6 pb-2">
+                      <div class="relative pl-6">
+                         <div class="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-brand-text"></div>
+                         <p class="text-[10px] font-bold uppercase text-slate-400 mb-1">Hoje, 10:15</p>
+                         <p class="text-sm font-semibold text-brand-text">Alteração de Limite Regimental</p>
+                         <p class="text-xs text-slate-500">Recálculo da base aplicado com sucesso</p>
+                      </div>
+                      <div class="relative pl-6">
+                         <div class="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
+                         <p class="text-[10px] font-bold uppercase text-slate-400 mb-1">Ontem, 16:40</p>
+                         <p class="text-sm font-semibold text-brand-text">Sincronização Concluída</p>
+                         <p class="text-xs text-slate-500">Cronômetros alinhados com diário oficial</p>
+                      </div>
+                      <div class="relative pl-6">
+                         <div class="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-brand-error"></div>
+                         <p class="text-[10px] font-bold uppercase text-slate-400 mb-1">Ontem, 14:22</p>
+                         <p class="text-sm font-semibold text-brand-text">Novo Alerta Disparado</p>
+                         <p class="text-xs text-slate-500">Fila da CCJC atingiu teto de 40 dias</p>
+                      </div>
+                   </div>
+                </div>
+
+             </div>
+          </div>
+        </div>
+      </main>
+    </div>
+    
+    <script src="../../public/js/app.js"></script>
+  </body>
+</html>
