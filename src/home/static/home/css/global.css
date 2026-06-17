@@ -1,16 +1,10 @@
-@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
 
 body {
-  font-family: "Inter", sans-serif;
+  font-family: 'Inter', sans-serif;
   overflow: hidden;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-.font-display {
-  font-family: "IBM Plex Sans", sans-serif;
+h1, h2, h3, h4, h5, h6, .font-display {
+  font-family: 'IBM Plex Sans', sans-serif;
 }

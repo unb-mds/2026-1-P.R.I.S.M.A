@@ -1,306 +1,170 @@
-{% extends 'home/base.html' %} {% block title %}Alertas{% endblock %} {% block
-page_title %}Alertas{% endblock %} {% block content %}
+{% extends 'home/base.html' %}
+{% block title %}Alertas{% endblock %}
+{% block content %}
 <div class="p-8 max-w-4xl mx-auto space-y-8">
-  <div class="flex items-center justify-between">
-    <p class="text-sm text-brand-text-muted">
-      Inteligência consolidada de movimentações e prazos legislativos.
-    </p>
-    <div class="flex items-center gap-4">
-      <div class="bg-slate-100 rounded-md p-1 flex text-sm font-medium">
-        <button class="px-4 py-1.5 bg-white shadow-sm rounded text-brand-text">
-          Ativos
-        </button>
-        <button class="px-4 py-1.5 text-slate-500 hover:text-brand-text">
-          Histórico
-        </button>
-      </div>
-      <button
-        class="bg-brand-primary text-white px-4 py-2 rounded-md text-sm font-medium flex items-center gap-2"
-      >
-        Filtros Avançados
-      </button>
-    </div>
-  </div>
-
-  <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-    <div
-      class="md:col-span-2 bg-white border-l-4 border-l-brand-error border-brand-outline border rounded-md p-5 shadow-sm relative overflow-hidden"
-    >
-      <div class="absolute right-4 top-4 text-brand-error opacity-20">
-        <i data-lucide="alert-triangle" class="w-16 h-16"></i>
-      </div>
-      <p
-        class="text-xs font-bold uppercase tracking-wider text-brand-error mb-2"
-      >
-        Urgência Alta
-      </p>
-      <h3 class="font-display font-semibold text-2xl text-brand-text">
-        03 Prazos Críticos
-      </h3>
-      <p class="text-sm text-slate-600 mt-2 max-w-[80%]">
-        Vencimentos de emendas e pedidos de vista em projetos favoritos nas
-        próximas 24 horas.
-      </p>
-      <div class="flex gap-2 mt-4 text-brand-error">
-        <div
-          class="w-6 h-6 rounded bg-red-50 flex items-center justify-center shrink-0 border border-red-100"
-        >
-          <i data-lucide="calendar-clock" class="w-3.5 h-3.5"></i>
-        </div>
-        <div
-          class="w-6 h-6 rounded bg-red-50 flex items-center justify-center shrink-0 border border-red-100"
-        >
-          <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
-        </div>
-      </div>
-    </div>
-
-    <div
-      class="bg-white border border-brand-outline rounded-md p-5 shadow-sm text-center flex flex-col justify-center"
-    >
-      <p
-        class="text-[10px] font-bold uppercase tracking-wider text-emerald-600 mb-2"
-      >
-        Mencionados
-      </p>
-      <h3 class="font-display font-bold text-4xl text-brand-text">12</h3>
-      <p class="text-xs text-slate-500 mt-2 leading-tight">
-        Menções em Pautas<br />de Comissões hoje.
-      </p>
-      <div class="w-full h-1 bg-slate-100 rounded-full mt-4 overflow-hidden">
-        <div class="h-full bg-emerald-500 w-[60%]"></div>
-      </div>
-    </div>
-
-    <div
-      class="bg-brand-primary text-white border border-brand-primary rounded-md p-5 shadow-sm"
-    >
-      <div class="flex justify-between items-start mb-4">
-        <p class="text-[10px] font-bold uppercase tracking-wider text-blue-200">
-          Quórum em Tempo Real
-        </p>
-        <i data-lucide="users" class="w-4 h-4 text-emerald-400"></i>
-      </div>
-      <div class="flex items-baseline gap-1">
-        <h3 class="font-display font-bold text-4xl">84%</h3>
-      </div>
-      <p class="text-xs text-slate-300 mt-1">Plenário Principal</p>
-      <p
-        class="text-[10px] bg-white/10 text-emerald-300 px-2 py-1 rounded inline-block mt-4 flex items-center font-medium gap-1 w-fit"
-      >
-        <i data-lucide="trending-up" class="w-2.5 h-2.5"></i> +5 parlamentares
-        registrados
-      </p>
-    </div>
-  </div>
-
-  <div class="mt-8">
-    <div
-      class="flex items-center justify-between border-b border-brand-outline pb-4"
-    >
-      <h3 class="font-display font-semibold text-lg text-brand-text">
-        Feed de Inteligência
-      </h3>
-      <div class="flex gap-4 text-sm font-medium text-slate-500">
-        <span
-          class="text-brand-text border-b-2 border-brand-text pb-[18px] -mb-[18px]"
-          >Tudo</span
-        >
-        <span class="hover:text-brand-text cursor-pointer pb-[18px]"
-          >Prazos</span
-        >
-        <span class="hover:text-brand-text cursor-pointer pb-[18px]"
-          >Votações</span
-        >
-        <span class="hover:text-brand-text cursor-pointer pb-[18px]"
-          >Menções</span
-        >
-      </div>
-    </div>
-
-    <div
-      class="bg-white rounded-b-md border-x border-b border-brand-outline shadow-sm"
-    >
-      <div
-        class="p-5 border-b border-slate-100 flex gap-4 hover:bg-slate-50 transition-colors"
-      >
-        <div
-          class="w-10 h-10 rounded bg-red-50 text-red-600 border border-red-100 flex items-center justify-center shrink-0 mt-1"
-        >
-          <i data-lucide="calendar-clock" class="w-5 h-5"></i>
-        </div>
-        <div class="flex-1">
-          <div class="flex justify-between items-start">
-            <div>
-              <div class="flex items-center gap-2 mb-1">
-                <span
-                  class="text-[10px] font-bold uppercase tracking-wider text-red-600"
-                  >Prazo Crítico</span
-                >
-                <span class="w-1 h-1 rounded-full bg-slate-300"></span>
-                <span
-                  class="text-[10px] font-bold uppercase tracking-wider text-slate-500"
-                  >Hoje, 18:00</span
-                >
-              </div>
-              <h4 class="font-semibold text-brand-text text-base">
-                PL 2630/2020 - Prazo para entrega de parecer na CCJ
-              </h4>
-            </div>
-            <span class="text-xs text-slate-400">Há 15 min</span>
+          <div class="flex items-center justify-between">
+             <p class="text-sm text-brand-text-muted">Monitoramento temporal de tramitações e vencimentos legislativos.</p>
+             <div class="flex items-center gap-4">
+                <div class="bg-slate-100 rounded-md p-1 flex text-sm font-medium">
+                   <button class="px-4 py-1.5 bg-white shadow-sm rounded text-brand-text">Prazos Ativos</button>
+                   <button class="px-4 py-1.5 text-slate-500 hover:text-brand-text">Histórico</button>
+                </div>
+                <button class="bg-brand-primary text-white px-4 py-2 rounded-md text-sm font-medium flex items-center gap-2">
+                   Filtros de Tempo
+                </button>
+             </div>
           </div>
-          <div class="flex justify-between items-end mt-2">
-            <p class="text-sm text-slate-600 max-w-xl">
-              O prazo final para a apresentação do relatório alternativo pelo
-              Deputado Relator encerra-se no final do expediente de hoje.
-            </p>
-            <div
-              class="flex items-center gap-2 bg-slate-50 px-2 py-1 rounded border border-slate-100"
-            >
-              <div
-                class="w-5 h-5 bg-slate-300 rounded-full overflow-hidden shrink-0"
-              ></div>
-              <span class="text-xs font-medium text-slate-700"
-                >Relator: Dep. Marcos S.</span
-              >
-            </div>
-          </div>
-        </div>
-      </div>
 
-      <div
-        class="p-5 border-b border-slate-100 flex gap-4 hover:bg-slate-50 transition-colors"
-      >
-        <div
-          class="w-10 h-10 rounded bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center shrink-0 mt-1"
-        >
-          <i data-lucide="message-circle" class="w-5 h-5"></i>
-        </div>
-        <div class="flex-1">
-          <div class="flex justify-between items-start">
-            <div>
-              <div class="flex items-center gap-2 mb-1">
-                <span
-                  class="text-[10px] font-bold uppercase tracking-wider text-blue-600"
-                  >Menção em Pauta</span
-                >
-                <span class="w-1 h-1 rounded-full bg-slate-300"></span>
-                <span
-                  class="text-[10px] font-bold uppercase tracking-wider text-slate-500"
-                  >Comissão de Finanças</span
-                >
-              </div>
-              <h4 class="font-semibold text-brand-text text-base">
-                PEC 45/2019 - Incluída na Ordem do Dia
-              </h4>
-            </div>
-            <span class="text-xs text-slate-400">Há 1 hora</span>
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+             <div class="md:col-span-2 bg-white border-l-4 border-l-brand-error border-brand-outline border rounded-md p-5 shadow-sm relative overflow-hidden">
+                <div class="absolute right-4 top-4 text-brand-error opacity-20">
+                   <i data-lucide="clock" class="w-16 h-16"></i>
+                </div>
+                <p class="text-xs font-bold uppercase tracking-wider text-brand-error mb-2">Urgência</p>
+                <h3 class="font-display font-semibold text-2xl text-brand-text">03 Prazos Críticos</h3>
+                <p class="text-sm text-slate-600 mt-2 max-w-[80%]">Limite regimental para entrega de relatorias e emendas se esgota nas próximas 24 horas.</p>
+                <div class="flex gap-2 mt-4 text-brand-error">
+                   <div class="w-6 h-6 rounded bg-red-50 flex items-center justify-center shrink-0 border border-red-100"><i data-lucide="timer" class="w-3.5 h-3.5"></i></div>
+                   <div class="w-6 h-6 rounded bg-red-50 flex items-center justify-center shrink-0 border border-red-100"><i data-lucide="calendar-x" class="w-3.5 h-3.5"></i></div>
+                </div>
+             </div>
+
+             <div class="bg-white border border-brand-outline rounded-md p-5 shadow-sm text-center flex flex-col justify-center">
+                <p class="text-[10px] font-bold uppercase tracking-wider text-emerald-600 mb-2">Tempo em Comissão</p>
+                <h3 class="font-display font-bold text-4xl text-brand-text">42</h3>
+                <p class="text-xs text-slate-500 mt-2 leading-tight">Dias de média<br/>nas CCJs atualmente.</p>
+                <div class="w-full h-1 bg-slate-100 rounded-full mt-4 overflow-hidden">
+                   <div class="h-full bg-emerald-500 w-[40%]"></div>
+                </div>
+             </div>
+
+             <div class="bg-brand-primary text-white border border-brand-primary rounded-md p-5 shadow-sm">
+                <div class="flex justify-between items-start mb-4">
+                   <p class="text-[10px] font-bold uppercase tracking-wider text-blue-200">Alerta de Estagnação</p>
+                   <i data-lucide="hourglass" class="w-4 h-4 text-emerald-400"></i>
+                </div>
+                <div class="flex items-baseline gap-1">
+                   <h3 class="font-display font-bold text-4xl">180</h3>
+                </div>
+                <p class="text-xs text-slate-300 mt-1">Dias sem movimentação</p>
+                <p class="text-[10px] bg-white/10 text-emerald-300 px-2 py-1 rounded inline-block mt-4 flex items-center font-medium gap-1 w-fit">
+                  <i data-lucide="alert-circle" class="w-2.5 h-2.5"></i> +12 dias de atraso médio
+                </p>
+             </div>
           </div>
-          <div class="flex justify-between items-end mt-2">
-            <p class="text-sm text-slate-600 max-w-xl">
-              A Reforma Tributária foi pautada para discussão extraordinária
-              amanhã às 09:00.
-            </p>
-            <span
-              class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-1 rounded uppercase tracking-wider border border-slate-200"
-              >Favorito</span
-            >
+
+          <div class="mt-8">
+             <div class="flex items-center justify-between border-b border-brand-outline pb-4">
+                <h3 class="font-display font-semibold text-lg text-brand-text">Feed da Linha do Tempo</h3>
+                <div class="flex gap-4 text-sm font-medium text-slate-500">
+                   <span class="text-brand-text border-b-2 border-brand-text pb-[18px] -mb-[18px]">Todos os Prazos</span>
+                   <span class="hover:text-brand-text cursor-pointer pb-[18px]">Vencendo Hoje</span>
+                   <span class="hover:text-brand-text cursor-pointer pb-[18px]">Atrasados</span>
+                   <span class="hover:text-brand-text cursor-pointer pb-[18px]">Acelerados</span>
+                </div>
+             </div>
+
+             <div class="bg-white rounded-b-md border-x border-b border-brand-outline shadow-sm">
+                <div class="p-5 border-b border-slate-100 flex gap-4 hover:bg-slate-50 transition-colors">
+                   <div class="w-10 h-10 rounded bg-red-50 text-red-600 border border-red-100 flex items-center justify-center shrink-0 mt-1">
+                      <i data-lucide="timer-off" class="w-5 h-5"></i>
+                   </div>
+                   <div class="flex-1">
+                      <div class="flex justify-between items-start">
+                         <div>
+                            <div class="flex items-center gap-2 mb-1">
+                               <span class="text-[10px] font-bold uppercase tracking-wider text-red-600">Prazo Regimental Esgotando</span>
+                               <span class="w-1 h-1 rounded-full bg-slate-300"></span>
+                               <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Hoje, 18:00</span>
+                            </div>
+                            <h4 class="font-semibold text-brand-text text-base">PL 2630/2020 - Fim do prazo de 15 dias na CCJ</h4>
+                         </div>
+                         <span class="text-xs text-slate-400">Faltam 4 horas</span>
+                      </div>
+                      <div class="flex justify-between items-end mt-2">
+                         <p class="text-sm text-slate-600 max-w-xl">A contagem de 5 sessões ordinárias para devolução do relatório será encerrada ao fim do expediente de hoje.</p>
+                         <div class="flex items-center gap-2 bg-slate-50 px-2 py-1 rounded border border-slate-100">
+                            <span class="text-xs font-medium text-slate-700">Tramitando há: 3 anos e 2 meses</span>
+                         </div>
+                      </div>
+                   </div>
+                </div>
+
+                <div class="p-5 border-b border-slate-100 flex gap-4 hover:bg-slate-50 transition-colors">
+                   <div class="w-10 h-10 rounded bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center shrink-0 mt-1">
+                      <i data-lucide="fast-forward" class="w-5 h-5"></i>
+                   </div>
+                   <div class="flex-1">
+                      <div class="flex justify-between items-start">
+                         <div>
+                            <div class="flex items-center gap-2 mb-1">
+                               <span class="text-[10px] font-bold uppercase tracking-wider text-blue-600">Aceleração de Trâmite</span>
+                               <span class="w-1 h-1 rounded-full bg-slate-300"></span>
+                               <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Regime de Urgência</span>
+                            </div>
+                            <h4 class="font-semibold text-brand-text text-base">PEC 45/2019 - Corte de 45 dias no trâmite</h4>
+                         </div>
+                         <span class="text-xs text-slate-400">Há 1 hora</span>
+                      </div>
+                      <div class="flex justify-between items-end mt-2">
+                         <p class="text-sm text-slate-600 max-w-xl">Aprovação de urgência reduziu o tempo previsto de análise de 60 para 15 dias corridos.</p>
+                         <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-1 rounded uppercase tracking-wider border border-slate-200">Favorito</span>
+                      </div>
+                   </div>
+                </div>
+
+                <div class="p-5 border-b border-slate-100 flex gap-4 hover:bg-slate-50 transition-colors">
+                   <div class="w-10 h-10 rounded bg-orange-50 text-orange-600 border border-orange-100 flex items-center justify-center shrink-0 mt-1">
+                      <i data-lucide="clock-10" class="w-5 h-5"></i>
+                   </div>
+                   <div class="flex-1">
+                      <div class="flex justify-between items-start">
+                         <div>
+                            <div class="flex items-center gap-2 mb-1">
+                               <span class="text-[10px] font-bold uppercase tracking-wider text-orange-600">Atraso Notificado</span>
+                               <span class="w-1 h-1 rounded-full bg-slate-300"></span>
+                               <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Comissão Especial</span>
+                            </div>
+                            <h4 class="font-semibold text-brand-text text-base">PL 123/2024 - Relatoria com 12 dias de atraso</h4>
+                         </div>
+                         <span class="text-xs text-slate-400">Acumulando desde 02/06</span>
+                      </div>
+                      <div class="flex justify-between items-end mt-2">
+                         <p class="text-sm text-slate-600 max-w-xl">O prazo de 40 sessões foi ultrapassado. Proposição encontra-se estagnada aguardando parecer do relator.</p>
+                         <span class="text-[10px] font-bold text-orange-600 flex items-center gap-1 uppercase tracking-wider"><div class="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse"></div> Excedido</span>
+                      </div>
+                   </div>
+                </div>
+
+                 <div class="p-5 flex gap-4 hover:bg-slate-50 transition-colors opacity-70">
+                   <div class="w-10 h-10 rounded bg-slate-100 text-slate-500 border border-slate-200 flex items-center justify-center shrink-0 mt-1">
+                      <i data-lucide="calendar-plus" class="w-5 h-5"></i>
+                   </div>
+                   <div class="flex-1">
+                      <div class="flex justify-between items-start">
+                         <div>
+                            <div class="flex items-center gap-2 mb-1">
+                               <span class="text-[10px] font-bold uppercase tracking-wider text-slate-600">Cronômetro Iniciado</span>
+                               <span class="w-1 h-1 rounded-full bg-slate-300"></span>
+                               <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Protocolo</span>
+                            </div>
+                            <h4 class="font-semibold text-brand-text text-base">Nova Emenda Protocolada - Início do prazo de 5 dias</h4>
+                         </div>
+                         <span class="text-xs text-slate-400">Hoje, 09:12</span>
+                      </div>
+                      <div class="flex justify-between items-end mt-2">
+                         <p class="text-sm text-slate-600 max-w-xl">Emenda aditiva adicionou 5 dias ao relógio de tramitação do projeto de lei de diretrizes.</p>
+                         <span class="text-xs italic text-slate-400">Contagem Ativa</span>
+                      </div>
+                   </div>
+                </div>
+
+                <div class="bg-slate-50 p-3 border-t border-slate-100 text-center rounded-b-md">
+                   <button class="text-xs font-bold uppercase tracking-wider text-slate-500 hover:text-brand-primary transition-colors py-2">
+                      Carregar Histórico de Tempos
+                   </button>
+                </div>
+             </div>
           </div>
         </div>
-      </div>
-
-      <div
-        class="p-5 border-b border-slate-100 flex gap-4 hover:bg-slate-50 transition-colors"
-      >
-        <div
-          class="w-10 h-10 rounded bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center shrink-0 mt-1"
-        >
-          <i data-lucide="users" class="w-5 h-5"></i>
-        </div>
-        <div class="flex-1">
-          <div class="flex justify-between items-start">
-            <div>
-              <div class="flex items-center gap-2 mb-1">
-                <span
-                  class="text-[10px] font-bold uppercase tracking-wider text-emerald-600"
-                  >Quórum</span
-                >
-                <span class="w-1 h-1 rounded-full bg-slate-300"></span>
-                <span
-                  class="text-[10px] font-bold uppercase tracking-wider text-slate-500"
-                  >Plenário</span
-                >
-              </div>
-              <h4 class="font-semibold text-brand-text text-base">
-                Quórum de Votação Atingido (257 deputados)
-              </h4>
-            </div>
-            <span class="text-xs text-slate-400">Há 2 horas</span>
-          </div>
-          <div class="flex justify-between items-end mt-2">
-            <p class="text-sm text-slate-600 max-w-xl">
-              Iniciada a ordem do dia com quórum suficiente para aprovação de
-              leis complementares.
-            </p>
-            <span
-              class="text-[10px] font-bold text-emerald-600 flex items-center gap-1 uppercase tracking-wider"
-              ><div
-                class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"
-              ></div>
-              Ao Vivo</span
-            >
-          </div>
-        </div>
-      </div>
-
-      <div
-        class="p-5 flex gap-4 hover:bg-slate-50 transition-colors opacity-70"
-      >
-        <div
-          class="w-10 h-10 rounded bg-slate-100 text-slate-500 border border-slate-200 flex items-center justify-center shrink-0 mt-1"
-        >
-          <i data-lucide="git-commit" class="w-5 h-5"></i>
-        </div>
-        <div class="flex-1">
-          <div class="flex justify-between items-start">
-            <div>
-              <div class="flex items-center gap-2 mb-1">
-                <span
-                  class="text-[10px] font-bold uppercase tracking-wider text-slate-600"
-                  >Movimentação</span
-                >
-                <span class="w-1 h-1 rounded-full bg-slate-300"></span>
-                <span
-                  class="text-[10px] font-bold uppercase tracking-wider text-slate-500"
-                  >Protocolo</span
-                >
-              </div>
-              <h4 class="font-semibold text-brand-text text-base">
-                PL 123/2024 - Nova Emenda Protocolada
-              </h4>
-            </div>
-            <span class="text-xs text-slate-400">Hoje, 09:12</span>
-          </div>
-          <div class="flex justify-between items-end mt-2">
-            <p class="text-sm text-slate-600 max-w-xl">
-              O Deputado Júlio C. protocolou emenda aditiva nº 45 ao projeto de
-              lei de diretrizes.
-            </p>
-            <span class="text-xs italic text-slate-400">Lido</span>
-          </div>
-        </div>
-      </div>
-
-      <div
-        class="bg-slate-50 p-3 border-t border-slate-100 text-center rounded-b-md"
-      >
-        <button
-          class="text-xs font-bold uppercase tracking-wider text-slate-500 hover:text-brand-primary transition-colors py-2"
-        >
-          Carregar Histórico Anterior
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
 {% endblock %}

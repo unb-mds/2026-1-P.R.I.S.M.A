@@ -1,497 +1,265 @@
-{% extends 'home/base.html' %} {% block title %}Proposições{% endblock %} {%
-block page_title %}Proposições{% endblock %} {% block content %}
+{% extends 'home/base.html' %}
+{% block title %}Proposicoes{% endblock %}
+{% block content %}
 <div class="h-[calc(100vh-72px)] overflow-hidden flex">
-  <div
-    class="w-64 border-r border-brand-outline bg-white flex flex-col flex-shrink-0 h-full overflow-y-auto"
-  >
-    <div
-      class="p-4 border-b border-brand-outline flex justify-between items-center sticky top-0 bg-white z-10"
-    >
-      <h3 class="font-semibold text-sm">Filtros Avançados</h3>
-      <button class="text-xs text-brand-primary font-medium hover:underline">
-        Limpar
-      </button>
-    </div>
+          <div class="w-64 border-r border-brand-outline bg-white flex flex-col flex-shrink-0 h-full overflow-y-auto">
+             <div class="p-4 border-b border-brand-outline flex justify-between items-center sticky top-0 bg-white z-10">
+                <h3 class="font-semibold text-sm">Filtros de Tempo</h3>
+                <button class="text-xs text-brand-primary font-medium hover:underline">Limpar</button>
+             </div>
+             
+             <div class="p-4 space-y-6">
+                <div class="space-y-3">
+                   <label class="text-xs font-semibold uppercase tracking-wider text-slate-500">Tipo de Proposição</label>
+                   <div class="grid grid-cols-2 gap-2">
+                     <button class="bg-brand-primary text-white text-xs py-1.5 rounded font-medium">PL</button>
+                     <button class="border border-slate-200 hover:bg-slate-50 text-slate-600 text-xs py-1.5 rounded font-medium">PEC</button>
+                     <button class="border border-slate-200 hover:bg-slate-50 text-slate-600 text-xs py-1.5 rounded font-medium">MPV</button>
+                     <button class="border border-slate-200 hover:bg-slate-50 text-slate-600 text-xs py-1.5 rounded font-medium">REQ</button>
+                   </div>
+                </div>
 
-    <div class="p-4 space-y-6">
-      <div class="space-y-3">
-        <label
-          class="text-xs font-semibold uppercase tracking-wider text-slate-500"
-          >Tipo de Proposição</label
-        >
-        <div class="grid grid-cols-2 gap-2">
-          <button
-            class="bg-brand-primary text-white text-xs py-1.5 rounded font-medium"
-          >
-            PL
-          </button>
-          <button
-            class="border border-slate-200 hover:bg-slate-50 text-slate-600 text-xs py-1.5 rounded font-medium"
-          >
-            PEC
-          </button>
-          <button
-            class="border border-slate-200 hover:bg-slate-50 text-slate-600 text-xs py-1.5 rounded font-medium"
-          >
-            MPV
-          </button>
-          <button
-            class="border border-slate-200 hover:bg-slate-50 text-slate-600 text-xs py-1.5 rounded font-medium"
-          >
-            REQ
-          </button>
-        </div>
-      </div>
+                <div class="space-y-2">
+                   <label class="text-xs font-semibold uppercase tracking-wider text-slate-500">Ritmo de Trâmite</label>
+                   <select class="w-full text-sm border border-slate-200 rounded p-2 bg-white outline-none focus:border-brand-primary">
+                     <option>Vencendo esta semana</option>
+                     <option>Estagnados (> 90 dias)</option>
+                     <option>Regime de Urgência</option>
+                   </select>
+                </div>
 
-      <div class="space-y-2">
-        <label
-          class="text-xs font-semibold uppercase tracking-wider text-slate-500"
-          >Temas Prioritários</label
-        >
-        <select
-          class="w-full text-sm border border-slate-200 rounded p-2 bg-white outline-none focus:border-brand-primary"
-        >
-          <option>Educação e Cultura</option>
-          <option>Economia</option>
-          <option>Saúde</option>
-        </select>
-      </div>
+                <div class="space-y-2">
+                   <label class="text-xs font-semibold uppercase tracking-wider text-slate-500">Busca por Período</label>
+                   <div class="relative">
+                     <div class="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
+                        <i data-lucide="calendar-search" class="w-3.5 h-3.5 text-slate-400"></i>
+                     </div>
+                     <input type="text" placeholder="Ex: Jan 2023 - Mar 2024" class="w-full text-sm border border-slate-200 rounded pl-8 p-2 bg-white outline-none focus:border-brand-primary" />
+                   </div>
+                </div>
 
-      <div class="space-y-2">
-        <label
-          class="text-xs font-semibold uppercase tracking-wider text-slate-500"
-          >Autor</label
-        >
-        <div class="relative">
-          <div
-            class="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none"
-          >
-            <i data-lucide="user-plus" class="w-3.5 h-3.5 text-slate-400"></i>
+                <div class="space-y-3">
+                   <label class="text-xs font-semibold uppercase tracking-wider text-slate-500">Status Temporal</label>
+                   <div class="space-y-2">
+                       <label class="flex items-center gap-2 cursor-pointer group">
+                         <div class="w-4 h-4 rounded border flex items-center justify-center bg-brand-primary border-brand-primary">
+                            <i data-lucide="check" class="w-3 h-3 text-white"></i>
+                         </div>
+                         <span class="text-sm text-slate-700">Contagem Ativa</span>
+                       </label>
+                       <label class="flex items-center gap-2 cursor-pointer group">
+                         <div class="w-4 h-4 rounded border flex items-center justify-center border-slate-300">
+                         </div>
+                         <span class="text-sm text-slate-700">Prazo Excedido</span>
+                       </label>
+                       <label class="flex items-center gap-2 cursor-pointer group">
+                         <div class="w-4 h-4 rounded border flex items-center justify-center border-slate-300">
+                         </div>
+                         <span class="text-sm text-slate-700">Ciclo Fechado</span>
+                       </label>
+                       <label class="flex items-center gap-2 cursor-pointer group">
+                         <div class="w-4 h-4 rounded border flex items-center justify-center border-slate-300">
+                         </div>
+                         <span class="text-sm text-slate-700">Contagem Suspensa</span>
+                       </label>
+                   </div>
+                </div>
+
+                <button class="w-full bg-slate-100 hover:bg-slate-200 transition-colors text-brand-text font-medium text-sm py-2 rounded border border-slate-200 mt-4">
+                  Aplicar Filtros
+                </button>
+             </div>
           </div>
-          <input
-            type="text"
-            placeholder="Nome do Parlamentar"
-            class="w-full text-sm border border-slate-200 rounded pl-8 p-2 bg-white outline-none focus:border-brand-primary"
-          />
-        </div>
-      </div>
 
-      <div class="space-y-3">
-        <label
-          class="text-xs font-semibold uppercase tracking-wider text-slate-500"
-          >Status</label
-        >
-        <div class="space-y-2">
-          <label class="flex items-center gap-2 cursor-pointer group">
-            <div
-              class="w-4 h-4 rounded border flex items-center justify-center bg-brand-primary border-brand-primary"
-            >
-              <i data-lucide="check" class="w-3 h-3 text-white"></i>
-            </div>
-            <span class="text-sm text-slate-700">Em Tramitação</span>
-          </label>
-          <label class="flex items-center gap-2 cursor-pointer group">
-            <div
-              class="w-4 h-4 rounded border flex items-center justify-center border-slate-300"
-            ></div>
-            <span class="text-sm text-slate-700">Aprovado</span>
-          </label>
-          <label class="flex items-center gap-2 cursor-pointer group">
-            <div
-              class="w-4 h-4 rounded border flex items-center justify-center border-slate-300"
-            ></div>
-            <span class="text-sm text-slate-700">Arquivado</span>
-          </label>
-          <label class="flex items-center gap-2 cursor-pointer group">
-            <div
-              class="w-4 h-4 rounded border flex items-center justify-center border-slate-300"
-            ></div>
-            <span class="text-sm text-slate-700">Veto Presidencial</span>
-          </label>
-        </div>
-      </div>
+          <div class="flex-1 overflow-x-hidden overflow-y-auto bg-brand-surface p-6">
+             <div class="flex justify-between items-center mb-6">
+                <h2 class="font-display font-semibold text-lg text-brand-text">Gestão de Tempos e Prazos</h2>
+                <button class="bg-brand-primary hover:bg-[#102a43] text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
+                  + Iniciar Cronômetro
+                </button>
+             </div>
 
-      <button
-        class="w-full bg-slate-100 hover:bg-slate-200 transition-colors text-brand-text font-medium text-sm py-2 rounded border border-slate-200 mt-4"
-      >
-        Aplicar Filtros
-      </button>
-    </div>
-  </div>
-
-  <div class="flex-1 overflow-x-hidden overflow-y-auto bg-brand-surface p-6">
-    <div class="flex justify-between items-center mb-6">
-      <h2 class="font-display font-semibold text-lg text-brand-text">
-        Proposições Legislativas
-      </h2>
-      <button
-        class="bg-brand-primary hover:bg-[#102a43] text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
-      >
-        + Acompanhar Nova Proposição
-      </button>
-    </div>
-
-    <div class="grid grid-cols-4 gap-4 mb-8">
-      <div
-        class="bg-white border border-brand-outline rounded-md flex p-4 shadow-sm items-center gap-4"
-      >
-        <div
-          class="w-10 h-10 rounded bg-blue-50 text-blue-600 flex items-center justify-center shrink-0"
-        >
-          <i data-lucide="file-signature" class="w-5 h-5"></i>
-        </div>
-        <div>
-          <p class="text-xs text-slate-500 font-medium">Total PLs</p>
-          <p class="text-xl font-display font-bold text-brand-text">1,248</p>
-        </div>
-      </div>
-      <div
-        class="bg-white border border-brand-outline rounded-md flex p-4 shadow-sm items-center gap-4"
-      >
-        <div
-          class="w-10 h-10 rounded bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0"
-        >
-          <i data-lucide="timer-reset" class="w-5 h-5"></i>
-        </div>
-        <div>
-          <p class="text-xs text-slate-500 font-medium">Em Tramitação</p>
-          <p class="text-xl font-display font-bold text-brand-text">482</p>
-        </div>
-      </div>
-      <div
-        class="bg-white border border-brand-outline rounded-md flex p-4 shadow-sm items-center gap-4"
-      >
-        <div
-          class="w-10 h-10 rounded bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0"
-        >
-          <i data-lucide="check-circle" class="w-5 h-5"></i>
-        </div>
-        <div>
-          <p class="text-xs text-slate-500 font-medium">Aprovadas 2024</p>
-          <p class="text-xl font-display font-bold text-brand-text">56</p>
-        </div>
-      </div>
-      <div
-        class="bg-white border border-brand-outline rounded-md flex p-4 shadow-sm items-center gap-4"
-      >
-        <div
-          class="w-10 h-10 rounded bg-red-50 text-red-600 flex items-center justify-center shrink-0"
-        >
-          <i data-lucide="alert-circle" class="w-5 h-5"></i>
-        </div>
-        <div>
-          <p class="text-xs text-slate-500 font-medium">Vetos Recentes</p>
-          <p class="text-xl font-display font-bold text-brand-text">12</p>
-        </div>
-      </div>
-    </div>
-
-    <div
-      class="bg-white border border-brand-outline rounded-md shadow-sm overflow-hidden mb-6"
-    >
-      <table class="w-full text-left border-collapse">
-        <thead>
-          <tr
-            class="border-b border-brand-outline bg-slate-50 text-xs font-semibold text-slate-500 uppercase tracking-wider"
-          >
-            <th class="p-4 w-40">ID / Tipo</th>
-            <th class="p-4">Título / Ementa</th>
-            <th class="p-4 w-48">Autor Principal</th>
-            <th class="p-4 w-40">Última Movimentação</th>
-            <th class="p-4 w-32">Status</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-slate-100">
-          <tr
-            class="bg-blue-50/30 border-l-2 border-brand-primary cursor-pointer hover:bg-slate-50 transition-colors"
-          >
-            <td class="p-4 align-top">
-              <p class="font-display font-bold text-brand-text">PL 2630/2020</p>
-              <span
-                class="inline-block mt-1 px-1.5 py-0.5 bg-blue-100 text-blue-700 text-[9px] font-bold uppercase tracking-widest rounded border border-blue-200"
-                >Urgência</span
-              >
-            </td>
-            <td class="p-4 align-top">
-              <p class="font-semibold text-brand-text">Lei das Fake News</p>
-              <p class="text-xs text-brand-text-muted mt-1 truncate max-w-sm">
-                Institui a Lei Brasileira de Liberdade, Responsabilidade e
-                Transparência na Internet.
-              </p>
-            </td>
-            <td class="p-4 align-top text-sm">Sen. Alessandro Vieira</td>
-            <td class="p-4 align-top">
-              <p class="text-sm font-medium text-brand-text">15 Out 2023</p>
-              <p class="text-[10px] text-slate-500 mt-0.5 italic">
-                Enviado à CCJC
-              </p>
-            </td>
-            <td class="p-4 align-top">
-              <span
-                class="inline-block px-2 py-1 bg-[#d1fae5] text-[#065f46] text-[10px] font-bold uppercase tracking-wider rounded border border-[#a7f3d0]"
-                >Em Tramitação</span
-              >
-            </td>
-          </tr>
-
-          <tr>
-            <td
-              colspan="5"
-              class="p-0 border-b-2 border-slate-200 bg-[#f8fafc]"
-            >
-              <div
-                class="p-8 px-12 border-l-2 border-brand-primary shadow-inner"
-              >
-                <div class="flex justify-between items-center mb-8">
-                  <h4 class="font-semibold text-sm flex items-center gap-2">
-                    <i
-                      data-lucide="timer-reset"
-                      class="w-4 h-4 text-slate-400"
-                    ></i>
-                    Linha do Tempo Legislativa: PL 2630/2020
-                  </h4>
-                  <div class="flex gap-2">
-                    <button
-                      class="text-xs border border-slate-300 bg-white px-3 py-1.5 rounded hover:bg-slate-50 font-medium"
-                    >
-                      Exportar PDF
-                    </button>
-                    <button
-                      class="text-xs border border-slate-300 bg-white px-3 py-1.5 rounded hover:bg-slate-50 font-medium"
-                    >
-                      Ver Documento Original
-                    </button>
+             <div class="grid grid-cols-4 gap-4 mb-8">
+                <div class="bg-white border border-brand-outline rounded-md flex p-4 shadow-sm items-center gap-4">
+                  <div class="w-10 h-10 rounded bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+                    <i data-lucide="clock" class="w-5 h-5"></i>
+                  </div>
+                  <div>
+                    <p class="text-xs text-slate-500 font-medium">Dias em Média</p>
+                    <p class="text-xl font-display font-bold text-brand-text">145</p>
                   </div>
                 </div>
-
-                <div
-                  class="relative border-l-2 border-slate-200 ml-3 space-y-8 pb-4"
-                >
-                  <div class="relative pl-8">
-                    <div
-                      class="absolute -left-[17px] top-1 w-8 h-8 rounded-full bg-brand-primary text-white flex items-center justify-center border-4 border-[#f8fafc]"
-                    >
-                      <i data-lucide="file-signature" class="w-3.5 h-3.5"></i>
-                    </div>
-                    <div>
-                      <p class="text-xs font-semibold text-slate-500 mb-0.5">
-                        03 Abr 2020
-                      </p>
-                      <p class="text-sm font-semibold text-brand-text">
-                        Apresentação da Proposição
-                      </p>
-                      <p class="text-sm text-slate-600 mt-2">
-                        Protocolado no Senado Federal pelo autor Senador
-                        Alessandro Vieira. Início da tramitação oficial.
-                      </p>
-                    </div>
+                <div class="bg-white border border-brand-outline rounded-md flex p-4 shadow-sm items-center gap-4">
+                  <div class="w-10 h-10 rounded bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                    <i data-lucide="timer" class="w-5 h-5"></i>
                   </div>
-
-                  <div class="relative pl-8">
-                    <div
-                      class="absolute -left-[17px] top-1 w-8 h-8 rounded-full bg-[#f1f5f9] border border-brand-outline text-brand-text flex items-center justify-center border-4 border-[#f8fafc]"
-                    >
-                      <i data-lucide="file-signature" class="w-3.5 h-3.5"></i>
-                    </div>
-                    <div>
-                      <p class="text-xs font-semibold text-slate-500 mb-0.5">
-                        12 Jun 2020
-                      </p>
-                      <p class="text-sm font-semibold text-brand-text">
-                        Apresentação de Emendas (14 total)
-                      </p>
-                      <div class="flex gap-2 mt-2 mb-3">
-                        <span
-                          class="text-[10px] bg-slate-200 text-slate-700 px-2 py-0.5 rounded uppercase font-bold"
-                          >Emenda 01 - Modificação</span
-                        >
-                        <span
-                          class="text-[10px] bg-slate-200 text-slate-700 px-2 py-0.5 rounded uppercase font-bold"
-                          >Emenda 05 - Aditiva</span
-                        >
-                        <span
-                          class="text-[10px] text-slate-500 font-medium self-center"
-                          >+12 emendas</span
-                        >
-                      </div>
-                      <p class="text-sm text-slate-600">
-                        Diversas modificações sugeridas por membros da comissão
-                        de ciência e tecnologia.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div class="relative pl-8">
-                    <div
-                      class="absolute -left-[17px] top-1 w-8 h-8 rounded-full bg-[#10b981] text-white flex items-center justify-center border-4 border-[#f8fafc]"
-                    >
-                      <i data-lucide="vote" class="w-3.5 h-3.5"></i>
-                    </div>
-                    <div>
-                      <p class="text-xs font-semibold text-slate-500 mb-0.5">
-                        30 Jun 2020
-                      </p>
-                      <p class="text-sm font-semibold text-brand-text">
-                        Votação e Aprovação no Senado
-                      </p>
-                      <div class="grid grid-cols-3 gap-4 mt-3 mb-3 max-w-md">
-                        <div
-                          class="border border-emerald-200 bg-emerald-50 rounded p-2 text-center"
-                        >
-                          <p class="text-xl font-bold text-emerald-700">44</p>
-                          <p
-                            class="text-[10px] uppercase font-bold text-emerald-600"
-                          >
-                            SIM
-                          </p>
-                        </div>
-                        <div
-                          class="border border-red-200 bg-red-50 rounded p-2 text-center"
-                        >
-                          <p class="text-xl font-bold text-red-700">32</p>
-                          <p
-                            class="text-[10px] uppercase font-bold text-red-600"
-                          >
-                            NÃO
-                          </p>
-                        </div>
-                        <div
-                          class="border border-slate-200 bg-slate-50 rounded p-2 text-center"
-                        >
-                          <p class="text-xl font-bold text-slate-500">02</p>
-                          <p
-                            class="text-[10px] uppercase font-bold text-slate-500"
-                          >
-                            ABS
-                          </p>
-                        </div>
-                      </div>
-                      <p class="text-sm text-slate-600">
-                        Matéria aprovada em primeiro turno. Remetida à Câmara
-                        dos Deputados.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div class="relative pl-8">
-                    <div
-                      class="absolute -left-[17px] top-1 w-8 h-8 rounded-full bg-white border border-brand-outline text-brand-primary flex items-center justify-center shadow-sm"
-                    >
-                      <i data-lucide="hourglass" class="w-3.5 h-3.5"></i>
-                    </div>
-                    <div
-                      class="bg-white border border-brand-outline rounded-md p-4 shadow-sm"
-                    >
-                      <p
-                        class="text-[10px] font-bold uppercase tracking-wider text-brand-primary mb-1"
-                      >
-                        Status Atual
-                      </p>
-                      <p class="text-sm font-semibold text-brand-text">
-                        Aguardando Parecer na CCJC
-                      </p>
-                      <p class="text-sm text-slate-600 mt-2">
-                        A proposição está sob análise da Comissão de
-                        Constituição e Justiça e de Cidadania. Prazo regimental
-                        até 15 Dez 2023.
-                      </p>
-
-                      <div class="mt-5 relative pb-4">
-                        <div
-                          class="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden"
-                        >
-                          <div class="h-full bg-brand-primary w-[66%]"></div>
-                        </div>
-                        <div class="flex justify-between absolute w-full top-3">
-                          <span
-                            class="text-[9px] font-bold uppercase text-slate-500"
-                            >Senado</span
-                          >
-                          <span
-                            class="text-[9px] font-bold uppercase text-brand-primary"
-                            >Câmara (CCJC)</span
-                          >
-                          <span
-                            class="text-[9px] font-bold uppercase text-slate-400"
-                            >Sanção</span
-                          >
-                        </div>
-                      </div>
-                    </div>
+                  <div>
+                    <p class="text-xs text-slate-500 font-medium">Relógios Ativos</p>
+                    <p class="text-xl font-display font-bold text-brand-text">482</p>
                   </div>
                 </div>
-              </div>
-            </td>
-          </tr>
+                <div class="bg-white border border-brand-outline rounded-md flex p-4 shadow-sm items-center gap-4">
+                  <div class="w-10 h-10 rounded bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
+                    <i data-lucide="check-circle" class="w-5 h-5"></i>
+                  </div>
+                  <div>
+                    <p class="text-xs text-slate-500 font-medium">Prazos Cumpridos</p>
+                    <p class="text-xl font-display font-bold text-brand-text">356</p>
+                  </div>
+                </div>
+                 <div class="bg-white border border-brand-outline rounded-md flex p-4 shadow-sm items-center gap-4">
+                  <div class="w-10 h-10 rounded bg-red-50 text-red-600 flex items-center justify-center shrink-0">
+                    <i data-lucide="calendar-x" class="w-5 h-5"></i>
+                  </div>
+                  <div>
+                    <p class="text-xs text-slate-500 font-medium">Prazos Excedidos</p>
+                    <p class="text-xl font-display font-bold text-brand-text">124</p>
+                  </div>
+                </div>
+             </div>
 
-          <tr class="hover:bg-slate-50 transition-colors cursor-pointer">
-            <td class="p-4 align-top border-l-2 border-transparent">
-              <p class="font-display font-medium text-brand-text">
-                PEC 45/2019
-              </p>
-            </td>
-            <td class="p-4 align-top">
-              <p class="font-medium text-brand-text">Reforma Tributária</p>
-              <p class="text-xs text-brand-text-muted mt-1 truncate max-w-sm">
-                Altera o Sistema Tributário Nacional.
-              </p>
-            </td>
-            <td class="p-4 align-top text-sm">Dep. Baleia Rossi</td>
-            <td class="p-4 align-top">
-              <p class="text-sm text-brand-text">20 Dez 2023</p>
-              <p class="text-[10px] text-slate-500 mt-0.5 italic">Promulgada</p>
-            </td>
-            <td class="p-4 align-top">
-              <span
-                class="inline-block px-2 py-1 bg-blue-100 text-blue-800 text-[10px] font-bold uppercase tracking-wider rounded border border-blue-200"
-                >Aprovada</span
-              >
-            </td>
-          </tr>
-        </tbody>
-      </table>
+             <div class="bg-white border border-brand-outline rounded-md shadow-sm overflow-hidden mb-6">
+                <table class="w-full text-left border-collapse">
+                   <thead>
+                     <tr class="border-b border-brand-outline bg-slate-50 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                       <th class="p-4 w-40">ID / Ciclo</th>
+                       <th class="p-4">Título / Referência</th>
+                       <th class="p-4 w-48">Tempo Acumulado</th>
+                       <th class="p-4 w-40">Prazo Regimental</th>
+                       <th class="p-4 w-32">Status Temporal</th>
+                     </tr>
+                   </thead>
+                   <tbody class="divide-y divide-slate-100">
+                      <tr class="bg-blue-50/30 border-l-2 border-brand-primary cursor-pointer hover:bg-slate-50 transition-colors">
+                         <td class="p-4 align-top">
+                           <p class="font-display font-bold text-brand-text">PL 2630/2020</p>
+                           <span class="inline-block mt-1 px-1.5 py-0.5 bg-blue-100 text-blue-700 text-[9px] font-bold uppercase tracking-widest rounded border border-blue-200">Cronômetro Reduzido</span>
+                         </td>
+                         <td class="p-4 align-top">
+                           <p class="font-semibold text-brand-text">Lei das Fake News</p>
+                           <p class="text-xs text-brand-text-muted mt-1 truncate max-w-sm">Acompanhamento do ciclo de tramitação nas comissões mistas.</p>
+                         </td>
+                         <td class="p-4 align-top">
+                            <p class="text-sm font-bold text-brand-text">3 anos e 2 meses</p>
+                            <p class="text-[10px] text-slate-500 mt-0.5">Desde 03/04/2020</p>
+                         </td>
+                         <td class="p-4 align-top">
+                           <p class="text-sm font-medium text-brand-error">Faltam 14 dias</p>
+                           <p class="text-[10px] text-slate-500 mt-0.5 italic">Encerra em 15 Out</p>
+                         </td>
+                         <td class="p-4 align-top">
+                           <span class="inline-block px-2 py-1 bg-[#d1fae5] text-[#065f46] text-[10px] font-bold uppercase tracking-wider rounded border border-[#a7f3d0]">Contagem Ativa</span>
+                         </td>
+                      </tr>
 
-      <div
-        class="border-t border-slate-100 p-4 bg-slate-50 flex items-center justify-between"
-      >
-        <span class="text-sm text-slate-500"
-          >Mostrando 1-10 de 1,248 proposições</span
-        >
-        <div class="flex items-center gap-1">
-          <button
-            class="px-3 py-1 bg-white border border-slate-200 rounded text-sm hover:bg-slate-50"
-          >
-            &lsaquo;
-          </button>
-          <button
-            class="px-3 py-1 bg-brand-primary text-white rounded text-sm font-medium"
-          >
-            1
-          </button>
-          <button
-            class="px-3 py-1 bg-white border border-slate-200 rounded text-sm hover:bg-slate-50"
-          >
-            2
-          </button>
-          <button
-            class="px-3 py-1 bg-white border border-slate-200 rounded text-sm hover:bg-slate-50"
-          >
-            3
-          </button>
-          <span class="px-2 text-slate-400">...</span>
-          <button
-            class="px-3 py-1 bg-white border border-slate-200 rounded text-sm hover:bg-slate-50"
-          >
-            125
-          </button>
-          <button
-            class="px-3 py-1 bg-white border border-slate-200 rounded text-sm hover:bg-slate-50"
-          >
-            &rsaquo;
-          </button>
+                      <tr>
+                        <td colspan="5" class="p-0 border-b-2 border-slate-200 bg-[#f8fafc]">
+                           <div class="p-8 px-12 border-l-2 border-brand-primary shadow-inner">
+                              <div class="flex justify-between items-center mb-8">
+                                 <h4 class="font-semibold text-sm flex items-center gap-2">
+                                   <i data-lucide="history" class="w-4 h-4 text-slate-400"></i>
+                                   Desdobramento do Tempo: PL 2630/2020
+                                 </h4>
+                                 <div class="flex gap-2">
+                                   <button class="text-xs border border-slate-300 bg-white px-3 py-1.5 rounded hover:bg-slate-50 font-medium">Exportar Relatório de Dias</button>
+                                 </div>
+                              </div>
+
+                              <div class="relative border-l-2 border-slate-200 ml-3 space-y-8 pb-4">
+                                 <div class="relative pl-8">
+                                    <div class="absolute -left-[17px] top-1 w-8 h-8 rounded-full bg-brand-primary text-white flex items-center justify-center border-4 border-[#f8fafc]">
+                                       <i data-lucide="play" class="w-3.5 h-3.5 ml-0.5"></i>
+                                    </div>
+                                    <div>
+                                       <p class="text-xs font-semibold text-slate-500 mb-0.5">03 Abr 2020</p>
+                                       <p class="text-sm font-semibold text-brand-text">Início do Cronômetro Principal</p>
+                                       <p class="text-sm text-slate-600 mt-2">Data do protocolo oficial. O relógio de tramitação global foi ativado nesta data.</p>
+                                    </div>
+                                 </div>
+
+                                 <div class="relative pl-8">
+                                    <div class="absolute -left-[17px] top-1 w-8 h-8 rounded-full bg-[#f1f5f9] border border-brand-outline text-brand-text flex items-center justify-center border-4 border-[#f8fafc]">
+                                       <i data-lucide="fast-forward" class="w-3.5 h-3.5"></i>
+                                    </div>
+                                    <div>
+                                       <p class="text-xs font-semibold text-slate-500 mb-0.5">12 Jun 2020 <span class="text-brand-primary font-bold">(+ 70 dias)</span></p>
+                                       <p class="text-sm font-semibold text-brand-text">Fim do Prazo de Emendas</p>
+                                       <div class="flex gap-2 mt-2 mb-3">
+                                          <span class="text-[10px] bg-slate-200 text-slate-700 px-2 py-0.5 rounded uppercase font-bold">14 Adições ao Texto</span>
+                                       </div>
+                                       <p class="text-sm text-slate-600">O período de 70 dias corridos foi utilizado inteiramente para o recebimento de modificações.</p>
+                                    </div>
+                                 </div>
+
+                                 <div class="relative pl-8">
+                                    <div class="absolute -left-[17px] top-1 w-8 h-8 rounded-full bg-[#10b981] text-white flex items-center justify-center border-4 border-[#f8fafc]">
+                                       <i data-lucide="timer" class="w-3.5 h-3.5"></i>
+                                    </div>
+                                    <div>
+                                       <p class="text-xs font-semibold text-slate-500 mb-0.5">30 Jun 2020 <span class="text-emerald-600 font-bold">(+ 18 dias)</span></p>
+                                       <p class="text-sm font-semibold text-brand-text">Duração do Debate no Plenário</p>
+                                       <div class="grid grid-cols-2 gap-4 mt-3 mb-3 max-w-sm">
+                                          <div class="border border-emerald-200 bg-emerald-50 rounded p-2 text-center">
+                                             <p class="text-xl font-bold text-emerald-700">14h 30m</p>
+                                             <p class="text-[10px] uppercase font-bold text-emerald-600">Tempo de Discussão</p>
+                                         </div>
+                                          <div class="border border-slate-200 bg-slate-50 rounded p-2 text-center">
+                                             <p class="text-xl font-bold text-slate-600">02h 15m</p>
+                                             <p class="text-[10px] uppercase font-bold text-slate-500">Tempo de Votação</p>
+                                          </div>
+                                       </div>
+                                       <p class="text-sm text-slate-600">Primeiro ciclo fechado em 88 dias totais. Cronômetro pausado e transferido para a próxima casa legislativa.</p>
+                                    </div>
+                                 </div>
+
+                                 <div class="relative pl-8">
+                                    <div class="absolute -left-[17px] top-1 w-8 h-8 rounded-full bg-white border border-brand-outline text-brand-primary flex items-center justify-center shadow-sm">
+                                       <i data-lucide="hourglass" class="w-3.5 h-3.5"></i>
+                                    </div>
+                                    <div class="bg-white border border-brand-outline rounded-md p-4 shadow-sm">
+                                       <p class="text-[10px] font-bold uppercase tracking-wider text-brand-primary mb-1">Status da Contagem Atual</p>
+                                       <p class="text-sm font-semibold text-brand-text">Correndo Prazo na CCJC</p>
+                                       <p class="text-sm text-slate-600 mt-2">Relógio ativo aguardando devolução. Limite regimental máximo estipulado para 15 Dez 2023.</p>
+                                       
+                                       <div class="mt-5 relative pb-4">
+                                         <div class="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                                            <div class="h-full bg-brand-primary w-[82%]"></div>
+                                         </div>
+                                         <div class="flex justify-between absolute w-full top-3">
+                                            <span class="text-[9px] font-bold uppercase text-slate-500">Dia 1</span>
+                                            <span class="text-[9px] font-bold uppercase text-brand-primary">Dia 33 (Atual)</span>
+                                            <span class="text-[9px] font-bold uppercase text-slate-400">Dia 40 (Limite)</span>
+                                         </div>
+                                       </div>
+                                    </div>
+                                 </div>
+                              </div>
+
+                           </div>
+                        </td>
+                      </tr>
+                      <tr class="hover:bg-slate-50 transition-colors cursor-pointer">
+                         <td class="p-4 align-top border-l-2 border-transparent">
+                           <p class="font-display font-medium text-brand-text">PEC 45/2019</p>
+                         </td>
+                         <td class="p-4 align-top">
+                           <p class="font-medium text-brand-text">Reforma Tributária</p>
+                           <p class="text-xs text-brand-text-muted mt-1 truncate max-w-sm">Histórico finalizado.</p>
+                         </td>
+                         <td class="p-4 align-top">
+                            <p class="text-sm font-bold text-brand-text">4 anos e 8 meses</p>
+                         </td>
+                         <td class="p-4 align-top">
+                           <p class="text-sm text-brand-text">Concluído</p>
+                           <p class="text-[10px] text-slate-500 mt-0.5 italic">Finalizado em 20 Dez 2023</p>
+                         </td>
+                         <td class="p-4 align-top">
+                           <span class="inline-block px-2 py-1 bg-slate-100 text-slate-600 text-[10px] font-bold uppercase tracking-wider rounded border border-slate-200">Ciclo Fechado</span>
+                         </td>
+                      </tr>
+                   </tbody>
+                </table>
+             </div>
+          </div>
         </div>
-      </div>
-    </div>
-  </div>
-</div>
 {% endblock %}
