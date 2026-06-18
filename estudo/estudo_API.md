@@ -2,7 +2,7 @@
 
 ### O que são APIs?
 
-Application Programming Interface, ou Interface de Programação de Aplicações. 
+Application Programming Interface, ou Interface de Programação de Aplicações.
 
 São um conjunto de regras e protocolos que permite que dois softwares "conversem" entre si, trocando dados e funcionalidades com segurança.
 
@@ -10,7 +10,7 @@ Atua como como uma ponte ou intermediário, permitindo que um sistema solicite i
 
 ### Como funciona?
 
-Analogicamente, a API seria um garçom: Ele permite que os clientes façam pedidos, leva-os até a cozinha de forma que os cozinheiros entendam e traz a resposta (o prato) de volta aos clientes. 
+Analogicamente, a API seria um garçom: Ele permite que os clientes façam pedidos, leva-os até a cozinha de forma que os cozinheiros entendam e traz a resposta (o prato) de volta aos clientes.
 A cozinha seria o servidor/banco de dados que é onde ocorre o processamento dos dados solicitados no pedido.
 
 > É uma forma de comunicação que permite trafegar informações entre diferentes sistemas.

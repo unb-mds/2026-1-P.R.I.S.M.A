@@ -92,7 +92,7 @@ Docker é mais leve e rápido, mas tem algumas limitações.
 
 Os dois têm seu uso. Pra testar outro SO, vai de VM. Pra rodar aplicação em produção, vai de Docker.
 
-## Imagem e Container 
+## Imagem e Container
 
 **Imagem**: é um pacote estático. Um arquivo. Ela contém tudo que um aplicativo precisa pra rodar: código, bibliotecas, configurações, variáveis de ambiente. A imagem não roda. Ela só existe, guardada no seu disco.
 
@@ -100,7 +100,7 @@ Os dois têm seu uso. Pra testar outro SO, vai de VM. Pra rodar aplicação em p
 
 Com poucos comandos você baixa uma imagem, sobe um container, e tá com um banco PostgreSQL rodando em segundos. Sem instalar nada na maquina além de Docker.
 
-Imagens vêm de um repositório de imagens. O mais famoso é o Docker Hub. 
+Imagens vêm de um repositório de imagens. O mais famoso é o Docker Hub.
 
 ## Docker vs Maquina Virtual
 
@@ -112,7 +112,6 @@ Muita gente confunde container com maquina virtual. Não é a mesma coisa.
 
 Resumo: VM virtualiza hardware. Container virtualiza o sistema operacional.
 
-
 ## Vantagens dos containers
 
 **Escalabilidade**: precisa rodar mais copias do seu app? É facil. Sobe mais containers. Dá pra ter dezenas rodando junto.
@@ -122,4 +121,3 @@ Resumo: VM virtualiza hardware. Container virtualiza o sistema operacional.
 **Facilidade de backup**: como tudo que importa tá dentro do container ou em volumes separados, fica facil de versionar, copiar, restaurar.
 
 **Reprodutibilidade**: roda na sua maquina, roda no servidor, roda na maquina do colega. Sem o famoso "mas na minha máquina funciona".
-

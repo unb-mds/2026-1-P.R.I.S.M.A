@@ -3,6 +3,7 @@
 ---
 
 ## 1. Estrutura de Pastas (ATUAL)
+
 2026-1-SQUAD11/
 ├── .github/ # GitHub Actions workflows
 ├── docs/ # Documentação do projeto (MkDocs)
@@ -38,19 +39,18 @@
 ├── requirements.txt # Dependências Python
 └── uv.lock # Lock file do UV (fast package manager)
 
-
 ---
 
 ## 2. Tecnologias por Camada
 
-| Camada | Localização | Tecnologia | Responsabilidade |
-|--------|------------|------------|------------------|
-| **Templates** | `src/templates/` | HTML + Django Template Language | Interface visual |
-| **Views** | `src/*/views.py` | Python + Django | Lógica de negócio |
-| **Models** | `src/*/models.py` | Python + Django ORM | Estrutura de dados |
-| **Config/URLs** | `src/config/` | Python | Rotas e configurações |
-| **Banco de Dados** | PostgreSQL (via Docker) | SQL | Armazenamento |
-| **Container** | `compose.yml` + `dockerfile` | Docker | Ambiente isolado |
+| Camada             | Localização                  | Tecnologia                      | Responsabilidade      |
+| ------------------ | ---------------------------- | ------------------------------- | --------------------- |
+| **Templates**      | `src/templates/`             | HTML + Django Template Language | Interface visual      |
+| **Views**          | `src/*/views.py`             | Python + Django                 | Lógica de negócio     |
+| **Models**         | `src/*/models.py`            | Python + Django ORM             | Estrutura de dados    |
+| **Config/URLs**    | `src/config/`                | Python                          | Rotas e configurações |
+| **Banco de Dados** | PostgreSQL (via Docker)      | SQL                             | Armazenamento         |
+| **Container**      | `compose.yml` + `dockerfile` | Docker                          | Ambiente isolado      |
 
 ---
 
@@ -75,7 +75,6 @@ View renderiza template (src/templates/)
 
 Resposta HTTP retorna ao navegador
 
-
 ---
 
 ## 4. Configuração de Ambiente (Docker)
@@ -89,3 +88,4 @@ docker compose up
 # Serviços definidos :
 # - db: PostgreSQL
 # - app: Django
+```
