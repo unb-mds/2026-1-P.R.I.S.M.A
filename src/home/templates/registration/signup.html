@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cadastro - P.R.I.S.M.A</title>
+</head>
+<body>
+
+<h1>Cadastro</h1>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit">
+        Cadastrar
+    </button>
+</form>
+
+<p>
+    Já possui conta?
+    <a href="{% url 'login' %}">
+        Entrar
+    </a>
+</p>
+
+</body>
+</html>

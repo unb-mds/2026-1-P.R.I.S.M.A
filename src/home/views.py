@@ -1,4 +1,8 @@
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, CreateView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
+
+from .forms import SignUpForm
 
 
 class DashboardView(TemplateView):
@@ -10,7 +14,7 @@ class DashboardView(TemplateView):
         return context
 
 
-class ProposicoesView(TemplateView):
+class ProposicoesView(LoginRequiredMixin, TemplateView):
     template_name = "home/proposicoes.html"
 
     def get_context_data(self, **kwargs):
@@ -19,7 +23,7 @@ class ProposicoesView(TemplateView):
         return context
 
 
-class VotacoesView(TemplateView):
+class VotacoesView(LoginRequiredMixin, TemplateView):
     template_name = "home/votacoes.html"
 
     def get_context_data(self, **kwargs):
@@ -28,7 +32,7 @@ class VotacoesView(TemplateView):
         return context
 
 
-class FavoritosView(TemplateView):
+class FavoritosView(LoginRequiredMixin, TemplateView):
     template_name = "home/favoritos.html"
 
     def get_context_data(self, **kwargs):
@@ -37,7 +41,7 @@ class FavoritosView(TemplateView):
         return context
 
 
-class AlertasView(TemplateView):
+class AlertasView(LoginRequiredMixin, TemplateView):
     template_name = "home/alertas.html"
 
     def get_context_data(self, **kwargs):
@@ -46,10 +50,15 @@ class AlertasView(TemplateView):
         return context
 
 
-class UsuarioView(TemplateView):
+class UsuarioView(LoginRequiredMixin, TemplateView):
     template_name = "home/usuario.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["active_page"] = "usuario"
         return context
+
+class SignUpView(CreateView):
+    form_class = SignUpForm
+    template_name = "registration/signup.html"
+    success_url = reverse_lazy("login")
