@@ -10,6 +10,12 @@ class ProcessoLegislativo(models.Model):
     tipo_proposicao = models.CharField(max_length=255)
     status_atual = models.CharField(max_length=255)
 
+class Movimentacao(models.Model):
+    processo = models.ForeignKey(ProcessoLegislativo, on_delete=models.CASCADE, related_name='movimentacoes')
+    data_evento = models.DateTimeField()
+    descricao = models.TextField()
+    comissao_atual = models.CharField(max_length=255, blank=True, null=True)
+
 class TermoMonitorado(models.Model):
     palavra_chave = models.CharField(max_length=255, unique=True)
     users = models.ManyToManyField(
