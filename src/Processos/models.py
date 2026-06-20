@@ -18,6 +18,11 @@ class Movimentacao(models.Model):
 
 class TermoMonitorado(models.Model):
     palavra_chave = models.CharField(max_length=255, unique=True)
+    processos = models.ManyToManyField(
+        'ProcessoLegislativo',
+        related_name='termos_monitorados',
+        blank=True,
+    )
     users = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         related_name='termos_monitorados',

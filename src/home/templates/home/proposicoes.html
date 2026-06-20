@@ -127,6 +127,7 @@
         Proposições Legislativas
       </h2>
       <button
+        onclick="openModal()"
         class="bg-brand-primary hover:bg-[#102a43] text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
       >
         + Acompanhar Nova Proposição
@@ -324,4 +325,140 @@
     </div>
   </div>
 </div>
+
+<!-- Modal de Busca de Proposição -->
+<div id="searchModal" class="fixed inset-0 bg-black/50 hidden z-50 flex items-center justify-center">
+  <div class="bg-white rounded-lg shadow-xl w-[600px] max-h-[80vh] flex flex-col">
+    <div class="p-4 border-b border-brand-outline flex justify-between items-center">
+      <h3 class="font-semibold text-lg">Buscar Proposição</h3>
+      <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+    </div>
+    
+    <div class="p-4 border-b border-brand-outline">
+      <div class="relative">
+        <i data-lucide="search" class="w-4 h-4 absolute left-3 top-3 text-slate-400"></i>
+        <input 
+          type="text" 
+          id="searchInput"
+          class="w-full pl-9 pr-4 py-2 border border-brand-outline rounded-md focus:outline-none focus:ring-1 focus:ring-brand-primary" 
+          placeholder="Digite o número, ano ou palavra-chave..."
+        >
+      </div>
+    </div>
+
+    <div class="flex-1 overflow-y-auto p-4 bg-slate-50" id="searchResults">
+      <div class="text-center text-sm text-slate-500 py-8">
+        Digite algo para buscar nas proposições
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let searchTimeout = null;
+
+  function openModal() {
+    document.getElementById('searchModal').classList.remove('hidden');
+    document.getElementById('searchInput').focus();
+  }
+
+  function closeModal() {
+    document.getElementById('searchModal').classList.add('hidden');
+    document.getElementById('searchInput').value = '';
+    document.getElementById('searchResults').innerHTML = '<div class="text-center text-sm text-slate-500 py-8">Digite algo para buscar nas proposições</div>';
+  }
+
+  document.getElementById('searchInput').addEventListener('input', function(e) {
+    clearTimeout(searchTimeout);
+    const query = e.target.value.trim();
+    
+    if (query.length < 3) {
+      document.getElementById('searchResults').innerHTML = '<div class="text-center text-sm text-slate-500 py-8">Digite pelo menos 3 caracteres...</div>';
+      return;
+    }
+
+    document.getElementById('searchResults').innerHTML = '<div class="text-center text-sm text-slate-500 py-8">Buscando...</div>';
+
+    searchTimeout = setTimeout(() => {
+      fetch(`/proposicoes/buscar/?q=${encodeURIComponent(query)}`)
+        .then(res => res.json())
+        .then(data => {
+          const results = data.results;
+          if (results.length === 0) {
+            document.getElementById('searchResults').innerHTML = '<div class="text-center text-sm text-slate-500 py-8">Nenhuma proposição encontrada.</div>';
+            return;
+          }
+
+          let html = '<div class="space-y-3">';
+          results.forEach(p => {
+            html += `
+              <div class="bg-white p-4 rounded-md border border-brand-outline flex justify-between items-start gap-4">
+                <div>
+                  <h4 class="font-semibold text-brand-primary">${p.titulo}</h4>
+                  <p class="text-xs text-slate-600 mt-1 line-clamp-2">${p.ementa}</p>
+                </div>
+                <button 
+                  onclick="acompanhar(${p.id}, this)"
+                  class="shrink-0 bg-brand-primary hover:bg-[#102a43] text-white px-3 py-1.5 rounded text-xs font-medium transition-colors"
+                >
+                  Acompanhar
+                </button>
+              </div>
+            `;
+          });
+          html += '</div>';
+          document.getElementById('searchResults').innerHTML = html;
+        });
+    }, 500);
+  });
+
+  function acompanhar(id, btn) {
+    btn.disabled = true;
+    btn.innerText = 'Adicionando...';
+    btn.classList.add('opacity-50');
+
+    // Retrieve CSRF token from the cookie
+    const getCookie = (name) => {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    };
+
+    fetch('/proposicoes/acompanhar/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-CSRFToken': getCookie('csrftoken')
+      },
+      body: 'proposicao_id=' + id
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === 'success') {
+        btn.innerText = 'Acompanhado ✓';
+        btn.classList.remove('bg-brand-primary', 'hover:bg-[#102a43]');
+        btn.classList.add('bg-green-600');
+        // Reload page to show the new proposition in the list
+        setTimeout(() => window.location.reload(), 1000);
+      } else {
+        alert('Erro: ' + data.message);
+        btn.disabled = false;
+        btn.innerText = 'Acompanhar';
+        btn.classList.remove('opacity-50');
+      }
+    });
+  }
+</script>
+
 {% endblock %}
