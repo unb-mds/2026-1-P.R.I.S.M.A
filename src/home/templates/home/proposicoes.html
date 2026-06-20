@@ -1,5 +1,7 @@
-{% extends 'home/base.html' %} {% block title %}Proposições{% endblock %} {%
-block page_title %}Proposições{% endblock %} {% block content %}
+{% extends 'home/base.html' %} 
+{% block title %}Proposições{% endblock %} 
+{% block page_title %}Proposições{% endblock %} 
+{% block content %}
 <div class="h-[calc(100vh-72px)] overflow-hidden flex">
   <div
     class="w-64 border-r border-brand-outline bg-white flex flex-col flex-shrink-0 h-full overflow-y-auto"
@@ -202,252 +204,80 @@ block page_title %}Proposições{% endblock %} {% block content %}
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-100">
-          <tr
-            class="bg-blue-50/30 border-l-2 border-brand-primary cursor-pointer hover:bg-slate-50 transition-colors"
-          >
+          {% for processo in proposicoes %}
+          <tr class="bg-blue-50/30 border-l-2 border-brand-primary cursor-pointer hover:bg-slate-50 transition-colors">
             <td class="p-4 align-top">
-              <p class="font-display font-bold text-brand-text">PL 2630/2020</p>
-              <span
-                class="inline-block mt-1 px-1.5 py-0.5 bg-blue-100 text-blue-700 text-[9px] font-bold uppercase tracking-widest rounded border border-blue-200"
-                >Urgência</span
-              >
+              <p class="font-display font-bold text-brand-text">{{ processo.tipo_proposicao }} {{ processo.numero }}/{{ processo.ano }}</p>
+              <span class="inline-block mt-1 px-1.5 py-0.5 bg-blue-100 text-blue-700 text-[9px] font-bold uppercase tracking-widest rounded border border-blue-200">Urgência</span>
             </td>
             <td class="p-4 align-top">
-              <p class="font-semibold text-brand-text">Lei das Fake News</p>
+              <p class="font-semibold text-brand-text">Proposição Legislativa</p>
               <p class="text-xs text-brand-text-muted mt-1 truncate max-w-sm">
-                Institui a Lei Brasileira de Liberdade, Responsabilidade e
-                Transparência na Internet.
+                {{ processo.ementa }}
               </p>
             </td>
-            <td class="p-4 align-top text-sm">Sen. Alessandro Vieira</td>
+            <td class="p-4 align-top text-sm">Autor Indisponível</td>
             <td class="p-4 align-top">
-              <p class="text-sm font-medium text-brand-text">15 Out 2023</p>
-              <p class="text-[10px] text-slate-500 mt-0.5 italic">
-                Enviado à CCJC
-              </p>
+              {% with last_mov=processo.movimentacoes.last %}
+                {% if last_mov %}
+                <p class="text-sm font-medium text-brand-text">{{ last_mov.data_evento|date:"d M Y" }}</p>
+                <p class="text-[10px] text-slate-500 mt-0.5 italic">
+                  Enviado à {{ last_mov.comissao_atual }}
+                </p>
+                {% else %}
+                <p class="text-sm font-medium text-brand-text">-</p>
+                {% endif %}
+              {% endwith %}
             </td>
             <td class="p-4 align-top">
-              <span
-                class="inline-block px-2 py-1 bg-[#d1fae5] text-[#065f46] text-[10px] font-bold uppercase tracking-wider rounded border border-[#a7f3d0]"
-                >Em Tramitação</span
-              >
+              <span class="inline-block px-2 py-1 bg-[#d1fae5] text-[#065f46] text-[10px] font-bold uppercase tracking-wider rounded border border-[#a7f3d0]">{{ processo.status_atual }}</span>
             </td>
           </tr>
 
           <tr>
-            <td
-              colspan="5"
-              class="p-0 border-b-2 border-slate-200 bg-[#f8fafc]"
-            >
-              <div
-                class="p-8 px-12 border-l-2 border-brand-primary shadow-inner"
-              >
+            <td colspan="5" class="p-0 border-b-2 border-slate-200 bg-[#f8fafc]">
+              <div class="p-8 px-12 border-l-2 border-brand-primary shadow-inner">
                 <div class="flex justify-between items-center mb-8">
                   <h4 class="font-semibold text-sm flex items-center gap-2">
-                    <i
-                      data-lucide="timer-reset"
-                      class="w-4 h-4 text-slate-400"
-                    ></i>
-                    Linha do Tempo Legislativa: PL 2630/2020
+                    <i data-lucide="timer-reset" class="w-4 h-4 text-slate-400"></i>
+                    Linha do Tempo Legislativa: {{ processo.tipo_proposicao }} {{ processo.numero }}/{{ processo.ano }}
                   </h4>
                   <div class="flex gap-2">
-                    <button
-                      class="text-xs border border-slate-300 bg-white px-3 py-1.5 rounded hover:bg-slate-50 font-medium"
-                    >
-                      Exportar PDF
-                    </button>
-                    <button
-                      class="text-xs border border-slate-300 bg-white px-3 py-1.5 rounded hover:bg-slate-50 font-medium"
-                    >
-                      Ver Documento Original
-                    </button>
+                    <button class="text-xs border border-slate-300 bg-white px-3 py-1.5 rounded hover:bg-slate-50 font-medium">Exportar PDF</button>
+                    <button class="text-xs border border-slate-300 bg-white px-3 py-1.5 rounded hover:bg-slate-50 font-medium">Ver Documento Original</button>
                   </div>
                 </div>
 
-                <div
-                  class="relative border-l-2 border-slate-200 ml-3 space-y-8 pb-4"
-                >
+                <div class="relative border-l-2 border-slate-200 ml-3 space-y-8 pb-4">
+                  {% for mov in processo.movimentacoes.all %}
                   <div class="relative pl-8">
-                    <div
-                      class="absolute -left-[17px] top-1 w-8 h-8 rounded-full bg-brand-primary text-white flex items-center justify-center border-4 border-[#f8fafc]"
-                    >
+                    <div class="absolute -left-[17px] top-1 w-8 h-8 rounded-full bg-brand-primary text-white flex items-center justify-center border-4 border-[#f8fafc]">
                       <i data-lucide="file-signature" class="w-3.5 h-3.5"></i>
                     </div>
                     <div>
                       <p class="text-xs font-semibold text-slate-500 mb-0.5">
-                        03 Abr 2020
+                        {{ mov.data_evento|date:"d M Y" }}
                       </p>
                       <p class="text-sm font-semibold text-brand-text">
-                        Apresentação da Proposição
+                        {{ mov.comissao_atual|default:"Movimentação" }}
                       </p>
                       <p class="text-sm text-slate-600 mt-2">
-                        Protocolado no Senado Federal pelo autor Senador
-                        Alessandro Vieira. Início da tramitação oficial.
+                        {{ mov.descricao }}
                       </p>
                     </div>
                   </div>
-
-                  <div class="relative pl-8">
-                    <div
-                      class="absolute -left-[17px] top-1 w-8 h-8 rounded-full bg-[#f1f5f9] border border-brand-outline text-brand-text flex items-center justify-center border-4 border-[#f8fafc]"
-                    >
-                      <i data-lucide="file-signature" class="w-3.5 h-3.5"></i>
-                    </div>
-                    <div>
-                      <p class="text-xs font-semibold text-slate-500 mb-0.5">
-                        12 Jun 2020
-                      </p>
-                      <p class="text-sm font-semibold text-brand-text">
-                        Apresentação de Emendas (14 total)
-                      </p>
-                      <div class="flex gap-2 mt-2 mb-3">
-                        <span
-                          class="text-[10px] bg-slate-200 text-slate-700 px-2 py-0.5 rounded uppercase font-bold"
-                          >Emenda 01 - Modificação</span
-                        >
-                        <span
-                          class="text-[10px] bg-slate-200 text-slate-700 px-2 py-0.5 rounded uppercase font-bold"
-                          >Emenda 05 - Aditiva</span
-                        >
-                        <span
-                          class="text-[10px] text-slate-500 font-medium self-center"
-                          >+12 emendas</span
-                        >
-                      </div>
-                      <p class="text-sm text-slate-600">
-                        Diversas modificações sugeridas por membros da comissão
-                        de ciência e tecnologia.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div class="relative pl-8">
-                    <div
-                      class="absolute -left-[17px] top-1 w-8 h-8 rounded-full bg-[#10b981] text-white flex items-center justify-center border-4 border-[#f8fafc]"
-                    >
-                      <i data-lucide="vote" class="w-3.5 h-3.5"></i>
-                    </div>
-                    <div>
-                      <p class="text-xs font-semibold text-slate-500 mb-0.5">
-                        30 Jun 2020
-                      </p>
-                      <p class="text-sm font-semibold text-brand-text">
-                        Votação e Aprovação no Senado
-                      </p>
-                      <div class="grid grid-cols-3 gap-4 mt-3 mb-3 max-w-md">
-                        <div
-                          class="border border-emerald-200 bg-emerald-50 rounded p-2 text-center"
-                        >
-                          <p class="text-xl font-bold text-emerald-700">44</p>
-                          <p
-                            class="text-[10px] uppercase font-bold text-emerald-600"
-                          >
-                            SIM
-                          </p>
-                        </div>
-                        <div
-                          class="border border-red-200 bg-red-50 rounded p-2 text-center"
-                        >
-                          <p class="text-xl font-bold text-red-700">32</p>
-                          <p
-                            class="text-[10px] uppercase font-bold text-red-600"
-                          >
-                            NÃO
-                          </p>
-                        </div>
-                        <div
-                          class="border border-slate-200 bg-slate-50 rounded p-2 text-center"
-                        >
-                          <p class="text-xl font-bold text-slate-500">02</p>
-                          <p
-                            class="text-[10px] uppercase font-bold text-slate-500"
-                          >
-                            ABS
-                          </p>
-                        </div>
-                      </div>
-                      <p class="text-sm text-slate-600">
-                        Matéria aprovada em primeiro turno. Remetida à Câmara
-                        dos Deputados.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div class="relative pl-8">
-                    <div
-                      class="absolute -left-[17px] top-1 w-8 h-8 rounded-full bg-white border border-brand-outline text-brand-primary flex items-center justify-center shadow-sm"
-                    >
-                      <i data-lucide="hourglass" class="w-3.5 h-3.5"></i>
-                    </div>
-                    <div
-                      class="bg-white border border-brand-outline rounded-md p-4 shadow-sm"
-                    >
-                      <p
-                        class="text-[10px] font-bold uppercase tracking-wider text-brand-primary mb-1"
-                      >
-                        Status Atual
-                      </p>
-                      <p class="text-sm font-semibold text-brand-text">
-                        Aguardando Parecer na CCJC
-                      </p>
-                      <p class="text-sm text-slate-600 mt-2">
-                        A proposição está sob análise da Comissão de
-                        Constituição e Justiça e de Cidadania. Prazo regimental
-                        até 15 Dez 2023.
-                      </p>
-
-                      <div class="mt-5 relative pb-4">
-                        <div
-                          class="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden"
-                        >
-                          <div class="h-full bg-brand-primary w-[66%]"></div>
-                        </div>
-                        <div class="flex justify-between absolute w-full top-3">
-                          <span
-                            class="text-[9px] font-bold uppercase text-slate-500"
-                            >Senado</span
-                          >
-                          <span
-                            class="text-[9px] font-bold uppercase text-brand-primary"
-                            >Câmara (CCJC)</span
-                          >
-                          <span
-                            class="text-[9px] font-bold uppercase text-slate-400"
-                            >Sanção</span
-                          >
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  {% empty %}
+                  <p class="text-sm text-slate-600 pl-8">Nenhuma movimentação registrada.</p>
+                  {% endfor %}
                 </div>
               </div>
             </td>
           </tr>
-
-          <tr class="hover:bg-slate-50 transition-colors cursor-pointer">
-            <td class="p-4 align-top border-l-2 border-transparent">
-              <p class="font-display font-medium text-brand-text">
-                PEC 45/2019
-              </p>
-            </td>
-            <td class="p-4 align-top">
-              <p class="font-medium text-brand-text">Reforma Tributária</p>
-              <p class="text-xs text-brand-text-muted mt-1 truncate max-w-sm">
-                Altera o Sistema Tributário Nacional.
-              </p>
-            </td>
-            <td class="p-4 align-top text-sm">Dep. Baleia Rossi</td>
-            <td class="p-4 align-top">
-              <p class="text-sm text-brand-text">20 Dez 2023</p>
-              <p class="text-[10px] text-slate-500 mt-0.5 italic">Promulgada</p>
-            </td>
-            <td class="p-4 align-top">
-              <span
-                class="inline-block px-2 py-1 bg-blue-100 text-blue-800 text-[10px] font-bold uppercase tracking-wider rounded border border-blue-200"
-                >Aprovada</span
-              >
-            </td>
+          {% empty %}
+          <tr>
+            <td colspan="5" class="p-4 text-center text-sm text-slate-500">Nenhuma proposição encontrada.</td>
           </tr>
+          {% endfor %}
         </tbody>
       </table>
 
