@@ -46,6 +46,15 @@ class Movimentacao(models.Model):
     descricao = models.TextField()
     comissao_atual = models.CharField(max_length=255, blank=True, null=True)
 
+    @property
+    def dias_gastos(self):
+        next_mov = self.processo.movimentacoes.filter(data_evento__gt=self.data_evento).order_by('data_evento').first()
+        if next_mov and next_mov.data_evento:
+            return (next_mov.data_evento - self.data_evento).days
+        else:
+            from django.utils import timezone
+            return (timezone.now() - self.data_evento).days
+
 class TermoMonitorado(models.Model):
     palavra_chave = models.CharField(max_length=255, unique=True)
     processos = models.ManyToManyField(
