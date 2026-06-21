@@ -7,6 +7,7 @@ from django.db import models
 
 from .forms import SignUpForm
 from Processos.models import ProcessoLegislativo, TermoMonitorado
+from Processos.services import sync_processo_on_demand
 
 
 class DashboardView(TemplateView):
@@ -24,9 +25,15 @@ class ProposicoesView(LoginRequiredMixin, ListView):
     context_object_name = "proposicoes"
 
     def get_queryset(self):
-        return ProcessoLegislativo.objects.filter(
+        qs = ProcessoLegislativo.objects.filter(
             termos_monitorados__users=self.request.user
         ).distinct().prefetch_related('movimentacoes')
+        
+        # Sincroniza sob demanda quando o usuário acessa a página
+        for processo in qs:
+            sync_processo_on_demand(processo)
+            
+        return qs
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -98,6 +105,10 @@ class AcompanharProposicaoView(LoginRequiredMixin, View):
         
         try:
             proposicao = ProcessoLegislativo.objects.get(id=proposicao_id)
+            
+            # Sincroniza sob demanda no momento em que é adicionado para acompanhar
+            sync_processo_on_demand(proposicao)
+            
             termo, created = TermoMonitorado.objects.get_or_create(
                 palavra_chave=f"proposicao_{proposicao.id_externo}"
             )
