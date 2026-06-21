@@ -36,6 +36,6 @@ def test_favoritos_render_and_filters(page, live_server):
     expect(page.locator("text=Estagnadas (Atrasadas)").first).to_be_visible()
     
     # Verifica cards com Dias em Trâmite
-    expect(page.locator("text=Dias em Trâmite")).to_be_visible()
+    expect(page.locator("text=Tempo Acumulado")).to_be_visible()
     expect(page.locator("text=PL 10/2024")).to_be_visible()
     expect(page.locator("text=Ementa de teste favoritos")).to_be_visible()
