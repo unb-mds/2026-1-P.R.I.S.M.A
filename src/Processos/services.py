@@ -35,7 +35,7 @@ def _sync_camara_api(processo):
                 descricao = tramitacao.get('despacho') or tramitacao.get('descricaoTramitacao') or "Movimentação registrada"
                 comissao = tramitacao.get('siglaOrgao')
                 
-                Movimentacao.objects.get_or_create(
+                mov, created = Movimentacao.objects.get_or_create(
                     processo=processo,
                     data_evento=data_evento,
                     descricao=descricao,
@@ -43,6 +43,8 @@ def _sync_camara_api(processo):
                         'comissao_atual': comissao
                     }
                 )
+                if created:
+                    _gerar_notificacao_atualizacao(processo, mov)
     except Exception as e:
         print(f"Erro ao sincronizar API da Câmara para {processo.id_externo}: {e}")
 
@@ -77,7 +79,7 @@ def _sync_senado_api(processo):
                     local = informe.get('Local', {})
                     comissao = local.get('SiglaLocal') or local.get('NomeLocal')
                     
-                    Movimentacao.objects.get_or_create(
+                    mov, created = Movimentacao.objects.get_or_create(
                         processo=processo,
                         data_evento=data_evento,
                         descricao=descricao,
@@ -85,7 +87,18 @@ def _sync_senado_api(processo):
                             'comissao_atual': comissao
                         }
                     )
+                    if created:
+                        _gerar_notificacao_atualizacao(processo, mov)
     except Exception as e:
         print(f"Erro ao sincronizar API do Senado para {processo.id_externo}: {e}")
 
-
+def _gerar_notificacao_atualizacao(processo, movimentacao):
+    from Usuarios.models import Notificacao
+    usuarios = processo.users.all()
+    for user in usuarios:
+        Notificacao.objects.create(
+            user=user,
+            processo=processo,
+            tipo='ATUALIZACAO',
+            mensagem=f"Nova movimentação no processo {processo.numero}/{processo.ano}: {movimentacao.descricao}"
+        )
