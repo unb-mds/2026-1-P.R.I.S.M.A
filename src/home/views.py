@@ -8,7 +8,7 @@ from django.db.models import Avg, Min, Max, F, ExpressionWrapper, fields
 from django.db.models.functions import ExtractDay
 from django.utils import timezone
 import datetime
-from Usuarios.models import Notificacao
+from Usuarios.models import Notificacao, UserProfile
 
 from .forms import SignUpForm
 from Processos.models import ProcessoLegislativo, TermoMonitorado
@@ -156,7 +156,29 @@ class UsuarioView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["active_page"] = "usuario"
+        profile, _ = UserProfile.objects.get_or_create(user=self.request.user)
+        context["profile"] = profile
         return context
+
+    def post(self, request, *args, **kwargs):
+        profile, _ = UserProfile.objects.get_or_create(user=request.user)
+        
+        receber_estagnacao = request.POST.get('receber_alertas_estagnacao') == 'on'
+        dias_estagnacao = request.POST.get('dias_limite_estagnacao', 30)
+        receber_novas_mov = request.POST.get('receber_alertas_novas_movimentacoes') == 'on'
+        
+        profile.receber_alertas_estagnacao = receber_estagnacao
+        try:
+            profile.dias_limite_estagnacao = int(dias_estagnacao)
+        except ValueError:
+            profile.dias_limite_estagnacao = 30
+        profile.receber_alertas_novas_movimentacoes = receber_novas_mov
+        
+        profile.save()
+        
+        context = self.get_context_data()
+        context["success"] = True
+        return self.render_to_response(context)
 
 class BuscarProposicaoView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):

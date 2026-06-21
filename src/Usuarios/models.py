@@ -28,3 +28,12 @@ class Notificacao(models.Model):
 
     class Meta:
         ordering = ['-data_criacao']
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profile')
+    receber_alertas_estagnacao = models.BooleanField(default=True)
+    dias_limite_estagnacao = models.IntegerField(default=30)
+    receber_alertas_novas_movimentacoes = models.BooleanField(default=True)
+    
+    def __str__(self):
+        return f"Perfil de {self.user.username}"
