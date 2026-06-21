@@ -10,6 +10,22 @@ class ProcessoLegislativo(models.Model):
     tipo_proposicao = models.CharField(max_length=255)
     status_atual = models.CharField(max_length=255)
 
+    @property
+    def dias_na_comissao_atual(self):
+        from django.utils import timezone
+        ultima_movimentacao = self.movimentacoes.order_by('-data_evento').first()
+        if ultima_movimentacao and ultima_movimentacao.data_evento:
+            return (timezone.now() - ultima_movimentacao.data_evento).days
+        return 0
+
+    @property
+    def dias_totais_tramitacao(self):
+        from django.utils import timezone
+        primeira_movimentacao = self.movimentacoes.order_by('data_evento').first()
+        if primeira_movimentacao and primeira_movimentacao.data_evento:
+            return (timezone.now() - primeira_movimentacao.data_evento).days
+        return 0
+
 class Movimentacao(models.Model):
     processo = models.ForeignKey(ProcessoLegislativo, on_delete=models.CASCADE, related_name='movimentacoes')
     data_evento = models.DateTimeField()
