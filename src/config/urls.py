@@ -5,13 +5,13 @@ from django.urls import include
 from home.views import (
     DashboardView,
     ProposicoesView,
-    VotacoesView,
     FavoritosView,
     AlertasView,
     UsuarioView,
     SignUpView,
     BuscarProposicaoView,
     AcompanharProposicaoView,
+    ProcessoDetailView,
 )
 
 urlpatterns = [
@@ -47,15 +47,15 @@ urlpatterns = [
     ),
 
     path(
-        "proposicoes/acompanhar/",
-        AcompanharProposicaoView.as_view(),
-        name="acompanhar_proposicao"
+        "proposicoes/<int:pk>/",
+        ProcessoDetailView.as_view(),
+        name="proposicao_detalhes"
     ),
 
     path(
-        "votacoes/",
-        VotacoesView.as_view(),
-        name="votacoes"
+        "proposicoes/acompanhar/",
+        AcompanharProposicaoView.as_view(),
+        name="acompanhar_proposicao"
     ),
 
     path(

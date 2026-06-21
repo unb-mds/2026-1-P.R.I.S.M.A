@@ -29,13 +29,7 @@
       <i data-lucide="file-text" class="w-[18px] h-[18px] text-slate-400"></i>
       Proposições
     </a>
-    <a
-      href="{% url 'votacoes' %}"
-      class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-md transition-colors text-sm font-medium {% if active_page == 'votacoes' %}bg-white/5 text-white border-brand-primary{% else %}text-slate-300 hover:text-white hover:bg-white/5 border-transparent{% endif %} border-l-2"
-    >
-      <i data-lucide="vote" class="w-[18px] h-[18px] text-slate-400"></i>
-      Votações
-    </a>
+
     <a
       href="{% url 'favoritos' %}"
       class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-md transition-colors text-sm font-medium {% if active_page == 'favoritos' %}bg-white/5 text-white border-brand-primary{% else %}text-slate-300 hover:text-white hover:bg-white/5 border-transparent{% endif %} border-l-2"

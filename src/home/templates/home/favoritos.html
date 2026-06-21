@@ -24,8 +24,8 @@
     <a href="?status=urgencia" class="px-5 py-2 {% if status_atual == 'urgencia' %}bg-brand-primary text-white{% else %}bg-slate-200 text-slate-600 hover:bg-slate-300{% endif %} text-xs font-bold uppercase tracking-wider rounded-md shrink-0 transition-colors">Urgência ({{ urgencia_count }})</a>
   </div>
 
-  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-    <div class="lg:col-span-2 space-y-4">
+  <div class="grid grid-cols-1 gap-6">
+    <div class="space-y-4">
       {% for processo in favoritos %}
         <div class="bg-white border border-brand-outline hover:border-brand-primary rounded-md p-6 shadow-sm transition-colors cursor-pointer group mb-4">
           <div class="flex justify-between items-start mb-4">
@@ -65,62 +65,7 @@
       {% endfor %}
     </div>
 
-    <div class="space-y-6">
-      <div class="bg-[#00152a] text-white rounded-md p-6 shadow-md border border-[#102a43]">
-        <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-4">Resumo dos Favoritos</p>
-        <div class="flex justify-between items-end mb-8">
-          <p class="text-sm text-slate-300">Projetos Ativos</p>
-          <p class="text-4xl font-display font-bold text-white">12</p>
-        </div>
-        <div class="mb-8">
-          <p class="text-[10px] uppercase font-semibold text-slate-400 mb-2">Distribuição por Tema</p>
-          <div class="w-full h-2 bg-[#102a43] rounded-full overflow-hidden flex">
-            <div class="h-full bg-emerald-400 w-[35%]"></div>
-            <div class="h-full bg-blue-400 w-[25%] opacity-80"></div>
-          </div>
-          <div class="flex gap-4 mt-3 text-xs text-slate-300 font-medium">
-            <div class="flex items-center gap-1.5"><div class="w-2 h-2 rounded-full bg-emerald-400"></div> Tributário</div>
-            <div class="flex items-center gap-1.5"><div class="w-2 h-2 rounded-full bg-blue-400"></div> Saúde</div>
-          </div>
-        </div>
-        <div class="bg-white/5 border border-white/10 rounded p-4 relative overflow-hidden">
-          <div class="absolute top-0 right-0 p-2 opacity-20"><i data-lucide="trending-up" class="w-10 h-10"></i></div>
-          <p class="text-xs font-bold uppercase tracking-wider text-emerald-300 mb-2 flex items-center gap-1.5">
-            <i data-lucide="sparkles" class="w-3 h-3"></i> Métrica de Impacto
-          </p>
-          <p class="text-sm text-slate-300 mb-4 relative z-10 leading-relaxed">
-            4 dos seus projetos favoritados estão com movimentação atípica nas últimas 48h.
-          </p>
-          <button class="w-full bg-emerald-400 text-[#00152a] hover:bg-emerald-300 text-xs font-bold uppercase tracking-wider py-2 rounded transition-colors relative z-10">
-            Gerar Análise IA
-          </button>
-        </div>
-      </div>
 
-      <div class="grid grid-cols-1 gap-4">
-        <div class="bg-white border border-brand-outline rounded-md p-5 flex items-center justify-between shadow-sm">
-          <div>
-            <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">Relatórios Disponíveis</p>
-            <p class="text-2xl font-display font-bold text-brand-text">08</p>
-            <p class="text-[10px] text-slate-500 mt-1 max-w-[150px]">Documentos técnicos gerados automaticamente</p>
-          </div>
-          <div class="w-12 h-12 rounded bg-blue-50 text-brand-primary flex items-center justify-center shrink-0">
-            <i data-lucide="file-text" class="w-5 h-5"></i>
-          </div>
-        </div>
-
-        <div class="bg-white border border-brand-outline rounded-md p-5 flex items-center justify-between shadow-sm">
-          <div>
-            <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">Colaboradores</p>
-            <p class="text-2xl font-display font-bold text-brand-text">03</p>
-            <p class="text-[10px] text-slate-500 mt-1 max-w-[150px]">Membros da sua equipe compartilhando</p>
-          </div>
-          <div class="w-12 h-12 rounded bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
-            <i data-lucide="users" class="w-5 h-5"></i>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </div>
 {% endblock %}

@@ -78,18 +78,18 @@ def test_timeline_historico_tramitacao_e_acompanhamento(page, live_server, test_
         expect(page.locator("#searchResults")).to_contain_text("Testa a criação de uma linha do tempo", timeout=3000)
         page.click('#searchResults button:has-text("Acompanhar")')
         
-        # 7. A página recarrega e a proposição deve aparecer com a timeline
+        # 7. A página recarrega e a proposição deve aparecer
         expect(page.locator("body")).to_contain_text("PL 9999999/2023", timeout=3000)
         expect(page.locator("body")).to_contain_text("Testa a criação de uma linha do tempo")
-        expect(page.locator("body")).to_contain_text("Linha do Tempo Legislativa: PL 9999999/2023")
+        
+        # 8. Clicar na proposição para ir para a página de Detalhes
+        page.locator("tr", has_text="PL 9999999/2023").click()
+        
+        # 9. Verificar a timeline na página de detalhes
+        expect(page.locator("body")).to_contain_text("Histórico de Tramitação", timeout=3000)
         expect(page.locator("body")).to_contain_text("Comissão de Testes")
         expect(page.locator("body")).to_contain_text("Enviado para a comissão especial de testes")
         
-        # 8. Verificar as colunas de tracking de Tempo / SLA
-        expect(page.locator("body")).to_contain_text("0 dias")
-        expect(page.locator("body")).to_contain_text("Normal")
-        expect(page.locator("body")).to_contain_text("dias nesta fase")
-        
-        # 9. Verificar a Barra de Progresso Premium (Issue #15)
+        # 10. Verificar a Barra de Progresso Premium (Issue #15)
         expect(page.locator("text=Status Atual do Ciclo")).to_be_visible()
         expect(page.locator("body")).to_contain_text("10%") # Porque o status_atual é "Em Tramitação"
