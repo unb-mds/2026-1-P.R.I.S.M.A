@@ -14,3 +14,14 @@ h6,
 .font-display {
   font-family: "IBM Plex Sans", sans-serif;
 }
+
+/* HTMX: oculta o spinner por padrão e exibe durante requests */
+.htmx-indicator {
+  display: none;
+}
+.htmx-request .htmx-indicator {
+  display: inline-flex;
+}
+.htmx-request.htmx-indicator {
+  display: inline-flex;
+}
