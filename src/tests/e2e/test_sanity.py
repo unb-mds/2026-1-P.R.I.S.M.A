@@ -10,5 +10,6 @@ def test_sanity_check_home(page):
     # Verifica o título da página ou a presença de 'P.R.I.S.M.A' no body
     import re
     expect(page).to_have_title(re.compile(r"P\.R\.I\.S\.M\.A"), timeout=5000)
-    # Ou então, verificar se há um H1 com P.R.I.S.M.A
-    # expect(page.locator("h1")).to_contain_text("P.R.I.S.M.A")
+    # Verifica se os novos elementos da sidebar estão presentes
+    expect(page.locator("text=Monitor de Prazos")).to_be_visible()
+    expect(page.locator("text=Configurações")).to_be_visible()
