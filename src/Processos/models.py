@@ -26,6 +26,20 @@ class ProcessoLegislativo(models.Model):
             return (timezone.now() - primeira_movimentacao.data_evento).days
         return 0
 
+    @property
+    def progresso_percentual(self):
+        status = (self.status_atual or '').lower()
+        if any(palavra in status for palavra in ['sancionad', 'promulgad', 'transformad', 'vetad', 'arquivad', 'retirad']):
+            return 100
+        elif 'aprovad' in status:
+            return 75
+        elif 'plenário' in status or 'plenario' in status:
+            return 50
+        elif 'comissão' in status or 'comissao' in status:
+            return 25
+        else:
+            return 10
+
 class Movimentacao(models.Model):
     processo = models.ForeignKey(ProcessoLegislativo, on_delete=models.CASCADE, related_name='movimentacoes')
     data_evento = models.DateTimeField()

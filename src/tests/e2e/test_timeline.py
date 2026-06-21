@@ -88,3 +88,7 @@ def test_timeline_historico_tramitacao_e_acompanhamento(page, live_server, test_
         # 8. Verificar as colunas de tracking de Tempo / SLA
         expect(page.locator("body")).to_contain_text("0d total")
         expect(page.locator("body")).to_contain_text("0d estagnado")
+        
+        # 9. Verificar a Barra de Progresso Premium (Issue #15)
+        expect(page.locator("text=Status Atual do Ciclo")).to_be_visible()
+        expect(page.locator("body")).to_contain_text("10%") # Porque o status_atual é "Em Tramitação"

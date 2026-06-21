@@ -249,7 +249,7 @@
           <tr>
             <td colspan="6" class="p-0 border-b-2 border-slate-200 bg-[#f8fafc]">
               <div class="p-8 px-12 border-l-2 border-brand-primary shadow-inner">
-                <div class="flex justify-between items-center mb-8">
+                <div class="flex justify-between items-center mb-6">
                   <h4 class="font-semibold text-sm flex items-center gap-2">
                     <i data-lucide="timer-reset" class="w-4 h-4 text-slate-400"></i>
                     Linha do Tempo Legislativa: {{ processo.tipo_proposicao }} {{ processo.numero }}/{{ processo.ano }}
@@ -257,6 +257,26 @@
                   <div class="flex gap-2">
                     <button class="text-xs border border-slate-300 bg-white px-3 py-1.5 rounded hover:bg-slate-50 font-medium">Exportar PDF</button>
                     <button class="text-xs border border-slate-300 bg-white px-3 py-1.5 rounded hover:bg-slate-50 font-medium">Ver Documento Original</button>
+                  </div>
+                </div>
+
+                <!-- Barra de Progresso Premium -->
+                <div class="mb-8 p-5 bg-white border border-slate-100 rounded-lg shadow-sm">
+                  <div class="flex justify-between items-end mb-3">
+                    <div>
+                      <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Status Atual do Ciclo</p>
+                      <p class="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-brand-primary animate-pulse"></span>
+                        {{ processo.status_atual|default:"Em Tramitação Inicial" }}
+                      </p>
+                    </div>
+                    <span class="text-lg font-display font-bold text-brand-primary">{{ processo.progresso_percentual }}%</span>
+                  </div>
+                  <div class="relative w-full bg-slate-100 rounded-full h-3 shadow-inner overflow-hidden border border-slate-200/50">
+                    <div class="absolute top-0 left-0 h-full rounded-full bg-gradient-to-r from-cyan-400 via-blue-500 to-brand-primary transition-all duration-1000 ease-out" 
+                         style="width: {{ processo.progresso_percentual }}%">
+                      <div class="absolute top-0 bottom-0 left-0 w-20 bg-white/20 -skew-x-12 animate-shimmer"></div>
+                    </div>
                   </div>
                 </div>
 
@@ -471,5 +491,15 @@
     });
   }
 </script>
+
+<style>
+@keyframes shimmer {
+  0% { transform: translateX(-100%) skewX(-12deg); }
+  100% { transform: translateX(500%) skewX(-12deg); }
+}
+.animate-shimmer {
+  animation: shimmer 2.5s infinite linear;
+}
+</style>
 
 {% endblock %}
