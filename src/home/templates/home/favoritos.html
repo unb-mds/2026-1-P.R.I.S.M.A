@@ -2,195 +2,144 @@
 {% block title %}Favoritos{% endblock %}
 {% block page_title %}Favoritos{% endblock %}
 {% block content %}
-<div class="p-8 max-w-container-max mx-auto space-y-6">
-  <div class="flex items-center justify-between">
+<div class="h-[calc(100vh-72px)] overflow-hidden flex flex-col bg-brand-surface p-6">
+  <div class="flex items-center justify-between mb-6">
     <div>
+      <h2 class="font-display font-semibold text-lg text-brand-text">Favoritos: Monitoramento Avançado</h2>
       <p class="text-sm text-brand-text-muted mt-1">Gerencie suas proposições favoritadas e receba inteligência em tempo real.</p>
     </div>
     <div class="flex gap-3">
       <button class="flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-md text-sm font-semibold text-brand-text transition-colors uppercase tracking-wider text-[11px]">
         <i data-lucide="download" class="w-3.5 h-3.5"></i> Exportar Relatório
       </button>
-      <button class="flex items-center gap-2 px-4 py-2 bg-brand-primary hover:bg-[#102a43] rounded-md text-white font-semibold transition-colors uppercase tracking-wider text-[11px]">
-        <i data-lucide="plus" class="w-3.5 h-3.5"></i> Novo Monitoramento
-      </button>
+      <a href="{% url 'processos' %}" class="flex items-center gap-2 px-4 py-2 bg-brand-primary hover:bg-[#102a43] rounded-md text-white font-semibold transition-colors uppercase tracking-wider text-[11px]">
+        <i data-lucide="search" class="w-3.5 h-3.5"></i> Buscar Mais Processos
+      </a>
     </div>
   </div>
 
-  <div class="flex items-center gap-2 overflow-x-auto pb-2">
-    <button class="px-5 py-2 bg-brand-primary text-white text-xs font-bold uppercase tracking-wider rounded-md shrink-0">Tudo (12)</button>
-    <button class="px-5 py-2 bg-slate-200 text-slate-600 text-xs font-bold uppercase tracking-wider rounded-md shrink-0 hover:bg-slate-300 transition-colors">Tributário (4)</button>
-    <button class="px-5 py-2 bg-slate-200 text-slate-600 text-xs font-bold uppercase tracking-wider rounded-md shrink-0 hover:bg-slate-300 transition-colors">Saúde (3)</button>
-    <button class="px-5 py-2 bg-slate-200 text-slate-600 text-xs font-bold uppercase tracking-wider rounded-md shrink-0 hover:bg-slate-300 transition-colors">Educação (2)</button>
-    <button class="px-5 py-2 bg-slate-200 text-slate-600 text-xs font-bold uppercase tracking-wider rounded-md shrink-0 hover:bg-slate-300 transition-colors">Infraestrutura (3)</button>
-    <button class="p-2 border border-slate-300 text-slate-500 rounded-md shrink-0 hover:bg-slate-50 transition-colors"><i data-lucide="plus" class="w-4 h-4"></i></button>
-  </div>
-
-  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-    <div class="lg:col-span-2 space-y-4">
-      <div class="bg-white border-2 border-brand-primary rounded-md p-6 shadow-sm">
-        <div class="flex justify-between items-start mb-4">
-          <div class="flex items-center gap-2">
-            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">PL 2345/2023 • Tributário</span>
-            <span class="text-[10px] font-bold bg-[#d1fae5] text-[#065f46] px-2 py-0.5 rounded uppercase tracking-wider border border-[#a7f3d0]">Alta Prioridade</span>
-          </div>
-          <i data-lucide="star" class="text-brand-primary fill-brand-primary w-5 h-5"></i>
-        </div>
-
-        <h3 class="font-display font-semibold text-xl text-brand-text mb-6">Reforma da Tributação sobre Consumo e Serviços Digitais</h3>
-
-        <div class="grid grid-cols-3 gap-4 mb-6">
-          <div>
-            <p class="text-[10px] uppercase font-semibold text-slate-500 tracking-wider mb-1">Situação</p>
-            <p class="text-sm font-medium flex items-center gap-1.5"><div class="w-2 h-2 rounded-full bg-brand-success"></div> Em tramitação (CCJ)</p>
-          </div>
-          <div>
-            <p class="text-[10px] uppercase font-semibold text-slate-500 tracking-wider mb-1">Relator</p>
-            <p class="text-sm font-medium text-brand-text">Dep. Roberto Silva</p>
-          </div>
-          <div>
-            <p class="text-[10px] uppercase font-semibold text-slate-500 tracking-wider mb-1">Última Atualização</p>
-            <p class="text-sm font-medium text-brand-text">Hoje, às 14:30</p>
-          </div>
-        </div>
-
-        <div class="bg-slate-50 border border-slate-100 rounded-md p-4 mb-6 flex gap-3">
-          <i data-lucide="history" class="text-slate-400 mt-0.5 shrink-0 w-[18px] h-[18px]"></i>
-          <div>
-            <p class="text-xs font-bold text-slate-600 uppercase tracking-wider mb-1">Histórico Recente</p>
-            <p class="text-sm text-slate-700">Relatório favorável apresentado na Comissão de Constituição e Justiça. Previsão de votação para a próxima terça-feira (24/10).</p>
-          </div>
-        </div>
-
-        <div class="flex items-center justify-between">
-          <div class="flex items-center">
-            <div class="flex -space-x-2">
-              <div class="w-8 h-8 rounded-full bg-slate-200 border-2 border-white flex items-center justify-center text-xs font-bold">R</div>
-              <div class="w-8 h-8 rounded-full bg-slate-300 border-2 border-white flex items-center justify-center text-xs font-bold">M</div>
-              <div class="w-8 h-8 rounded-full bg-slate-100 border-2 border-white flex items-center justify-center text-xs font-bold text-slate-500">+3</div>
-            </div>
-          </div>
-          <div class="flex gap-3">
-            <button class="text-xs font-bold uppercase tracking-wider text-brand-text hover:text-brand-primary">Ver Detalhes</button>
-            <button class="text-xs font-bold uppercase tracking-wider text-white bg-brand-primary hover:bg-[#102a43] px-4 py-2 rounded">Configurar Alertas</button>
-          </div>
-        </div>
+  <div class="grid grid-cols-4 gap-4 mb-6">
+    <div class="bg-white border border-brand-outline rounded-md flex p-4 shadow-sm items-center gap-4">
+      <div class="w-10 h-10 rounded bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+        <i data-lucide="star" class="w-5 h-5 fill-current"></i>
       </div>
-
-      <div class="grid grid-cols-2 gap-4">
-        <div class="bg-white border border-brand-outline rounded-md p-5 shadow-sm hover:border-brand-primary transition-colors cursor-pointer group">
-          <div class="flex justify-between items-start mb-3">
-            <span class="text-[9px] font-bold text-slate-500 uppercase tracking-wider">PEC 45/2023 • Saúde</span>
-            <i data-lucide="star" class="text-brand-primary fill-brand-primary w-4 h-4"></i>
-          </div>
-          <h4 class="font-display font-semibold text-brand-text leading-tight mb-4 min-h-[40px]">Financiamento do Piso Nacional da Enfermagem</h4>
-          <div class="space-y-2 mb-4">
-            <div class="flex justify-between text-xs">
-              <span class="text-slate-500">Próximo Passo</span>
-              <span class="font-semibold text-brand-text">Comissão de Finanças</span>
-            </div>
-          </div>
-          <div class="pt-3 border-t border-slate-100">
-            <p class="text-xs text-brand-error flex items-center gap-1 font-medium"><i data-lucide="alert-triangle" class="w-3 h-3"></i> Prazo de emendas encerra em 2 dias</p>
-          </div>
-        </div>
-
-        <div class="bg-white border border-brand-outline rounded-md p-5 shadow-sm hover:border-brand-primary transition-colors cursor-pointer group">
-          <div class="flex justify-between items-start mb-3">
-            <span class="text-[9px] font-bold text-slate-500 uppercase tracking-wider">PL 121/2023 • Educação</span>
-            <i data-lucide="star" class="text-brand-primary fill-brand-primary w-4 h-4"></i>
-          </div>
-          <h4 class="font-display font-semibold text-brand-text leading-tight mb-4 min-h-[40px]">Implementação de Tecnologias de IA na Educação Básica</h4>
-          <div class="space-y-2 mb-4">
-            <div class="flex justify-between text-xs">
-              <span class="text-slate-500">Status</span>
-              <span class="font-semibold text-brand-text">Aprovado na Câmara</span>
-            </div>
-          </div>
-          <div class="pt-3 border-t border-slate-100">
-            <p class="text-xs text-brand-success flex items-center gap-1 font-medium"><div class="w-1.5 h-1.5 rounded-full bg-brand-success"></div> Enviado ao Senado Federal</p>
-          </div>
-        </div>
-
-        <div class="bg-white border border-brand-outline rounded-md p-5 shadow-sm hover:border-brand-primary transition-colors cursor-pointer group">
-          <div class="flex justify-between items-start mb-3">
-            <span class="text-[9px] font-bold text-slate-500 uppercase tracking-wider">PL 882/2021 • Infra</span>
-            <i data-lucide="star" class="text-slate-300 w-4 h-4"></i>
-          </div>
-          <h4 class="font-display font-semibold text-brand-text leading-tight mb-4 min-h-[40px]">Marco Legal das Ferrovias de Curta Distância</h4>
-          <div class="space-y-2 mb-4">
-            <div class="flex justify-between text-xs">
-              <span class="text-slate-500">Movimentação</span>
-              <span class="font-semibold text-brand-text">Designação de Relator</span>
-            </div>
-          </div>
-          <div class="pt-3 border-t border-slate-100">
-            <p class="text-xs text-slate-500 flex items-center gap-1 font-medium"><i data-lucide="history" class="w-3 h-3"></i> Sem novas ações em 15 dias</p>
-          </div>
-        </div>
-
-        <div class="bg-slate-50 border-2 border-dashed border-slate-300 rounded-md p-5 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] flex flex-col items-center justify-center hover:bg-slate-100 transition-colors cursor-pointer text-slate-400 hover:text-brand-primary hover:border-brand-primary min-h-[160px]">
-          <i data-lucide="plus" class="w-6 h-6 mb-2"></i>
-          <span class="text-sm font-semibold">Adicionar ao Monitoramento</span>
-        </div>
+      <div>
+        <p class="text-xs text-slate-500 font-medium">Total Favoritadas</p>
+        <p class="text-xl font-display font-bold text-brand-text">{{ total_pls }}</p>
       </div>
     </div>
-
-    <div class="space-y-6">
-      <div class="bg-[#00152a] text-white rounded-md p-6 shadow-md border border-[#102a43]">
-        <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-4">Resumo dos Favoritos</p>
-        <div class="flex justify-between items-end mb-8">
-          <p class="text-sm text-slate-300">Projetos Ativos</p>
-          <p class="text-4xl font-display font-bold text-white">12</p>
-        </div>
-        <div class="mb-8">
-          <p class="text-[10px] uppercase font-semibold text-slate-400 mb-2">Distribuição por Tema</p>
-          <div class="w-full h-2 bg-[#102a43] rounded-full overflow-hidden flex">
-            <div class="h-full bg-emerald-400 w-[35%]"></div>
-            <div class="h-full bg-blue-400 w-[25%] opacity-80"></div>
-          </div>
-          <div class="flex gap-4 mt-3 text-xs text-slate-300 font-medium">
-            <div class="flex items-center gap-1.5"><div class="w-2 h-2 rounded-full bg-emerald-400"></div> Tributário</div>
-            <div class="flex items-center gap-1.5"><div class="w-2 h-2 rounded-full bg-blue-400"></div> Saúde</div>
-          </div>
-        </div>
-        <div class="bg-white/5 border border-white/10 rounded p-4 relative overflow-hidden">
-          <div class="absolute top-0 right-0 p-2 opacity-20"><i data-lucide="trending-up" class="w-10 h-10"></i></div>
-          <p class="text-xs font-bold uppercase tracking-wider text-emerald-300 mb-2 flex items-center gap-1.5">
-            <i data-lucide="sparkles" class="w-3 h-3"></i> Métrica de Impacto
-          </p>
-          <p class="text-sm text-slate-300 mb-4 relative z-10 leading-relaxed">
-            4 dos seus projetos favoritados estão com movimentação atípica nas últimas 48h.
-          </p>
-          <button class="w-full bg-emerald-400 text-[#00152a] hover:bg-emerald-300 text-xs font-bold uppercase tracking-wider py-2 rounded transition-colors relative z-10">
-            Gerar Análise IA
-          </button>
-        </div>
+    <div class="bg-white border border-brand-outline rounded-md flex p-4 shadow-sm items-center gap-4">
+      <div class="w-10 h-10 rounded bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+        <i data-lucide="timer-reset" class="w-5 h-5"></i>
       </div>
-
-      <div class="grid grid-cols-1 gap-4">
-        <div class="bg-white border border-brand-outline rounded-md p-5 flex items-center justify-between shadow-sm">
-          <div>
-            <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">Relatórios Disponíveis</p>
-            <p class="text-2xl font-display font-bold text-brand-text">08</p>
-            <p class="text-[10px] text-slate-500 mt-1 max-w-[150px]">Documentos técnicos gerados automaticamente</p>
-          </div>
-          <div class="w-12 h-12 rounded bg-blue-50 text-brand-primary flex items-center justify-center shrink-0">
-            <i data-lucide="file-text" class="w-5 h-5"></i>
-          </div>
-        </div>
-
-        <div class="bg-white border border-brand-outline rounded-md p-5 flex items-center justify-between shadow-sm">
-          <div>
-            <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">Colaboradores</p>
-            <p class="text-2xl font-display font-bold text-brand-text">03</p>
-            <p class="text-[10px] text-slate-500 mt-1 max-w-[150px]">Membros da sua equipe compartilhando</p>
-          </div>
-          <div class="w-12 h-12 rounded bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
-            <i data-lucide="users" class="w-5 h-5"></i>
-          </div>
-        </div>
+      <div>
+        <p class="text-xs text-slate-500 font-medium">Em Tramitação</p>
+        <p class="text-xl font-display font-bold text-brand-text">{{ em_tramitacao }}</p>
       </div>
+    </div>
+    <div class="bg-white border border-brand-outline rounded-md flex p-4 shadow-sm items-center gap-4">
+      <div class="w-10 h-10 rounded bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
+        <i data-lucide="check-circle" class="w-5 h-5"></i>
+      </div>
+      <div>
+        <p class="text-xs text-slate-500 font-medium">Aprovadas</p>
+        <p class="text-xl font-display font-bold text-brand-text">{{ aprovadas }}</p>
+      </div>
+    </div>
+    <div class="bg-white border border-brand-outline rounded-md flex p-4 shadow-sm items-center gap-4">
+      <div class="w-10 h-10 rounded bg-red-50 text-red-600 flex items-center justify-center shrink-0">
+        <i data-lucide="alert-circle" class="w-5 h-5"></i>
+      </div>
+      <div>
+        <p class="text-xs text-slate-500 font-medium">Com Alertas</p>
+        <p class="text-xl font-display font-bold text-brand-text">{{ com_alerta }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex items-center gap-2 overflow-x-auto pb-4 shrink-0">
+    <a href="?status=todas" class="px-5 py-2 {% if status_atual == 'todas' %}bg-brand-primary text-white{% else %}bg-white border border-slate-200 text-slate-600 hover:bg-slate-50{% endif %} text-xs font-bold uppercase tracking-wider rounded-md shrink-0 transition-colors">Todas ({{ total_count }})</a>
+    <a href="?status=tramitacao_normal" class="px-5 py-2 {% if status_atual == 'tramitacao_normal' %}bg-brand-primary text-white{% else %}bg-white border border-slate-200 text-slate-600 hover:bg-slate-50{% endif %} text-xs font-bold uppercase tracking-wider rounded-md shrink-0 transition-colors">Em Tramitação Normal ({{ normal_count }})</a>
+    <a href="?status=estagnadas" class="px-5 py-2 {% if status_atual == 'estagnadas' %}bg-brand-primary text-white{% else %}bg-white border border-slate-200 text-slate-600 hover:bg-slate-50{% endif %} text-xs font-bold uppercase tracking-wider rounded-md shrink-0 transition-colors">Estagnadas (Atrasadas) ({{ estagnadas_count }})</a>
+    <a href="?status=urgencia" class="px-5 py-2 {% if status_atual == 'urgencia' %}bg-brand-primary text-white{% else %}bg-white border border-slate-200 text-slate-600 hover:bg-slate-50{% endif %} text-xs font-bold uppercase tracking-wider rounded-md shrink-0 transition-colors">Urgência ({{ urgencia_count }})</a>
+  </div>
+
+  <div class="bg-white border border-brand-outline rounded-md shadow-sm overflow-hidden flex-1 flex flex-col min-h-0">
+    <div class="overflow-y-auto flex-1">
+      <table class="w-full text-left border-collapse">
+        <thead class="sticky top-0 bg-slate-50 shadow-sm z-10">
+          <tr class="border-b border-brand-outline text-xs font-semibold text-slate-500 uppercase tracking-wider">
+            <th class="p-4 w-40">ID / Tipo</th>
+            <th class="p-4">Título / Ementa</th>
+            <th class="p-4 w-32">Tempo Acumulado</th>
+            <th class="p-4 w-40">Última Movimentação</th>
+            <th class="p-4 w-32">Status de SLA</th>
+            <th class="p-4 w-32">Status</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          {% for processo in favoritos %}
+          <tr data-href="{% url 'proposicao_detalhes' processo.pk %}" onclick="window.location.href=this.dataset.href" class="bg-blue-50/30 border-l-2 border-brand-primary cursor-pointer hover:bg-slate-50 transition-colors">
+            <td class="p-4 align-top">
+              <div class="flex items-center gap-2">
+                <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400 shrink-0"></i>
+                <p class="font-display font-bold text-brand-text">{{ processo.tipo_proposicao }} {{ processo.numero }}/{{ processo.ano }}</p>
+              </div>
+              {% if processo.dias_na_comissao_atual > 30 %}
+                <span class="inline-block mt-2 px-1.5 py-0.5 bg-red-100 text-red-700 text-[9px] font-bold uppercase tracking-widest rounded border border-red-200">Atrasado</span>
+              {% endif %}
+            </td>
+            <td class="p-4 align-top">
+              <p class="text-xs text-brand-text-muted mt-1 line-clamp-2">
+                {{ processo.ementa }}
+              </p>
+            </td>
+            <td class="p-4 align-top text-sm">
+              <span class="font-bold text-brand-text">{{ processo.dias_totais_tramitacao|default:"0" }} dias</span>
+            </td>
+            <td class="p-4 align-top">
+              {% with last_mov=processo.movimentacoes.last %}
+                {% if last_mov %}
+                <p class="text-sm font-medium text-brand-text">{{ last_mov.data_evento|date:"d M Y" }}</p>
+                <p class="text-[10px] text-slate-500 mt-0.5 italic truncate max-w-[150px]">
+                  Enviado à {{ last_mov.comissao_atual }}
+                </p>
+                {% else %}
+                <p class="text-sm font-medium text-brand-text">-</p>
+                {% endif %}
+              {% endwith %}
+            </td>
+            <td class="p-4 align-top">
+              {% if processo.dias_na_comissao_atual > 30 %}
+                <span class="inline-block px-2 py-1 bg-red-100 text-red-700 text-[10px] font-bold uppercase tracking-wider rounded border border-red-200">Estagnado</span>
+              {% elif processo.dias_na_comissao_atual >= 15 %}
+                <span class="inline-block px-2 py-1 bg-yellow-100 text-yellow-700 text-[10px] font-bold uppercase tracking-wider rounded border border-yellow-200">Atenção</span>
+              {% else %}
+                <span class="inline-block px-2 py-1 bg-green-100 text-green-700 text-[10px] font-bold uppercase tracking-wider rounded border border-green-200">Normal</span>
+              {% endif %}
+            </td>
+            <td class="p-4 align-top">
+              <span class="inline-block px-2 py-1 bg-[#d1fae5] text-[#065f46] text-[10px] font-bold uppercase tracking-wider rounded border border-[#a7f3d0]">{{ processo.status_atual }}</span>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="6" class="p-12">
+               <div class="text-center text-slate-500 flex flex-col items-center justify-center">
+                 <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-4">
+                   <i data-lucide="star" class="w-8 h-8 text-slate-400"></i>
+                 </div>
+                 <h3 class="font-display font-semibold text-brand-text mb-2 text-lg">Nenhum processo favoritado</h3>
+                 <p class="text-sm max-w-sm mx-auto mb-6">Acompanhe processos legislativos marcando-os com a estrela na página de buscas. Eles aparecerão aqui para monitoramento avançado.</p>
+                 <a href="{% url 'processos' %}" class="bg-brand-primary hover:bg-[#102a43] text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
+                    Explorar Processos
+                 </a>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
   </div>
 </div>

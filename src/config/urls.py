@@ -4,12 +4,15 @@ from django.urls import include
 
 from home.views import (
     DashboardView,
-    ProposicoesView,
-    VotacoesView,
+    ProcessosView,
     FavoritosView,
     AlertasView,
     UsuarioView,
     SignUpView,
+    BuscarProposicaoView,
+    AcompanharProposicaoView,
+    ProcessoDetailView,
+    ToggleFavoritoView,
 )
 
 urlpatterns = [
@@ -33,15 +36,33 @@ urlpatterns = [
     ),
 
     path(
-        "proposicoes/",
-        ProposicoesView.as_view(),
-        name="proposicoes"
+        "processos/",
+        ProcessosView.as_view(),
+        name="processos"
     ),
 
     path(
-        "votacoes/",
-        VotacoesView.as_view(),
-        name="votacoes"
+        "processos/buscar/",
+        BuscarProposicaoView.as_view(),
+        name="buscar_proposicao"
+    ),
+
+    path(
+        "processos/<int:pk>/",
+        ProcessoDetailView.as_view(),
+        name="proposicao_detalhes"
+    ),
+
+    path(
+        "processos/acompanhar/",
+        AcompanharProposicaoView.as_view(),
+        name="acompanhar_proposicao"
+    ),
+
+    path(
+        "processos/toggle-favorito/",
+        ToggleFavoritoView.as_view(),
+        name="toggle_favorito"
     ),
 
     path(

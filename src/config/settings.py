@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_filters',
     'home',
     'Processos',
     'Usuarios',
@@ -106,13 +107,13 @@ WSGI_APPLICATION = "config.wsgi.application"
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.{}'.format(os.getenv('DATABASE_ENGINE', 'postgresql')),
-        'NAME': os.getenv('DATABASE_NAME', 'squad11'),
-        'USER': os.getenv('DATABASE_USERNAME', 'squad11'),
-        'PASSWORD': os.getenv('DATABASE_PASSWORD', 'squad11'),
-        'HOST': _database_host(),
-        'PORT': _database_port(),
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.environ["DATABASE_NAME"],
+        "USER": os.environ["DATABASE_USERNAME"],
+        "PASSWORD": os.environ["DATABASE_PASSWORD"],
+        "HOST": _database_host(),
+        "PORT": _database_port(),
     }
 }
 

@@ -8,8 +8,7 @@ from django.utils import timezone
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
-from Processos.models import ProcessoLegislativo
-
+from Processos.models import ProcessoLegislativo, Movimentacao
 
 CAMARA_API_BASE = "https://dadosabertos.camara.leg.br/api/v2"
 SENADO_API_BASE = "https://legis.senado.leg.br/dadosabertos"
@@ -23,7 +22,6 @@ BULK_INSERT_SIZE = 1000
 RATE_LIMIT_DELAY = 0.2  # 200ms entre chamadas individuais de detalhes
 
 logger = logging.getLogger(__name__)
-
 
 def _build_session():
     """Cria sessão HTTP com retry automático e exponential backoff."""
@@ -39,9 +37,7 @@ def _build_session():
     session.mount("http://", adapter)
     return session
 
-
 _SESSION = _build_session()
-
 
 def _parse_date(value: str):
     if not value:
@@ -52,7 +48,6 @@ def _parse_date(value: str):
         return datetime.date.fromisoformat(value)
     except ValueError:
         return None
-
 
 def _parse_datetime(value: str):
     if not value:
@@ -68,7 +63,6 @@ def _parse_datetime(value: str):
     if timezone.is_naive(parsed):
         return timezone.make_aware(parsed, timezone.get_current_timezone())
     return parsed
-
 
 def _get_json(url, params=None, headers=None):
     """Faz GET e retorna JSON. Retorna None em caso de falha."""
@@ -88,14 +82,12 @@ def _get_json(url, params=None, headers=None):
         logger.warning("JSON invalido para %s", url)
         return None
 
-
 def _coerce_list(value):
     if value is None:
         return []
     if isinstance(value, list):
         return value
     return [value]
-
 
 def _extract_ano_camara(ano_raw, data_apresentacao):
     ano_str = str(ano_raw or "")
@@ -105,6 +97,16 @@ def _extract_ano_camara(ano_raw, data_apresentacao):
         return str(data_apresentacao.year)
     return ""
 
+def _gerar_notificacao_atualizacao(processo, movimentacao):
+    from Usuarios.models import Notificacao
+    usuarios = processo.users.all()
+    for user in usuarios:
+        Notificacao.objects.create(
+            user=user,
+            processo=processo,
+            tipo='ATUALIZACAO',
+            mensagem=f"Nova movimentação no processo {processo.numero}/{processo.ano}: {movimentacao.descricao}"
+        )
 
 # ============================================================================
 # API da Câmara dos Deputados
@@ -147,20 +149,17 @@ def buscar_todas_proposicoes_camara(termo: str = None, ano: int = None, data_ini
 
     return todas_proposicoes
 
-
 def buscar_detalhe_camara(id_externo: str):
     payload = _get_json(f"{CAMARA_API_BASE}/proposicoes/{id_externo}")
     if not payload:
         return {}
     return payload.get("dados", {})
 
-
 def buscar_tramitacoes_camara(id_externo: str):
     payload = _get_json(f"{CAMARA_API_BASE}/proposicoes/{id_externo}/tramitacoes")
     if not payload:
         return []
     return payload.get("dados", [])
-
 
 def atualizar_detalhes_camara(processo: ProcessoLegislativo, incluir_tramitacoes: bool = True):
     dados = buscar_detalhe_camara(processo.id_externo)
@@ -206,21 +205,40 @@ def atualizar_detalhes_camara(processo: ProcessoLegislativo, incluir_tramitacoes
     if incluir_tramitacoes:
         tramitacoes = buscar_tramitacoes_camara(processo.id_externo)
         processo.tramitacao_json = json.dumps(tramitacoes, ensure_ascii=True)
+        
+        # Extrair Movimentacao
+        for tramitacao in tramitacoes:
+            data_hora_str = tramitacao.get('dataHora')
+            if not data_hora_str:
+                continue
+                
+            data_evento = _parse_datetime(data_hora_str)
+            
+            descricao = tramitacao.get('despacho') or tramitacao.get('descricaoTramitacao') or "Movimentação registrada"
+            comissao = tramitacao.get('siglaOrgao')
+            
+            mov, created = Movimentacao.objects.get_or_create(
+                processo=processo,
+                data_evento=data_evento,
+                descricao=descricao,
+                defaults={
+                    'comissao_atual': comissao
+                }
+            )
+            if created:
+                _gerar_notificacao_atualizacao(processo, mov)
 
     processo.detalhes_atualizados_em = timezone.now()
     processo.save()
     return True
 
-
 # ============================================================================
-# API do Senado Federal (nova API /dadosabertos/processo)
+# API do Senado Federal
 # ============================================================================
 
 def buscar_todos_processos_senado(ano=None):
     """
     Busca TODOS os processos em tramitação ou de um determinado ano na nova API do Senado.
-    Retorna uma lista de dicts JSON.
-    Endpoint: GET /dadosabertos/processo
     """
     params = {}
     if ano:
@@ -232,15 +250,11 @@ def buscar_todos_processos_senado(ano=None):
         return []
     if isinstance(payload, list):
         return payload
-    # Caso venha com wrapper
     return payload.get("dados", payload.get("processos", []))
-
 
 def buscar_detalhe_senado(id_processo: str):
     """
     Busca detalhes de um processo na nova API do Senado.
-    Endpoint: GET /dadosabertos/processo/{idProcesso}
-    O idProcesso é o campo 'id' da listagem (IdentificacaoProcesso na API antiga).
     """
     url = f"{SENADO_PROCESSO_BASE}/{id_processo}"
     payload = _get_json(url, headers=SENADO_HEADERS)
@@ -248,33 +262,17 @@ def buscar_detalhe_senado(id_processo: str):
         return {}
     return payload
 
-
-def buscar_tramitacoes_senado(id_processo: str):
-    """
-    Na nova API, as tramitações fazem parte dos detalhes do processo.
-    Mantemos esta função por compatibilidade, delegando para buscar_detalhe_senado.
-    """
-    detalhes = buscar_detalhe_senado(id_processo)
-    return detalhes
-
-
 def _mapear_processo_senado_da_listagem(proc: dict) -> dict:
-    """
-    Mapeia um item da listagem /dadosabertos/processo para os campos do model.
-    Retorna dict com os defaults para get_or_create / bulk_create.
-    """
     data_apresentacao = _parse_date(proc.get('dataApresentacao'))
     ano_raw = proc.get('ano') or proc.get('Ano')
     ano_str = str(ano_raw) if ano_raw else ""
     if not ano_str and data_apresentacao:
         ano_str = str(data_apresentacao.year)
 
-    # Extrair número e sigla da identificação (ex: "PL 3/2025")
     identificacao = proc.get('identificacao', '')
     sigla = proc.get('sigla') or proc.get('Sigla', '')
     numero = proc.get('numero') or proc.get('Numero', '')
     if not numero and identificacao:
-        # Tentar extrair de "PL 3/2025"
         parts = identificacao.split()
         if len(parts) >= 2:
             num_part = parts[-1].split('/')[0] if '/' in parts[-1] else parts[-1]
@@ -301,7 +299,7 @@ def _mapear_processo_senado_da_listagem(proc: dict) -> dict:
         'autor': _trunc(proc.get('autoria', '')),
         'descricao_identificacao': _trunc(identificacao),
         'data_apresentacao': data_apresentacao,
-        'url_detalhe': None,  # Nova API não inclui URL de detalhe na listagem
+        'url_detalhe': None,
         'id_processo_senado': _trunc(proc.get('id', ''), 50),
         'tipo_conteudo': _trunc(proc.get('tipoConteudo', '')),
         'tipo_documento': _trunc(proc.get('tipoDocumento', '')),
@@ -312,11 +310,49 @@ def _mapear_processo_senado_da_listagem(proc: dict) -> dict:
         'objetivo': _trunc(proc.get('objetivo', ''), 100),
     }
 
+def _fetch_and_create_movimentacoes_senado(processo):
+    try:
+        url = f"https://legis.senado.leg.br/dadosabertos/materia/movimentacoes/{processo.id_externo}"
+        response = _SESSION.get(url, headers={'Accept': 'application/json'}, timeout=10)
+        
+        if response.status_code == 200:
+            data = response.json()
+            materia = data.get('MovimentacaoMateria', {}).get('Materia', {})
+            autuacoes = materia.get('Autuacoes', {}).get('Autuacao', [])
+            
+            if isinstance(autuacoes, dict):
+                autuacoes = [autuacoes]
+                
+            for autuacao in autuacoes:
+                informes = autuacao.get('InformesLegislativos', {}).get('InformeLegislativo', [])
+                if isinstance(informes, dict):
+                    informes = [informes]
+                    
+                for informe in informes:
+                    data_hora_str = informe.get('Data')
+                    if not data_hora_str:
+                        continue
+                        
+                    data_evento = _parse_datetime(data_hora_str)
+                    
+                    descricao = informe.get('Descricao') or "Movimentação registrada"
+                    local = informe.get('Local', {})
+                    comissao = local.get('SiglaLocal') or local.get('NomeLocal')
+                    
+                    mov, created = Movimentacao.objects.get_or_create(
+                        processo=processo,
+                        data_evento=data_evento,
+                        descricao=descricao,
+                        defaults={
+                            'comissao_atual': comissao
+                        }
+                    )
+                    if created:
+                        _gerar_notificacao_atualizacao(processo, mov)
+    except Exception as e:
+        logger.error(f"Erro ao sincronizar movimentações do Senado para {processo.id_externo}: {e}")
 
 def atualizar_detalhes_senado(processo: ProcessoLegislativo, incluir_tramitacoes: bool = True):
-    """
-    Atualiza detalhes de um processo do Senado usando a nova API /dadosabertos/processo/{id}.
-    """
     id_processo = processo.id_processo_senado
     if not id_processo:
         logger.warning("Processo %s sem id_processo_senado, impossível buscar detalhes", processo.id_externo)
@@ -326,10 +362,8 @@ def atualizar_detalhes_senado(processo: ProcessoLegislativo, incluir_tramitacoes
     if not detalhes:
         return False
 
-    # Mapeamento dos campos da nova API
     processo.status_atual = detalhes.get('situacaoAtual') or processo.status_atual
 
-    # Dados do conteúdo (sub-objeto) - processar antes porque ementa pode vir aqui
     conteudo = detalhes.get('conteudo', {})
     if conteudo:
         ementa_conteudo = conteudo.get('ementa')
@@ -337,12 +371,10 @@ def atualizar_detalhes_senado(processo: ProcessoLegislativo, incluir_tramitacoes
             processo.ementa = ementa_conteudo
         processo.tipo_conteudo = conteudo.get('tipo') or processo.tipo_conteudo
 
-    # Ementa no nível raiz (fallback se não veio em conteudo)
     ementa_raiz = detalhes.get('ementa')
     if ementa_raiz and not conteudo.get('ementa'):
         processo.ementa = ementa_raiz
 
-    # Dados do documento (sub-objeto)
     documento = detalhes.get('documento', {})
     if documento:
         data_apres = _parse_date(documento.get('dataApresentacao'))
@@ -354,7 +386,6 @@ def atualizar_detalhes_senado(processo: ProcessoLegislativo, incluir_tramitacoes
         if url_doc:
             processo.url_inteiro_teor = url_doc
 
-        # Autoria
         autorias = documento.get('autoria', [])
         if autorias and isinstance(autorias, list):
             autores_str = ', '.join(
@@ -364,7 +395,6 @@ def atualizar_detalhes_senado(processo: ProcessoLegislativo, incluir_tramitacoes
             )
             processo.autor = autores_str
 
-    # Campos diretos
     processo.tipo_documento = detalhes.get('tipoDocumento') or processo.tipo_documento
     processo.casa_identificadora = detalhes.get('casaIdentificadora') or processo.casa_identificadora
     processo.objetivo = detalhes.get('objetivo') or processo.objetivo
@@ -399,17 +429,15 @@ def atualizar_detalhes_senado(processo: ProcessoLegislativo, incluir_tramitacoes
     if tramitando_str:
         processo.tramitando = tramitando_str == 'Sim'
 
-    # Salvar JSON completo dos detalhes
     processo.dados_extra_json = json.dumps(detalhes, ensure_ascii=True, default=str)
 
     if incluir_tramitacoes:
-        # Na nova API, tramitações estão incluídas nos detalhes
         processo.tramitacao_json = json.dumps(detalhes, ensure_ascii=True, default=str)
+        _fetch_and_create_movimentacoes_senado(processo)
 
     processo.detalhes_atualizados_em = timezone.now()
     processo.save()
     return True
-
 
 # ============================================================================
 # Funções genéricas
@@ -422,27 +450,18 @@ def atualizar_detalhes_processo(processo: ProcessoLegislativo, incluir_tramitaco
         return atualizar_detalhes_senado(processo, incluir_tramitacoes=incluir_tramitacoes)
     return False
 
-
 # ============================================================================
-# Sincronização incremental
+# Sincronização incremental e utilidades
 # ============================================================================
 
-def sincronizar_processos_legislativos(
-    data_inicio: str = DEFAULT_DATA_INICIO,
-    ano_inicio: int = DEFAULT_ANO_INICIO,
-):
-    """
-    Sincroniza processos legislativos da Câmara e do Senado.
-    """
+def sincronizar_processos_legislativos(data_inicio: str = DEFAULT_DATA_INICIO, ano_inicio: int = DEFAULT_ANO_INICIO):
     novos_processos_criados = 0
     processos_camara_atualizados = set()
     processos_senado_atualizados = set()
 
-    # === 1. API Câmara ===
     logger.info("Iniciando sincronização da Câmara dos Deputados...")
     proposicoes_camara = buscar_todas_proposicoes_camara(None, data_inicio=data_inicio)
-    logger.info("Câmara: %d proposições encontradas", len(proposicoes_camara))
-
+    
     for prop in proposicoes_camara:
         id_externo = str(prop.get('id', ''))
         if not id_externo:
@@ -472,11 +491,8 @@ def sincronizar_processos_legislativos(
             processos_camara_atualizados.add(id_externo)
             time.sleep(RATE_LIMIT_DELAY)
 
-    # === 2. API Senado (nova API /dadosabertos/processo) ===
     logger.info("Iniciando sincronização do Senado Federal...")
-    # Busca apenas do ano de inicio para frente para otimizar o cron
     todos_processos_senado = buscar_todos_processos_senado(ano=ano_inicio)
-    logger.info("Senado: %d processos encontrados no ano >= %d", len(todos_processos_senado), ano_inicio)
 
     for proc in todos_processos_senado:
         codigo_materia = str(proc.get('codigoMateria', ''))
@@ -493,7 +509,6 @@ def sincronizar_processos_legislativos(
         if created:
             novos_processos_criados += 1
         else:
-            # Atualizar id_processo_senado se não existia
             if not processo.id_processo_senado and defaults.get('id_processo_senado'):
                 processo.id_processo_senado = defaults['id_processo_senado']
                 processo.save(update_fields=['id_processo_senado'])
@@ -503,36 +518,17 @@ def sincronizar_processos_legislativos(
             processos_senado_atualizados.add(codigo_materia)
             time.sleep(RATE_LIMIT_DELAY)
 
-    logger.info("Sincronização concluída: %d novos processos criados", novos_processos_criados)
     return novos_processos_criados
 
-
-# ============================================================================
-# Carga inicial (bulk)
-# ============================================================================
-
 def popular_banco_carga_inicial(ano_inicio=2024):
-    """
-    Ignora os termos e baixa TODOS os processos legislativos das APIs da Câmara e Senado
-    a partir do 'ano_inicio' até o ano atual.
-    """
     total_antes = ProcessoLegislativo.objects.count()
-    ano_atual = datetime.datetime.now().year
     buffer = []
     
-    # === 1. Câmara (permite puxar a partir de uma data paginando tudo) ===
-    logger.info("Carga inicial Câmara: buscando proposições a partir de %d...", ano_inicio)
     proposicoes_camara = buscar_todas_proposicoes_camara(ano=ano_inicio)
-    logger.info("Câmara: %d proposições encontradas", len(proposicoes_camara))
-    
     for prop in proposicoes_camara:
         id_externo = str(prop.get('id', ''))
         data_apresentacao = _parse_date(prop.get('dataApresentacao'))
-        
-        # Câmara envia algumas proposições (como Pareceres) com ano=0.
-        # Vamos tentar extrair pelo `dataApresentacao` quando isso ocorrer
         ano_str = _extract_ano_camara(prop.get('ano'), data_apresentacao)
-
         numero_str = str(prop.get('numero', ''))
         
         if not id_externo:
@@ -567,7 +563,6 @@ def popular_banco_carga_inicial(ano_inicio=2024):
             )
             buffer.clear()
 
-    # Flush buffer da Câmara
     if buffer:
         ProcessoLegislativo.objects.bulk_create(
             buffer,
@@ -578,23 +573,17 @@ def popular_banco_carga_inicial(ano_inicio=2024):
         )
         buffer.clear()
 
-    # === 2. Senado (nova API /dadosabertos/processo) ===
-    logger.info("Carga inicial Senado: buscando todos os processos...")
     todos_processos_senado = buscar_todos_processos_senado()
-    logger.info("Senado: %d processos encontrados", len(todos_processos_senado))
-
     for proc in todos_processos_senado:
         codigo_materia = str(proc.get('codigoMateria', ''))
         if not codigo_materia:
             continue
 
-        # Filtrar por ano_inicio
         ano_proc = proc.get('ano')
         if ano_proc and isinstance(ano_proc, int) and ano_proc < ano_inicio:
             continue
 
         defaults = _mapear_processo_senado_da_listagem(proc)
-
         tramitando_val = defaults.pop('tramitando', None)
 
         buffer.append(
@@ -633,28 +622,15 @@ def popular_banco_carga_inicial(ano_inicio=2024):
         )
 
     total_depois = ProcessoLegislativo.objects.count()
-    total_novos = total_depois - total_antes
-    logger.info("Carga inicial concluída: %d novos processos criados", total_novos)
-    return total_novos
+    return total_depois - total_antes
 
-
-def sincronizar_processo_on_demand(processo: ProcessoLegislativo, timeout_hours: int = 1) -> bool:
+def sincronizar_processo_on_demand(processo: ProcessoLegislativo) -> bool:
     """
-    Sincroniza um único processo legislativo sob demanda de forma inteligente (Lazy Update).
-    Só consulta a API caso a última atualização tenha sido há mais de `timeout_hours` (Cache).
-    
-    Retorna:
-        - True: Se conectou na API e atualizou dados frescos.
-        - False: Se os dados atuais já são frescos e o cache foi utilizado.
+    Sincroniza um único processo legislativo sob demanda.
+    Sempre faz a consulta na API, ignorando cache, para garantir a atualização.
     """
     agora = timezone.now()
     
-    # Se existe uma atualização anterior, verifica a idade
-    if processo.detalhes_atualizados_em:
-        idade = agora - processo.detalhes_atualizados_em
-        if idade < datetime.timedelta(hours=timeout_hours):
-            return False  # Cache válido, não bate na API
-
     logger.info(f"Processo {processo.id_externo} desatualizado. Buscando novas tramitações na API...")
     try:
         if processo.origem_camara_ou_senado == 'CAMARA':
@@ -662,10 +638,25 @@ def sincronizar_processo_on_demand(processo: ProcessoLegislativo, timeout_hours:
         else:
             atualizar_detalhes_senado(processo, incluir_tramitacoes=True)
             
-        # O Django salva internamente em atualizar_detalhes_... mas para garantir a data:
         processo.detalhes_atualizados_em = agora
         processo.save(update_fields=['detalhes_atualizados_em'])
         return True
     except Exception as e:
         logger.error(f"Erro ao atualizar sob demanda o processo {processo.id_externo}: {e}")
         return False
+
+def previsao_tempo_conclusao(processo):
+    """
+    Serviço simples para previsão de tempo de conclusão do processo.
+    """
+    progresso = getattr(processo, 'progresso_percentual', 0)
+    if progresso == 100:
+        return 0
+    elif progresso == 75:
+        return 30
+    elif progresso == 50:
+        return 60
+    elif progresso == 25:
+        return 180
+    else:
+        return 365

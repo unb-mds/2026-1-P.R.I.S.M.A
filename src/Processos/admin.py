@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from Processos.models import ProcessoLegislativo, TermoMonitorado
+from Processos.models import ProcessoLegislativo, TermoMonitorado, Movimentacao
 
 # Register your models here.
 from Processos.services import sincronizar_processo_on_demand
@@ -61,6 +61,11 @@ class ProcessoLegislativoAdmin(admin.ModelAdmin):
             pass
             
         return super().change_view(request, object_id, form_url, extra_context)
+
+@admin.register(Movimentacao)
+class MovimentacaoAdmin(admin.ModelAdmin):
+    list_display = ('processo', 'data_evento', 'comissao_atual')
+    search_fields = ('processo__numero', 'descricao', 'comissao_atual')
 
 @admin.register(TermoMonitorado)
 class TermoMonitoradoAdmin(admin.ModelAdmin):

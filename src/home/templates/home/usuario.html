@@ -1,76 +1,11 @@
-{% extends 'home/base.html' %} {% block title %}Usuário{% endblock %} {% block
-page_title %}Usuário{% endblock %} {% block content %}
+{% extends 'home/base.html' %}
+{% block title %}Usuário{% endblock %}
+{% block page_title %}Usuário{% endblock %}
+{% block content %}
 <div class="p-8 max-w-container-max mx-auto space-y-6">
-  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-    <div class="lg:col-span-2 space-y-6">
-      <div
-        class="bg-white border border-brand-outline rounded-md p-6 shadow-sm flex items-start gap-6"
-      >
-        <div
-          class="w-24 h-24 rounded-md bg-slate-200 overflow-hidden shrink-0 relative border border-slate-300"
-        >
-          <div
-            class="absolute inset-0 bg-brand-primary flex items-center justify-center text-white text-3xl font-display font-bold"
-          >
-            RS
-          </div>
-          <button
-            class="absolute bottom-1 right-1 w-6 h-6 bg-brand-text text-white rounded-full flex items-center justify-center border-2 border-white hover:bg-brand-primary"
-          >
-            <svg
-              width="12"
-              height="12"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path
-                d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"
-              />
-            </svg>
-          </button>
-        </div>
+  <div class="max-w-3xl mx-auto space-y-6">
+    <div class="space-y-6">
 
-        <div class="flex-1">
-          <h2 class="font-display font-bold text-2xl text-brand-text">
-            Dr. Ricardo Silva
-          </h2>
-          <p class="text-sm text-slate-500 mb-4 flex items-center gap-2">
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <rect x="4" y="2" width="16" height="20" rx="2" ry="2" />
-              <path d="M9 22v-4h6v4" />
-              <path d="M8 6h.01" />
-              <path d="M16 6h.01" />
-              <path d="M12 6h.01" />
-              <path d="M12 10h.01" />
-              <path d="M12 14h.01" />
-              <path d="M16 10h.01" />
-              <path d="M16 14h.01" />
-              <path d="M8 10h.01" />
-              <path d="M8 14h.01" />
-            </svg>
-            Consultoria Legislativa • Brasília, DF
-          </p>
-          <div class="flex gap-2">
-            <span
-              class="bg-blue-100 text-blue-800 text-xs font-bold uppercase tracking-wider px-3 py-1 rounded"
-              >Nível 4 - Especialista</span
-            >
-          </div>
-        </div>
-      </div>
 
       <div class="grid grid-cols-1 gap-6">
         <div
@@ -109,346 +44,89 @@ page_title %}Usuário{% endblock %} {% block content %}
         </div>
       </div>
 
-      <div
-        class="bg-white border border-brand-outline rounded-md p-0 shadow-sm overflow-hidden"
-      >
-        <div class="p-6 border-b border-slate-100">
-          <h3 class="font-display font-semibold text-lg text-brand-text">
-            Preferências de Notificação
-          </h3>
-        </div>
-
-        <table class="w-full text-left">
-          <thead>
-            <tr class="bg-slate-50 border-b border-slate-100">
-              <th
-                class="p-4 text-[10px] font-bold uppercase tracking-wider text-slate-500 w-1/2"
-              >
-                Evento Legislativo
-              </th>
-              <th
-                class="p-4 text-[10px] font-bold uppercase tracking-wider text-slate-500 text-center"
-              >
-                E-mail
-              </th>
-              <th
-                class="p-4 text-[10px] font-bold uppercase tracking-wider text-slate-500 text-center"
-              >
-                Push Mobile
-              </th>
-              <th
-                class="p-4 text-[10px] font-bold uppercase tracking-wider text-slate-500 text-center"
-              >
-                SMS
-              </th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-slate-100">
-            <tr>
-              <td class="p-4">
-                <p class="text-sm font-medium text-brand-text">
-                  Novas Proposições Favoritas
-                </p>
-                <p class="text-xs text-slate-500">
-                  Alertar quando um projeto marcado for pautado
-                </p>
-              </td>
-              <td class="p-4 text-center">
-                <div
-                  class="w-5 h-5 rounded mx-auto border flex items-center justify-center transition-colors cursor-pointer bg-[#102a43] border-[#102a43]"
-                >
-                  <i data-lucide="check" class="w-3 h-3 text-white"></i>
-                </div>
-              </td>
-              <td class="p-4 text-center">
-                <div
-                  class="w-5 h-5 rounded mx-auto border flex items-center justify-center transition-colors cursor-pointer bg-[#102a43] border-[#102a43]"
-                >
-                  <i data-lucide="check" class="w-3 h-3 text-white"></i>
-                </div>
-              </td>
-              <td class="p-4 text-center">
-                <div
-                  class="w-5 h-5 rounded mx-auto border flex items-center justify-center transition-colors cursor-pointer bg-white border-slate-300"
-                ></div>
-              </td>
-            </tr>
-            <tr class="bg-slate-50/50">
-              <td class="p-4">
-                <p class="text-sm font-medium text-brand-text">
-                  Relatórios de Inteligência
-                </p>
-                <p class="text-xs text-slate-500">
-                  Sumário semanal de tendências de votação
-                </p>
-              </td>
-              <td class="p-4 text-center">
-                <div
-                  class="w-5 h-5 rounded mx-auto border flex items-center justify-center transition-colors cursor-pointer bg-[#102a43] border-[#102a43]"
-                >
-                  <i data-lucide="check" class="w-3 h-3 text-white"></i>
-                </div>
-              </td>
-              <td class="p-4 text-center">
-                <div
-                  class="w-5 h-5 rounded mx-auto border flex items-center justify-center transition-colors cursor-pointer bg-white border-slate-300"
-                ></div>
-              </td>
-              <td class="p-4 text-center">
-                <div
-                  class="w-5 h-5 rounded mx-auto border flex items-center justify-center transition-colors cursor-pointer bg-white border-slate-300"
-                ></div>
-              </td>
-            </tr>
-            <tr>
-              <td class="p-4">
-                <p class="text-sm font-medium text-brand-text">
-                  Alteração de Status em Bloco
-                </p>
-                <p class="text-xs text-slate-500">
-                  Movimentações em massa em filtros salvos
-                </p>
-              </td>
-              <td class="p-4 text-center">
-                <div
-                  class="w-5 h-5 rounded mx-auto border flex items-center justify-center transition-colors cursor-pointer bg-[#102a43] border-[#102a43]"
-                >
-                  <i data-lucide="check" class="w-3 h-3 text-white"></i>
-                </div>
-              </td>
-              <td class="p-4 text-center">
-                <div
-                  class="w-5 h-5 rounded mx-auto border flex items-center justify-center transition-colors cursor-pointer bg-white border-slate-300"
-                ></div>
-              </td>
-              <td class="p-4 text-center">
-                <div
-                  class="w-5 h-5 rounded mx-auto border flex items-center justify-center transition-colors cursor-pointer bg-[#102a43] border-[#102a43]"
-                >
-                  <i data-lucide="check" class="w-3 h-3 text-white"></i>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="flex items-center justify-between pt-4 pb-8">
-        <div class="flex items-center gap-6 text-sm">
-          <button
-            class="text-brand-error font-medium hover:underline flex items-center gap-1"
-          >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-              <polyline points="16 17 21 12 16 7" />
-              <line x1="21" y1="12" x2="9" y2="12" />
-            </svg>
-            Encerrar Sessão
-          </button>
-          <button class="text-slate-500 hover:text-brand-text">
-            Termos de Uso
-          </button>
-          <button class="text-slate-500 hover:text-brand-text">
-            Privacidade
-          </button>
-        </div>
-        <div class="flex gap-4">
-          <button
-            class="px-6 py-2 border border-slate-300 rounded font-medium text-sm hover:bg-slate-50 transition-colors text-brand-text"
-          >
-            Descartar Alterações
-          </button>
-          <button
-            class="px-6 py-2 bg-brand-primary text-white rounded font-medium text-sm hover:bg-[#102a43] transition-colors"
-          >
-            Salvar Configurações
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <div class="space-y-6">
-      <div
-        class="bg-white border border-brand-outline rounded-md p-6 shadow-sm"
-      >
-        <div class="flex justify-between items-center mb-6">
-          <p
-            class="text-[10px] font-bold uppercase tracking-wider text-slate-500"
-          >
-            Filtros Inteligentes
-          </p>
-          <button class="text-xs font-bold text-brand-primary hover:underline">
-            Ver Todos
-          </button>
-        </div>
-
-        <div class="space-y-3">
-          <div
-            class="border border-slate-200 rounded p-3 flex justify-between items-center bg-slate-50 cursor-move text-sm font-medium text-brand-text"
-          >
-            <div class="flex items-center gap-2">
-              <div class="w-1.5 h-1.5 bg-brand-primary rounded-full"></div>
-              Reforma Tributária 2024
-            </div>
-            <svg
-              width="14"
-              height="14"
-              class="text-slate-400"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <line x1="8" y1="6" x2="21" y2="6" />
-              <line x1="8" y1="12" x2="21" y2="12" />
-              <line x1="8" y1="18" x2="21" y2="18" />
-              <line x1="3" y1="6" x2="3.01" y2="6" />
-              <line x1="3" y1="12" x2="3.01" y2="12" />
-              <line x1="3" y1="18" x2="3.01" y2="18" />
-            </svg>
-          </div>
-          <div
-            class="border border-slate-200 rounded p-3 flex justify-between items-center bg-slate-50 cursor-move text-sm font-medium text-brand-text"
-          >
-            <div class="flex items-center gap-2">
-              <div class="w-1.5 h-1.5 bg-brand-primary rounded-full"></div>
-              Direito Digital & IA
-            </div>
-            <svg
-              width="14"
-              height="14"
-              class="text-slate-400"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <line x1="8" y1="6" x2="21" y2="6" />
-              <line x1="8" y1="12" x2="21" y2="12" />
-              <line x1="8" y1="18" x2="21" y2="18" />
-              <line x1="3" y1="6" x2="3.01" y2="6" />
-              <line x1="3" y1="12" x2="3.01" y2="12" />
-              <line x1="3" y1="18" x2="3.01" y2="18" />
-            </svg>
-          </div>
-          <div
-            class="border border-slate-200 rounded p-3 flex justify-between items-center bg-slate-50 cursor-move text-sm font-medium text-brand-text"
-          >
-            <div class="flex items-center gap-2">
-              <div class="w-1.5 h-1.5 bg-brand-primary rounded-full"></div>
-              Saúde - Orçamento União
-            </div>
-            <svg
-              width="14"
-              height="14"
-              class="text-slate-400"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <line x1="8" y1="6" x2="21" y2="6" />
-              <line x1="8" y1="12" x2="21" y2="12" />
-              <line x1="8" y1="18" x2="21" y2="18" />
-              <line x1="3" y1="6" x2="3.01" y2="6" />
-              <line x1="3" y1="12" x2="3.01" y2="12" />
-              <line x1="3" y1="18" x2="3.01" y2="18" />
-            </svg>
-          </div>
-
-          <button
-            class="w-full border-2 border-dashed border-slate-300 rounded p-3 text-slate-400 text-sm font-medium hover:border-brand-primary hover:text-brand-primary transition-colors flex justify-center items-center gap-2"
-          >
-            <i data-lucide="plus" class="w-4 h-4"></i> Novo Filtro Dinâmico
-          </button>
-        </div>
-      </div>
-
-      <div
-        class="bg-white border border-brand-outline rounded-md p-6 shadow-sm"
-      >
-        <p
-          class="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-6"
-        >
-          Logs de Atividade
-        </p>
-        <div class="relative border-l border-slate-200 ml-2 space-y-6 pb-2">
-          <div class="relative pl-6">
-            <div
-              class="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-brand-text"
-            ></div>
-            <p class="text-[10px] font-bold uppercase text-slate-400 mb-1">
-              Hoje, 10:15
-            </p>
-            <p class="text-sm font-semibold text-brand-text">
-              Exportação de Relatório PDF
-            </p>
-            <p class="text-xs text-slate-500">
-              PEC 45/2019 - Análise de Impacto
-            </p>
-          </div>
-          <div class="relative pl-6">
-            <div
-              class="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-emerald-500"
-            ></div>
-            <p class="text-[10px] font-bold uppercase text-slate-400 mb-1">
-              Ontem, 16:40
-            </p>
-            <p class="text-sm font-semibold text-brand-text">
-              Atualização de Filtro
-            </p>
-            <p class="text-xs text-slate-500">
-              Keyword "Agronegócio" adicionada
-            </p>
-          </div>
-          <div class="relative pl-6">
-            <div
-              class="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-brand-text"
-            ></div>
-            <p class="text-[10px] font-bold uppercase text-slate-400 mb-1">
-              02 Jan, 09:22
-            </p>
-            <p class="text-sm font-semibold text-brand-text">
-              Mudança de Senha
-            </p>
-            <p class="text-xs text-slate-500">Segurança da conta atualizada</p>
-          </div>
-        </div>
-      </div>
-
-      <div
-        class="bg-slate-100 border border-slate-200 rounded-md p-5 flex items-center gap-4 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]"
-      >
+      <form method="POST" action="{% url 'usuario' %}">
+        {% csrf_token %}
         <div
-          class="w-10 h-10 rounded bg-[#00152a] text-white flex items-center justify-center shrink-0"
+          class="bg-white border border-brand-outline rounded-md p-0 shadow-sm overflow-hidden mb-6"
         >
-          <i data-lucide="hard-drive" class="w-5 h-5"></i>
+          <div class="p-6 border-b border-slate-100 flex justify-between items-center">
+            <h3 class="font-display font-semibold text-lg text-brand-text">
+              Preferências de Notificação
+            </h3>
+            {% if success %}
+              <span class="text-sm text-green-600 font-bold bg-green-50 px-3 py-1 border border-green-200 rounded uppercase tracking-wider">Configurações Salvas!</span>
+            {% endif %}
+          </div>
+          
+          <div class="p-6 space-y-6">
+            <div class="flex items-start justify-between border-b border-slate-50 pb-6">
+              <div>
+                <p class="text-sm font-medium text-brand-text">Alertas de Estagnação</p>
+                <p class="text-xs text-slate-500 mt-1">Receber alertas quando processos favoritos ficam estagnados</p>
+              </div>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" name="receber_alertas_estagnacao" class="sr-only peer" {% if profile.receber_alertas_estagnacao %}checked{% endif %}>
+                <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-primary"></div>
+              </label>
+            </div>
+            
+            <div class="flex items-center justify-between border-b border-slate-50 pb-6">
+              <div>
+                <p class="text-sm font-medium text-brand-text">Dias Limite para Estagnação</p>
+                <p class="text-xs text-slate-500 mt-1">Número de dias sem movimentação para acionar o alerta (Ex: 30)</p>
+              </div>
+              <input type="number" name="dias_limite_estagnacao" value="{{ profile.dias_limite_estagnacao }}" min="1" max="365" class="w-20 px-3 py-1.5 border border-slate-300 rounded-md text-sm font-bold text-center text-brand-text focus:border-brand-primary focus:ring-1 focus:ring-brand-primary focus:outline-none">
+            </div>
+
+            <div class="flex items-start justify-between">
+              <div>
+                <p class="text-sm font-medium text-brand-text">Alertas de Novas Movimentações</p>
+                <p class="text-xs text-slate-500 mt-1">Ser notificado sobre cada novo andamento dos processos favoritos</p>
+              </div>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" name="receber_alertas_novas_movimentacoes" class="sr-only peer" {% if profile.receber_alertas_novas_movimentacoes %}checked{% endif %}>
+                <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-primary"></div>
+              </label>
+            </div>
+          </div>
         </div>
-        <div>
-          <p class="text-xs text-slate-500 font-semibold mb-0.5">
-            Sincronização
-          </p>
-          <p class="text-lg font-display font-bold text-brand-text">
-            100% Estável
-          </p>
+
+        <div class="flex items-center justify-between pt-4 pb-8">
+          <div class="flex items-center gap-6 text-sm">
+            <button
+              type="button"
+              class="text-brand-error font-medium hover:underline flex items-center gap-1"
+            >
+              <i data-lucide="log-out" class="w-4 h-4"></i>
+              Encerrar Sessão
+            </button>
+            <button type="button" class="text-slate-500 hover:text-brand-text">
+              Termos de Uso
+            </button>
+            <button type="button" class="text-slate-500 hover:text-brand-text">
+              Privacidade
+            </button>
+          </div>
+          <div class="flex gap-4">
+            <button
+              type="button"
+              onclick="window.location.reload()"
+              class="px-6 py-2 border border-slate-300 rounded font-medium text-sm hover:bg-slate-50 transition-colors text-brand-text"
+            >
+              Descartar Alterações
+            </button>
+            <button
+              type="submit"
+              class="px-6 py-2 bg-brand-primary text-white rounded font-medium text-sm hover:bg-[#102a43] transition-colors"
+            >
+              Salvar Configurações
+            </button>
+          </div>
         </div>
-      </div>
+      </form>
     </div>
+
+
   </div>
 </div>
 {% endblock %}
