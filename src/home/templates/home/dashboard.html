@@ -37,7 +37,7 @@ Dashboard
       <div class="flex items-baseline gap-2">
         <span
           class="text-[40px] leading-none font-display font-bold text-[#00152a]"
-          >84</span
+          >{{ tempo_medio|default:0 }}</span
         >
         <span class="text-[#43474d] text-sm font-medium">dias</span>
       </div>
@@ -49,12 +49,12 @@ Dashboard
       <p
         class="text-[10px] font-bold text-[#74777e] uppercase tracking-widest mb-3 font-display"
       >
-        Impacto Econômico Est.
+        Estagnados
       </p>
       <div class="flex items-baseline gap-2">
         <span
           class="text-[40px] leading-none font-display font-bold text-[#00152a]"
-          >R$ 2.4B</span
+          >{{ estagnados|default:0 }}</span
         >
       </div>
     </div>
@@ -65,12 +65,12 @@ Dashboard
       <p
         class="text-[10px] font-bold text-[#74777e] uppercase tracking-widest mb-3 font-display"
       >
-        Conformidade Técnica
+        Em Andamento
       </p>
       <div class="flex items-baseline gap-2">
         <span
           class="text-[40px] leading-none font-display font-bold text-[#00152a]"
-          >98.2%</span
+          >{{ em_andamento|default:0 }}</span
         >
       </div>
     </div>
