@@ -40,6 +40,11 @@ class ProcessoLegislativo(models.Model):
         else:
             return 10
 
+    @property
+    def previsao_conclusao_dias(self):
+        from .services import previsao_tempo_conclusao
+        return previsao_tempo_conclusao(self)
+
 class Movimentacao(models.Model):
     processo = models.ForeignKey(ProcessoLegislativo, on_delete=models.CASCADE, related_name='movimentacoes')
     data_evento = models.DateTimeField()

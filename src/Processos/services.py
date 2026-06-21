@@ -102,3 +102,19 @@ def _gerar_notificacao_atualizacao(processo, movimentacao):
             tipo='ATUALIZACAO',
             mensagem=f"Nova movimentação no processo {processo.numero}/{processo.ano}: {movimentacao.descricao}"
         )
+
+def previsao_tempo_conclusao(processo):
+    """
+    Serviço simples para previsão de tempo de conclusão do processo.
+    """
+    progresso = processo.progresso_percentual
+    if progresso == 100:
+        return 0
+    elif progresso == 75:
+        return 30
+    elif progresso == 50:
+        return 60
+    elif progresso == 25:
+        return 180
+    else:
+        return 365

@@ -271,7 +271,19 @@
                         {{ processo.status_atual|default:"Em Tramitação Inicial" }}
                       </p>
                     </div>
-                    <span class="text-lg font-display font-bold text-brand-primary">{{ processo.progresso_percentual }}%</span>
+                    <div class="text-right">
+                      <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 flex items-center justify-end gap-1"><i data-lucide="clock" class="w-3 h-3"></i> Previsão de Conclusão</p>
+                      <div class="flex items-center justify-end gap-3">
+                        <span class="text-sm font-bold text-brand-text">
+                          {% if processo.previsao_conclusao_dias == 0 %}
+                            <span class="text-green-600">Concluído</span>
+                          {% else %}
+                            ~{{ processo.previsao_conclusao_dias }} dias
+                          {% endif %}
+                        </span>
+                        <span class="text-lg font-display font-bold text-brand-primary pl-3 border-l border-slate-200">{{ processo.progresso_percentual }}%</span>
+                      </div>
+                    </div>
                   </div>
                   <div class="relative w-full bg-slate-100 rounded-full h-3 shadow-inner overflow-hidden border border-slate-200/50">
                     <div class="absolute top-0 left-0 h-full rounded-full bg-gradient-to-r from-cyan-400 via-blue-500 to-brand-primary transition-all duration-1000 ease-out" 
