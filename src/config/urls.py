@@ -10,6 +10,8 @@ from home.views import (
     AlertasView,
     UsuarioView,
     SignUpView,
+    BuscarProposicaoView,
+    AcompanharProposicaoView,
 )
 
 urlpatterns = [
@@ -36,6 +38,18 @@ urlpatterns = [
         "proposicoes/",
         ProposicoesView.as_view(),
         name="proposicoes"
+    ),
+
+    path(
+        "proposicoes/buscar/",
+        BuscarProposicaoView.as_view(),
+        name="buscar_proposicao"
+    ),
+
+    path(
+        "proposicoes/acompanhar/",
+        AcompanharProposicaoView.as_view(),
+        name="acompanhar_proposicao"
     ),
 
     path(
