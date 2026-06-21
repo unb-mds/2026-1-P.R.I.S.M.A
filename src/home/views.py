@@ -1,4 +1,6 @@
 from django.views.generic import TemplateView, CreateView, ListView, DetailView
+from django_filters.views import FilterView
+from Processos.filters import ProcessoFilter
 from django.views import View
 from django.http import JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -8,6 +10,7 @@ from django.db.models import Avg, Min, Max, F, ExpressionWrapper, fields
 from django.db.models.functions import ExtractDay
 from django.utils import timezone
 import datetime
+import json
 from Usuarios.models import Notificacao, UserProfile
 
 from .forms import SignUpForm
@@ -26,6 +29,13 @@ class ProcessoDetailView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["active_page"] = "proposicoes"
+        
+        is_favorito = TermoMonitorado.objects.filter(
+            users=self.request.user,
+            processos=self.object
+        ).exists()
+        context["is_favorito"] = is_favorito
+        
         sync_processo_on_demand(self.object)
         return context
 
@@ -57,37 +67,31 @@ class DashboardView(TemplateView):
         return context
 
 
-class ProposicoesView(LoginRequiredMixin, ListView):
-    template_name = "home/proposicoes.html"
+class ProcessosView(LoginRequiredMixin, FilterView):
+    template_name = "home/processos.html"
     model = ProcessoLegislativo
-    context_object_name = "proposicoes"
+    context_object_name = "processos"
     paginate_by = 10
+    filterset_class = ProcessoFilter
 
     def get_queryset(self):
-        qs = ProcessoLegislativo.objects.filter(
-            termos_monitorados__users=self.request.user
-        ).distinct().prefetch_related('movimentacoes').order_by('-ano', '-numero')
-        
-        # Sincroniza sob demanda quando o usuário acessa a página
-        for processo in qs:
-            sync_processo_on_demand(processo)
-            
+        qs = ProcessoLegislativo.objects.all().order_by('-ano', '-numero')
         return qs
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["active_page"] = "proposicoes"
+        context["active_page"] = "processos"
         
-        # Real indicators
-        base_qs = ProcessoLegislativo.objects.filter(
+        # Para saber quais processos o usuário já favoritou na view
+        favoritos_ids = ProcessoLegislativo.objects.filter(
             termos_monitorados__users=self.request.user
-        ).distinct()
+        ).values_list('id', flat=True)
+        context["favoritos_ids"] = list(favoritos_ids)
         
-        context["total_pls"] = base_qs.count()
-        context["em_tramitacao"] = base_qs.exclude(status_atual__icontains='aprovad').exclude(status_atual__icontains='arquivad').count()
-        context["aprovadas"] = base_qs.filter(status_atual__icontains='aprovad').count()
-        context["com_alerta"] = Notificacao.objects.filter(user=self.request.user, lida=False).values('processo').distinct().count()
-        
+        # Sincroniza sob demanda os processos exibidos na página atual
+        for processo in context['processos']:
+            sync_processo_on_demand(processo)
+            
         return context
 
 
@@ -96,9 +100,15 @@ class FavoritosView(LoginRequiredMixin, ListView):
     context_object_name = "favoritos"
 
     def get_queryset(self):
-        qs = ProcessoLegislativo.objects.filter(
+        base_qs = ProcessoLegislativo.objects.filter(
             termos_monitorados__users=self.request.user
-        ).distinct().prefetch_related('movimentacoes')
+        ).distinct()
+        
+        # Sincroniza os favoritos antes de calcular os metadados e filtros
+        for processo in base_qs:
+            sync_processo_on_demand(processo)
+            
+        qs = base_qs.prefetch_related('movimentacoes')
         
         status = self.request.GET.get('status', 'todas')
         limite = timezone.now() - datetime.timedelta(days=30)
@@ -121,14 +131,23 @@ class FavoritosView(LoginRequiredMixin, ListView):
         
         base_qs = ProcessoLegislativo.objects.filter(
             termos_monitorados__users=self.request.user
-        ).distinct().annotate(ultima_mov=Max('movimentacoes__data_evento'))
+        ).distinct()
+        
+        qs_annotated = base_qs.annotate(ultima_mov=Max('movimentacoes__data_evento'))
         
         limite = timezone.now() - datetime.timedelta(days=30)
         
-        context["total_count"] = base_qs.count()
-        context["normal_count"] = base_qs.filter(ultima_mov__gte=limite).count()
-        context["estagnadas_count"] = base_qs.filter(ultima_mov__lt=limite).count()
-        context["urgencia_count"] = base_qs.filter(notificacoes__lida=False).distinct().count()
+        # Original Favoritos KPI
+        context["total_count"] = qs_annotated.count()
+        context["normal_count"] = qs_annotated.filter(ultima_mov__gte=limite).count()
+        context["estagnadas_count"] = qs_annotated.filter(ultima_mov__lt=limite).count()
+        context["urgencia_count"] = qs_annotated.filter(notificacoes__lida=False).distinct().count()
+        
+        # Processos/Proposicoes KPI that were moved here
+        context["total_pls"] = base_qs.count()
+        context["em_tramitacao"] = base_qs.exclude(status_atual__icontains='aprovad').exclude(status_atual__icontains='arquivad').count()
+        context["aprovadas"] = base_qs.filter(status_atual__icontains='aprovad').count()
+        context["com_alerta"] = Notificacao.objects.filter(user=self.request.user, lida=False).values('processo').distinct().count()
         
         return context
 
@@ -237,6 +256,44 @@ class AcompanharProposicaoView(LoginRequiredMixin, View):
             termo.processos.add(proposicao)
             
             return JsonResponse({'status': 'success'})
+        except ProcessoLegislativo.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Proposição não encontrada'}, status=404)
+
+class ToggleFavoritoView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        try:
+            data = json.loads(request.body)
+            proposicao_id = data.get('proposicao_id')
+        except json.JSONDecodeError:
+            proposicao_id = request.POST.get('proposicao_id')
+
+        if not proposicao_id:
+            return JsonResponse({'status': 'error', 'message': 'ID não fornecido'}, status=400)
+        
+        try:
+            proposicao = ProcessoLegislativo.objects.get(id=proposicao_id)
+            
+            # Verifica se o usuário já monitora sob qualquer termo
+            termos_existentes = TermoMonitorado.objects.filter(
+                users=request.user,
+                processos=proposicao
+            )
+            
+            if termos_existentes.exists():
+                # Se já monitora, remove de todos os termos vinculados a ele
+                for termo in termos_existentes:
+                    termo.processos.remove(proposicao)
+                    # Opcional: Se o termo ficar sem processos e sem outros usuários (exceto palavra_chave padrão), poderia deletar, mas remove() já basta.
+                return JsonResponse({'status': 'success', 'action': 'removed'})
+            else:
+                # Se não monitora, adiciona a "meus_favoritos"
+                termo, created = TermoMonitorado.objects.get_or_create(
+                    palavra_chave="meus_favoritos"
+                )
+                termo.users.add(request.user)
+                termo.processos.add(proposicao)
+                sync_processo_on_demand(proposicao)
+                return JsonResponse({'status': 'success', 'action': 'added'})
         except ProcessoLegislativo.DoesNotExist:
             return JsonResponse({'status': 'error', 'message': 'Proposição não encontrada'}, status=404)
 
