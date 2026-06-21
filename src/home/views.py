@@ -4,6 +4,9 @@ from django.http import JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.db import models
+from django.db.models import Avg, Min, F, ExpressionWrapper, fields
+from django.db.models.functions import ExtractDay
+from django.utils import timezone
 from Usuarios.models import Notificacao
 
 from .forms import SignUpForm
@@ -17,6 +20,25 @@ class DashboardView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["active_page"] = "dashboard"
+        
+        # Tempo médio de tramitação
+        qs = ProcessoLegislativo.objects.annotate(
+            primeira_movimentacao=Min('movimentacoes__data_evento')
+        ).filter(primeira_movimentacao__isnull=False).annotate(
+            dias_tramitacao=ExpressionWrapper(
+                ExtractDay(timezone.now() - F('primeira_movimentacao')),
+                output_field=fields.IntegerField()
+            )
+        )
+        tempo_medio = qs.aggregate(media=Avg('dias_tramitacao'))['media']
+        context["tempo_medio"] = tempo_medio if tempo_medio is not None else 0
+
+        # Estagnados vs Em andamento
+        estagnados = Notificacao.objects.filter(tipo='ESTAGNACAO').values('processo').distinct().count()
+        total_processos = ProcessoLegislativo.objects.count()
+        context["estagnados"] = estagnados
+        context["em_andamento"] = total_processos - estagnados
+
         return context
 
 
