@@ -34,14 +34,13 @@
       <p
         class="text-xs font-bold uppercase tracking-wider text-brand-error mb-2"
       >
-        Urgência Alta
+        Urgência Temporal
       </p>
       <h3 class="font-display font-semibold text-2xl text-brand-text">
-        03 Prazos Críticos
+        {{ urgencia_temporal|default:"0" }} Notificações Pendentes
       </h3>
       <p class="text-sm text-slate-600 mt-2 max-w-[80%]">
-        Vencimentos de emendas e pedidos de vista em projetos favoritos nas
-        próximas 24 horas.
+        Notificações não lidas que exigem atenção imediata.
       </p>
       <div class="flex gap-2 mt-4 text-brand-error">
         <div
@@ -61,16 +60,16 @@
       class="bg-white border border-brand-outline rounded-md p-5 shadow-sm text-center flex flex-col justify-center"
     >
       <p
-        class="text-[10px] font-bold uppercase tracking-wider text-emerald-600 mb-2"
+        class="text-[10px] font-bold uppercase tracking-wider text-blue-600 mb-2"
       >
-        Mencionados
+        Tempo Médio nas Comissões
       </p>
-      <h3 class="font-display font-bold text-4xl text-brand-text">12</h3>
+      <h3 class="font-display font-bold text-4xl text-brand-text">{{ tempo_medio_comissoes|default:"0" }}</h3>
       <p class="text-xs text-slate-500 mt-2 leading-tight">
-        Menções em Pautas<br />de Comissões hoje.
+        Dias de tramitação<br />em média.
       </p>
       <div class="w-full h-1 bg-slate-100 rounded-full mt-4 overflow-hidden">
-        <div class="h-full bg-emerald-500 w-[60%]"></div>
+        <div class="h-full bg-blue-500 w-[100%]"></div>
       </div>
     </div>
 
@@ -78,21 +77,15 @@
       class="bg-brand-primary text-white border border-brand-primary rounded-md p-5 shadow-sm"
     >
       <div class="flex justify-between items-start mb-4">
-        <p class="text-[10px] font-bold uppercase tracking-wider text-blue-200">
-          Quórum em Tempo Real
+        <p class="text-[10px] font-bold uppercase tracking-wider text-red-200">
+          Volume de Estagnação
         </p>
-        <i data-lucide="users" class="w-4 h-4 text-emerald-400"></i>
+        <i data-lucide="alert-circle" class="w-4 h-4 text-red-400"></i>
       </div>
       <div class="flex items-baseline gap-1">
-        <h3 class="font-display font-bold text-4xl">84%</h3>
+        <h3 class="font-display font-bold text-4xl">{{ volume_estagnacao|default:"0" }}</h3>
       </div>
-      <p class="text-xs text-slate-300 mt-1">Plenário Principal</p>
-      <p
-        class="text-[10px] bg-white/10 text-emerald-300 px-2 py-1 rounded inline-block mt-4 flex items-center font-medium gap-1 w-fit"
-      >
-        <i data-lucide="trending-up" class="w-2.5 h-2.5"></i> +5 parlamentares
-        registrados
-      </p>
+      <p class="text-xs text-slate-300 mt-1">Processos travados</p>
     </div>
   </div>
 

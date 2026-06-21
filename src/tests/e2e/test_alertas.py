@@ -17,6 +17,12 @@ def test_alertas_render_and_empty_state(page, live_server):
     
     # Verifica estado vazio
     expect(page.locator("text=Nenhuma notificação encontrada.")).to_be_visible()
+    
+    # Verifica widgets SLA
+    expect(page.locator("text=Urgência Temporal")).to_be_visible()
+    expect(page.locator("text=Tempo Médio nas Comissões")).to_be_visible()
+    expect(page.locator("text=Volume de Estagnação")).to_be_visible()
+    expect(page.locator("text=0 Notificações Pendentes")).to_be_visible()
 
 @pytest.mark.django_db(transaction=True)
 def test_alertas_render_notifications(page, live_server):
@@ -47,3 +53,7 @@ def test_alertas_render_notifications(page, live_server):
     expect(page.locator("text=Alerta de Estagnação")).to_be_visible()
     expect(page.locator("text=PL 10/2024")).to_be_visible()
     expect(page.locator("text=Processo estagnado")).to_be_visible()
+
+    # Verifica os widgets de SLA novamente
+    expect(page.locator("text=1 Notificações Pendentes")).to_be_visible()
+    expect(page.locator("text=Volume de Estagnação")).to_be_visible()

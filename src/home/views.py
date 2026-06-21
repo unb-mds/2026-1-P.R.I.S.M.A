@@ -93,6 +93,26 @@ class AlertasView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["active_page"] = "alertas"
+        
+        qs = ProcessoLegislativo.objects.annotate(
+            primeira_movimentacao=Min('movimentacoes__data_evento')
+        ).filter(primeira_movimentacao__isnull=False).annotate(
+            dias_tramitacao=ExpressionWrapper(
+                ExtractDay(timezone.now() - F('primeira_movimentacao')),
+                output_field=fields.IntegerField()
+            )
+        )
+        tempo_medio = qs.aggregate(media=Avg('dias_tramitacao'))['media']
+        context["tempo_medio_comissoes"] = int(tempo_medio) if tempo_medio is not None else 0
+        
+        context["volume_estagnacao"] = Notificacao.objects.filter(
+            user=self.request.user, tipo='ESTAGNACAO'
+        ).count()
+        
+        context["urgencia_temporal"] = Notificacao.objects.filter(
+            user=self.request.user, lida=False
+        ).count()
+        
         return context
 
 
