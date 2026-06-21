@@ -4,9 +4,10 @@ from django.http import JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.db import models
-from django.db.models import Avg, Min, F, ExpressionWrapper, fields
+from django.db.models import Avg, Min, Max, F, ExpressionWrapper, fields
 from django.db.models.functions import ExtractDay
 from django.utils import timezone
+import datetime
 from Usuarios.models import Notificacao
 
 from .forms import SignUpForm
@@ -73,12 +74,45 @@ class VotacoesView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class FavoritosView(LoginRequiredMixin, TemplateView):
+class FavoritosView(LoginRequiredMixin, ListView):
     template_name = "home/favoritos.html"
+    context_object_name = "favoritos"
+
+    def get_queryset(self):
+        qs = ProcessoLegislativo.objects.filter(
+            termos_monitorados__users=self.request.user
+        ).distinct().prefetch_related('movimentacoes')
+        
+        status = self.request.GET.get('status', 'todas')
+        limite = timezone.now() - datetime.timedelta(days=30)
+        
+        qs = qs.annotate(ultima_mov=Max('movimentacoes__data_evento'))
+        
+        if status == 'estagnadas':
+            qs = qs.filter(ultima_mov__lt=limite)
+        elif status == 'tramitacao_normal':
+            qs = qs.filter(ultima_mov__gte=limite)
+        elif status == 'urgencia':
+            qs = qs.filter(notificacoes__lida=False).distinct()
+            
+        return qs.order_by('-ultima_mov')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["active_page"] = "favoritos"
+        context["status_atual"] = self.request.GET.get('status', 'todas')
+        
+        base_qs = ProcessoLegislativo.objects.filter(
+            termos_monitorados__users=self.request.user
+        ).distinct().annotate(ultima_mov=Max('movimentacoes__data_evento'))
+        
+        limite = timezone.now() - datetime.timedelta(days=30)
+        
+        context["total_count"] = base_qs.count()
+        context["normal_count"] = base_qs.filter(ultima_mov__gte=limite).count()
+        context["estagnadas_count"] = base_qs.filter(ultima_mov__lt=limite).count()
+        context["urgencia_count"] = base_qs.filter(notificacoes__lida=False).distinct().count()
+        
         return context
 
 
