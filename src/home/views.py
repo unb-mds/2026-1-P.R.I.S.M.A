@@ -1,4 +1,4 @@
-from django.views.generic import TemplateView, CreateView, ListView
+from django.views.generic import TemplateView, CreateView, ListView, DetailView
 from django.views import View
 from django.http import JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -14,6 +14,20 @@ from .forms import SignUpForm
 from Processos.models import ProcessoLegislativo, TermoMonitorado
 from Processos.services import sync_processo_on_demand
 
+
+class ProcessoDetailView(LoginRequiredMixin, DetailView):
+    model = ProcessoLegislativo
+    template_name = "home/proposicao_detalhes.html"
+    context_object_name = "processo"
+
+    def get_queryset(self):
+        return ProcessoLegislativo.objects.prefetch_related('movimentacoes')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["active_page"] = "proposicoes"
+        sync_processo_on_demand(self.object)
+        return context
 
 class DashboardView(TemplateView):
     template_name = "home/dashboard.html"
@@ -47,11 +61,12 @@ class ProposicoesView(LoginRequiredMixin, ListView):
     template_name = "home/proposicoes.html"
     model = ProcessoLegislativo
     context_object_name = "proposicoes"
+    paginate_by = 10
 
     def get_queryset(self):
         qs = ProcessoLegislativo.objects.filter(
             termos_monitorados__users=self.request.user
-        ).distinct().prefetch_related('movimentacoes')
+        ).distinct().prefetch_related('movimentacoes').order_by('-ano', '-numero')
         
         # Sincroniza sob demanda quando o usuário acessa a página
         for processo in qs:
@@ -62,15 +77,17 @@ class ProposicoesView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["active_page"] = "proposicoes"
-        return context
-
-
-class VotacoesView(LoginRequiredMixin, TemplateView):
-    template_name = "home/votacoes.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["active_page"] = "votacoes"
+        
+        # Real indicators
+        base_qs = ProcessoLegislativo.objects.filter(
+            termos_monitorados__users=self.request.user
+        ).distinct()
+        
+        context["total_pls"] = base_qs.count()
+        context["em_tramitacao"] = base_qs.exclude(status_atual__icontains='aprovad').exclude(status_atual__icontains='arquivad').count()
+        context["aprovadas"] = base_qs.filter(status_atual__icontains='aprovad').count()
+        context["com_alerta"] = Notificacao.objects.filter(user=self.request.user, lida=False).values('processo').distinct().count()
+        
         return context
 
 
