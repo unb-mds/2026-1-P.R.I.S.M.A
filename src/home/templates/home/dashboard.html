@@ -8,73 +8,61 @@ Dashboard
 <div
   class="p-8 max-w-[1440px] mx-auto space-y-6 bg-[#f6fafe] min-h-full text-[#171c1f]"
 >
+  
   <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-    <div
-      class="bg-white p-6 rounded border border-[#c3c6ce] shadow-sm flex flex-col justify-center"
-    >
-      <p
-        class="text-[10px] font-bold text-[#74777e] uppercase tracking-widest mb-3 font-display"
-      >
-        Total Aprovadas (Ano)
+    <!-- Card 1: Tempo Médio de Trâmite -->
+    <div class="bg-gradient-to-br from-indigo-500 to-purple-600 p-6 rounded-xl border border-white/20 shadow-lg hover:-translate-y-1 hover:shadow-xl transition-all duration-300 flex flex-col justify-center relative overflow-hidden group">
+      <div class="absolute -right-6 -top-6 w-24 h-24 bg-white/10 rounded-full blur-xl group-hover:bg-white/20 transition-all"></div>
+      <p class="text-[11px] font-bold text-indigo-100 uppercase tracking-widest mb-3 font-display relative z-10 flex items-center gap-2">
+        <i data-lucide="clock" class="w-4 h-4"></i>
+        Tempo Médio de Trâmite
       </p>
-      <div class="flex items-baseline gap-2">
-        <span
-          class="text-[40px] leading-none font-display font-bold text-[#00152a]"
-          >142</span
-        >
-        <span class="text-[#00a472] text-sm font-bold">+12%</span>
+      <div class="flex items-baseline gap-2 relative z-10">
+        <span class="text-[40px] leading-none font-display font-bold text-white">{{ tempo_medio|default:0|floatformat:1 }}</span>
+        <span class="text-indigo-100 text-sm font-medium">dias</span>
       </div>
     </div>
 
-    <div
-      class="bg-white p-6 rounded border border-[#c3c6ce] shadow-sm flex flex-col justify-center"
-    >
-      <p
-        class="text-[10px] font-bold text-[#74777e] uppercase tracking-widest mb-3 font-display"
-      >
-        Média de Tramitação
+    <!-- Card 2: Proposições Estagnadas -->
+    <div class="bg-gradient-to-br from-rose-500 to-red-600 p-6 rounded-xl border border-white/20 shadow-lg hover:-translate-y-1 hover:shadow-xl transition-all duration-300 flex flex-col justify-center relative overflow-hidden group">
+      <div class="absolute -right-6 -top-6 w-24 h-24 bg-white/10 rounded-full blur-xl group-hover:bg-white/20 transition-all"></div>
+      <p class="text-[11px] font-bold text-rose-100 uppercase tracking-widest mb-3 font-display relative z-10 flex items-center gap-2">
+        <i data-lucide="alert-triangle" class="w-4 h-4"></i>
+        Proposições Estagnadas
       </p>
-      <div class="flex items-baseline gap-2">
-        <span
-          class="text-[40px] leading-none font-display font-bold text-[#00152a]"
-          >{{ tempo_medio|default:0 }}</span
-        >
-        <span class="text-[#43474d] text-sm font-medium">dias</span>
+      <div class="flex items-baseline gap-2 relative z-10">
+        <span class="text-[40px] leading-none font-display font-bold text-white">{{ estagnados|default:0 }}</span>
+        <span class="text-rose-100 text-sm font-medium">processos</span>
       </div>
     </div>
 
-    <div
-      class="bg-white p-6 rounded border border-[#c3c6ce] shadow-sm flex flex-col justify-center"
-    >
-      <p
-        class="text-[10px] font-bold text-[#74777e] uppercase tracking-widest mb-3 font-display"
-      >
-        Estagnados
-      </p>
-      <div class="flex items-baseline gap-2">
-        <span
-          class="text-[40px] leading-none font-display font-bold text-[#00152a]"
-          >{{ estagnados|default:0 }}</span
-        >
-      </div>
-    </div>
-
-    <div
-      class="bg-white p-6 rounded border border-[#c3c6ce] border-l-[6px] border-l-[#00a472] shadow-sm flex flex-col justify-center"
-    >
-      <p
-        class="text-[10px] font-bold text-[#74777e] uppercase tracking-widest mb-3 font-display"
-      >
+    <!-- Card 3: Em Andamento -->
+    <div class="bg-gradient-to-br from-emerald-500 to-teal-600 p-6 rounded-xl border border-white/20 shadow-lg hover:-translate-y-1 hover:shadow-xl transition-all duration-300 flex flex-col justify-center relative overflow-hidden group">
+      <div class="absolute -right-6 -top-6 w-24 h-24 bg-white/10 rounded-full blur-xl group-hover:bg-white/20 transition-all"></div>
+      <p class="text-[11px] font-bold text-emerald-100 uppercase tracking-widest mb-3 font-display relative z-10 flex items-center gap-2">
+        <i data-lucide="activity" class="w-4 h-4"></i>
         Em Andamento
       </p>
-      <div class="flex items-baseline gap-2">
-        <span
-          class="text-[40px] leading-none font-display font-bold text-[#00152a]"
-          >{{ em_andamento|default:0 }}</span
-        >
+      <div class="flex items-baseline gap-2 relative z-10">
+        <span class="text-[40px] leading-none font-display font-bold text-white">{{ em_andamento|default:0 }}</span>
+        <span class="text-emerald-100 text-sm font-medium">ativos</span>
+      </div>
+    </div>
+
+    <!-- Card 4: SLA de Relatoria -->
+    <div class="bg-gradient-to-br from-amber-500 to-orange-500 p-6 rounded-xl border border-white/20 shadow-lg hover:-translate-y-1 hover:shadow-xl transition-all duration-300 flex flex-col justify-center relative overflow-hidden group">
+      <div class="absolute -right-6 -top-6 w-24 h-24 bg-white/10 rounded-full blur-xl group-hover:bg-white/20 transition-all"></div>
+      <p class="text-[11px] font-bold text-amber-100 uppercase tracking-widest mb-3 font-display relative z-10 flex items-center gap-2">
+        <i data-lucide="check-circle" class="w-4 h-4"></i>
+        SLA de Relatoria
+      </p>
+      <div class="flex items-baseline gap-2 relative z-10">
+        <span class="text-[40px] leading-none font-display font-bold text-white">95%</span>
+        <span class="text-amber-100 text-sm font-medium">no prazo</span>
       </div>
     </div>
   </div>
+
 
   <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
     <div class="xl:col-span-2 space-y-4">
@@ -142,13 +130,13 @@ Dashboard
             <p
               class="text-[10px] font-bold text-[#74777e] uppercase tracking-widest mb-2 font-display"
             >
-              Impacto Legislativo
+              Duração Total
             </p>
             <div class="flex items-center gap-3">
-              <div class="h-1.5 w-32 bg-[#dfe3e7] rounded-full overflow-hidden">
-                <div class="h-full bg-[#00152a] w-[85%]"></div>
+              <div class="flex items-center justify-center bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full border border-indigo-100">
+                <i data-lucide="calendar" class="w-3 h-3 mr-1.5"></i>
+                <span class="text-xs font-bold">145 dias</span>
               </div>
-              <span class="text-xs font-bold text-[#00152a]">ALTO</span>
             </div>
           </div>
           <div class="flex justify-end items-center">
@@ -205,13 +193,13 @@ Dashboard
             <p
               class="text-[10px] font-bold text-[#74777e] uppercase tracking-widest mb-2 font-display"
             >
-              Unanimidade
+              Duração Total
             </p>
             <div class="flex items-center gap-3">
-              <div class="h-1.5 w-32 bg-[#dfe3e7] rounded-full overflow-hidden">
-                <div class="h-full bg-[#00a472] w-full"></div>
+              <div class="flex items-center justify-center bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full border border-emerald-100">
+                <i data-lucide="calendar" class="w-3 h-3 mr-1.5"></i>
+                <span class="text-xs font-bold">92 dias</span>
               </div>
-              <span class="text-xs font-bold text-[#00152a]">100%</span>
             </div>
           </div>
           <div class="flex justify-end items-center">
@@ -267,13 +255,13 @@ Dashboard
             <p
               class="text-[10px] font-bold text-[#74777e] uppercase tracking-widest mb-2 font-display"
             >
-              Impacto Legislativo
+              Duração Total
             </p>
             <div class="flex items-center gap-3">
-              <div class="h-1.5 w-32 bg-[#dfe3e7] rounded-full overflow-hidden">
-                <div class="h-full bg-[#00152a] w-[60%]"></div>
+              <div class="flex items-center justify-center bg-amber-50 text-amber-700 px-3 py-1 rounded-full border border-amber-100">
+                <i data-lucide="calendar" class="w-3 h-3 mr-1.5"></i>
+                <span class="text-xs font-bold">210 dias</span>
               </div>
-              <span class="text-xs font-bold text-[#00152a]">MÉDIO</span>
             </div>
           </div>
           <div class="flex justify-end items-center">

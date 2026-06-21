@@ -33,13 +33,17 @@ def test_dashboard_indicadores(page, live_server):
 
     page.goto(f"{live_server.url}/")
 
-    expect(page.locator('text="Média de Tramitação"')).to_be_visible()
-    expect(page.locator('text="Estagnados"')).to_be_visible()
+    expect(page.locator('text="Tempo Médio de Trâmite"')).to_be_visible()
+    expect(page.locator('text="Proposições Estagnadas"')).to_be_visible()
     expect(page.locator('text="Em Andamento"')).to_be_visible()
+    expect(page.locator('text="SLA de Relatoria"')).to_be_visible()
+    expect(page.locator('text="Duração Total"').first).to_be_visible()
 
     # Verifica os números. "1" deve aparecer para estagnados e em andamento.
     # Média deve ser "15" ou "15.0"
     content = page.content()
-    assert "Estagnados" in content
+    assert "Proposições Estagnadas" in content
     assert "Em Andamento" in content
-    assert "Média de Tramitação" in content
+    assert "Tempo Médio de Trâmite" in content
+    assert "SLA de Relatoria" in content
+    assert "Duração Total" in content
