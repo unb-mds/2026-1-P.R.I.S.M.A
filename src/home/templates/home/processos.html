@@ -1,6 +1,6 @@
 {% extends 'home/base.html' %} 
-{% block title %}Proposições{% endblock %} 
-{% block page_title %}Proposições{% endblock %} 
+{% block title %}Processos Legislativos{% endblock %} 
+{% block page_title %}Processos Legislativos{% endblock %} 
 {% block content %}
 <div class="h-[calc(100vh-72px)] overflow-hidden flex">
   <div
@@ -10,70 +10,74 @@
       class="p-4 border-b border-brand-outline flex justify-between items-center sticky top-0 bg-white z-10"
     >
       <h3 class="font-semibold text-sm">Filtros Avançados</h3>
-      <button class="text-xs text-brand-primary font-medium hover:underline">
+      <a href="?" class="text-xs text-brand-primary font-medium hover:underline">
         Limpar
-      </button>
+      </a>
     </div>
 
-    <div class="p-4 space-y-6">
+    <form method="GET" class="p-4 space-y-6" id="filterForm">
+      <div class="space-y-2">
+        <label
+          class="text-xs font-semibold uppercase tracking-wider text-slate-500"
+          >Pesquisa</label
+        >
+        <div class="relative">
+          <i data-lucide="search" class="w-4 h-4 absolute left-3 top-3 text-slate-400"></i>
+          <input
+            type="text"
+            name="q"
+            value="{{ request.GET.q }}"
+            placeholder="Ex: Reforma Tributária..."
+            class="w-full text-sm border border-slate-200 rounded p-2 pl-9 bg-white outline-none focus:border-brand-primary"
+          />
+        </div>
+      </div>
+
       <div class="space-y-3">
         <label
           class="text-xs font-semibold uppercase tracking-wider text-slate-500"
           >Tipo de Proposição</label
         >
-        <div class="grid grid-cols-2 gap-2">
-          <button
-            class="bg-brand-primary text-white text-xs py-1.5 rounded font-medium"
-          >
-            PL
-          </button>
-          <button
-            class="border border-slate-200 hover:bg-slate-50 text-slate-600 text-xs py-1.5 rounded font-medium"
-          >
-            PEC
-          </button>
-          <button
-            class="border border-slate-200 hover:bg-slate-50 text-slate-600 text-xs py-1.5 rounded font-medium"
-          >
-            MPV
-          </button>
-          <button
-            class="border border-slate-200 hover:bg-slate-50 text-slate-600 text-xs py-1.5 rounded font-medium"
-          >
-            REQ
-          </button>
-        </div>
-      </div>
-
-      <div class="space-y-2">
-        <label
-          class="text-xs font-semibold uppercase tracking-wider text-slate-500"
-          >Temas Prioritários</label
-        >
         <select
+          name="tipo_proposicao"
           class="w-full text-sm border border-slate-200 rounded p-2 bg-white outline-none focus:border-brand-primary"
         >
-          <option>Educação e Cultura</option>
-          <option>Economia</option>
-          <option>Saúde</option>
+          <option value="">Todos</option>
+          <option value="PL" {% if request.GET.tipo_proposicao == 'PL' %}selected{% endif %}>PL</option>
+          <option value="PEC" {% if request.GET.tipo_proposicao == 'PEC' %}selected{% endif %}>PEC</option>
+          <option value="MPV" {% if request.GET.tipo_proposicao == 'MPV' %}selected{% endif %}>MPV</option>
+          <option value="REQ" {% if request.GET.tipo_proposicao == 'REQ' %}selected{% endif %}>REQ</option>
         </select>
       </div>
 
       <div class="space-y-2">
         <label
           class="text-xs font-semibold uppercase tracking-wider text-slate-500"
-          >Autor</label
+          >Ano</label
         >
         <div class="relative">
-          <div
-            class="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none"
-          >
-            <i data-lucide="user-plus" class="w-3.5 h-3.5 text-slate-400"></i>
-          </div>
+          <input
+            type="number"
+            name="ano"
+            value="{{ request.GET.ano }}"
+            placeholder="Ex: 2024"
+            class="w-full text-sm border border-slate-200 rounded p-2 bg-white outline-none focus:border-brand-primary"
+          />
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <label
+          class="text-xs font-semibold uppercase tracking-wider text-slate-500"
+          >Número</label
+        >
+        <div class="relative">
           <input
             type="text"
-            placeholder="Nome do Parlamentar"
-            class="w-full text-sm border border-slate-200 rounded pl-8 p-2 bg-white outline-none focus:border-brand-primary"
+            name="numero"
+            value="{{ request.GET.numero }}"
+            placeholder="Ex: 1234"
+            class="w-full text-sm border border-slate-200 rounded p-2 bg-white outline-none focus:border-brand-primary"
           />
         </div>
       </div>
@@ -83,110 +87,37 @@
           class="text-xs font-semibold uppercase tracking-wider text-slate-500"
           >Status</label
         >
-        <div class="space-y-2">
-          <label class="flex items-center gap-2 cursor-pointer group">
-            <div
-              class="w-4 h-4 rounded border flex items-center justify-center bg-brand-primary border-brand-primary"
-            >
-              <i data-lucide="check" class="w-3 h-3 text-white"></i>
-            </div>
-            <span class="text-sm text-slate-700">Em Tramitação</span>
-          </label>
-          <label class="flex items-center gap-2 cursor-pointer group">
-            <div
-              class="w-4 h-4 rounded border flex items-center justify-center border-slate-300"
-            ></div>
-            <span class="text-sm text-slate-700">Aprovado</span>
-          </label>
-          <label class="flex items-center gap-2 cursor-pointer group">
-            <div
-              class="w-4 h-4 rounded border flex items-center justify-center border-slate-300"
-            ></div>
-            <span class="text-sm text-slate-700">Arquivado</span>
-          </label>
-          <label class="flex items-center gap-2 cursor-pointer group">
-            <div
-              class="w-4 h-4 rounded border flex items-center justify-center border-slate-300"
-            ></div>
-            <span class="text-sm text-slate-700">Veto Presidencial</span>
-          </label>
-        </div>
+        <select
+          name="status_atual"
+          class="w-full text-sm border border-slate-200 rounded p-2 bg-white outline-none focus:border-brand-primary"
+        >
+          <option value="">Todos</option>
+          <option value="Tramitação" {% if 'Tramitação' in request.GET.status_atual %}selected{% endif %}>Em Tramitação</option>
+          <option value="Aprovad" {% if 'Aprovad' in request.GET.status_atual %}selected{% endif %}>Aprovado</option>
+          <option value="Arquivad" {% if 'Arquivad' in request.GET.status_atual %}selected{% endif %}>Arquivado</option>
+        </select>
       </div>
 
       <button
+        type="submit"
         class="w-full bg-slate-100 hover:bg-slate-200 transition-colors text-brand-text font-medium text-sm py-2 rounded border border-slate-200 mt-4"
       >
         Aplicar Filtros
       </button>
-    </div>
+    </form>
   </div>
 
   <div class="flex-1 overflow-x-hidden overflow-y-auto bg-brand-surface p-6">
     <div class="flex justify-between items-center mb-6">
       <h2 class="font-display font-semibold text-lg text-brand-text">
-        Proposições Legislativas
+        Processos Legislativos
       </h2>
       <button
         onclick="openModal()"
         class="bg-brand-primary hover:bg-[#102a43] text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
       >
-        + Acompanhar Nova Proposição
+        + Acompanhar Novo Processo
       </button>
-    </div>
-
-    <div class="grid grid-cols-4 gap-4 mb-8">
-      <div
-        class="bg-white border border-brand-outline rounded-md flex p-4 shadow-sm items-center gap-4"
-      >
-        <div
-          class="w-10 h-10 rounded bg-blue-50 text-blue-600 flex items-center justify-center shrink-0"
-        >
-          <i data-lucide="file-signature" class="w-5 h-5"></i>
-        </div>
-        <div>
-          <p class="text-xs text-slate-500 font-medium">Total Acompanhadas</p>
-          <p class="text-xl font-display font-bold text-brand-text">{{ total_pls }}</p>
-        </div>
-      </div>
-      <div
-        class="bg-white border border-brand-outline rounded-md flex p-4 shadow-sm items-center gap-4"
-      >
-        <div
-          class="w-10 h-10 rounded bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0"
-        >
-          <i data-lucide="timer-reset" class="w-5 h-5"></i>
-        </div>
-        <div>
-          <p class="text-xs text-slate-500 font-medium">Em Tramitação</p>
-          <p class="text-xl font-display font-bold text-brand-text">{{ em_tramitacao }}</p>
-        </div>
-      </div>
-      <div
-        class="bg-white border border-brand-outline rounded-md flex p-4 shadow-sm items-center gap-4"
-      >
-        <div
-          class="w-10 h-10 rounded bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0"
-        >
-          <i data-lucide="check-circle" class="w-5 h-5"></i>
-        </div>
-        <div>
-          <p class="text-xs text-slate-500 font-medium">Aprovadas</p>
-          <p class="text-xl font-display font-bold text-brand-text">{{ aprovadas }}</p>
-        </div>
-      </div>
-      <div
-        class="bg-white border border-brand-outline rounded-md flex p-4 shadow-sm items-center gap-4"
-      >
-        <div
-          class="w-10 h-10 rounded bg-red-50 text-red-600 flex items-center justify-center shrink-0"
-        >
-          <i data-lucide="alert-circle" class="w-5 h-5"></i>
-        </div>
-        <div>
-          <p class="text-xs text-slate-500 font-medium">Com Alertas</p>
-          <p class="text-xl font-display font-bold text-brand-text">{{ com_alerta }}</p>
-        </div>
-      </div>
     </div>
 
     <div
@@ -197,6 +128,7 @@
           <tr
             class="border-b border-brand-outline bg-slate-50 text-xs font-semibold text-slate-500 uppercase tracking-wider"
           >
+            <th class="p-4 w-12 text-center">Fav</th>
             <th class="p-4 w-40">ID / Tipo</th>
             <th class="p-4">Título / Ementa</th>
             <th class="p-4 w-32">Tempo Acumulado</th>
@@ -206,14 +138,18 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-100">
-          {% for processo in proposicoes %}
-          <tr data-href="{% url 'proposicao_detalhes' processo.pk %}" onclick="window.location.href=this.dataset.href" class="bg-blue-50/30 border-l-2 border-brand-primary cursor-pointer hover:bg-slate-50 transition-colors">
-            <td class="p-4 align-top">
-              <p class="font-display font-bold text-brand-text">{{ processo.tipo_proposicao }} {{ processo.numero }}/{{ processo.ano }}</p>
-              <span class="inline-block mt-1 px-1.5 py-0.5 bg-blue-100 text-blue-700 text-[9px] font-bold uppercase tracking-widest rounded border border-blue-200">Urgência</span>
+          {% for processo in processos %}
+          <tr class="bg-blue-50/30 border-l-2 border-brand-primary hover:bg-slate-50 transition-colors">
+            <td class="p-4 align-middle text-center">
+              <button type="button" onclick="toggleFavorito(event, {{ processo.id }}, this)" class="text-slate-300 hover:text-yellow-400 focus:outline-none transition-colors">
+                <i data-lucide="star" class="w-5 h-5 {% if processo.id in favoritos_ids %}text-yellow-400 fill-yellow-400{% endif %}"></i>
+              </button>
             </td>
-            <td class="p-4 align-top">
-              <p class="font-semibold text-brand-text">Proposição Legislativa</p>
+            <td class="p-4 align-top cursor-pointer" onclick="window.location.href='{% url 'proposicao_detalhes' processo.pk %}'">
+              <p class="font-display font-bold text-brand-text">{{ processo.tipo_proposicao }} {{ processo.numero }}/{{ processo.ano }}</p>
+            </td>
+            <td class="p-4 align-top cursor-pointer" onclick="window.location.href='{% url 'proposicao_detalhes' processo.pk %}'">
+              <p class="font-semibold text-brand-text">Processo Legislativo</p>
               <p class="text-xs text-brand-text-muted mt-1 truncate max-w-sm">
                 {{ processo.ementa }}
               </p>
@@ -246,11 +182,9 @@
               <span class="inline-block px-2 py-1 bg-[#d1fae5] text-[#065f46] text-[10px] font-bold uppercase tracking-wider rounded border border-[#a7f3d0]">{{ processo.status_atual }}</span>
             </td>
           </tr>
-
-
           {% empty %}
           <tr>
-            <td colspan="6" class="p-4 text-center text-sm text-slate-500">Nenhuma proposição encontrada.</td>
+            <td colspan="7" class="p-4 text-center text-sm text-slate-500">Nenhum processo encontrado.</td>
           </tr>
           {% endfor %}
         </tbody>
@@ -258,11 +192,11 @@
 
       <div class="border-t border-slate-100 p-4 bg-slate-50 flex items-center justify-between">
         <span class="text-sm text-slate-500">
-          Mostrando {{ page_obj.start_index }}-{{ page_obj.end_index }} de {{ page_obj.paginator.count }} proposições
+          Mostrando {{ page_obj.start_index }}-{{ page_obj.end_index }} de {{ page_obj.paginator.count }} processos
         </span>
         <div class="flex items-center gap-1">
           {% if page_obj.has_previous %}
-          <a href="?page={{ page_obj.previous_page_number }}" class="px-3 py-1 bg-white border border-slate-200 rounded text-sm hover:bg-slate-50">&lsaquo;</a>
+          <a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.previous_page_number }}" class="px-3 py-1 bg-white border border-slate-200 rounded text-sm hover:bg-slate-50">&lsaquo;</a>
           {% else %}
           <button disabled class="px-3 py-1 bg-white border border-slate-200 rounded text-sm opacity-50">&lsaquo;</button>
           {% endif %}
@@ -272,7 +206,7 @@
           </span>
 
           {% if page_obj.has_next %}
-          <a href="?page={{ page_obj.next_page_number }}" class="px-3 py-1 bg-white border border-slate-200 rounded text-sm hover:bg-slate-50">&rsaquo;</a>
+          <a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.next_page_number }}" class="px-3 py-1 bg-white border border-slate-200 rounded text-sm hover:bg-slate-50">&rsaquo;</a>
           {% else %}
           <button disabled class="px-3 py-1 bg-white border border-slate-200 rounded text-sm opacity-50">&rsaquo;</button>
           {% endif %}
@@ -282,11 +216,11 @@
   </div>
 </div>
 
-<!-- Modal de Busca de Proposição -->
+<!-- Modal de Busca de Processo -->
 <div id="searchModal" class="fixed inset-0 bg-black/50 hidden z-50 flex items-center justify-center">
   <div class="bg-white rounded-lg shadow-xl w-[600px] max-h-[80vh] flex flex-col">
     <div class="p-4 border-b border-brand-outline flex justify-between items-center">
-      <h3 class="font-semibold text-lg">Buscar Proposição</h3>
+      <h3 class="font-semibold text-lg">Buscar Processo</h3>
       <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600">
         <i data-lucide="x" class="w-5 h-5"></i>
       </button>
@@ -306,13 +240,60 @@
 
     <div class="flex-1 overflow-y-auto p-4 bg-slate-50" id="searchResults">
       <div class="text-center text-sm text-slate-500 py-8">
-        Digite algo para buscar nas proposições
+        Digite algo para buscar nos processos
       </div>
     </div>
   </div>
 </div>
 
 <script>
+  // Setup CSRF token for fetch
+  const getCookie = (name) => {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  };
+
+  function toggleFavorito(e, id, btn) {
+    e.stopPropagation(); // Previne que o click vá para o tr que leva para o detalhe
+    
+    fetch('/processos/toggle-favorito/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCookie('csrftoken')
+      },
+      body: JSON.stringify({ proposicao_id: id })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === 'success') {
+        const icon = btn.querySelector('svg') || btn.querySelector('i');
+        if (data.action === 'added') {
+          icon.classList.add('text-yellow-400', 'fill-yellow-400');
+          icon.classList.remove('text-slate-300');
+        } else {
+          icon.classList.remove('text-yellow-400', 'fill-yellow-400');
+          icon.classList.add('text-slate-300');
+        }
+      } else {
+        alert('Erro: ' + data.message);
+      }
+    })
+    .catch(err => {
+      alert('Erro de conexão ao tentar favoritar: ' + err.message);
+    });
+  }
+
   let searchTimeout = null;
 
   function openModal() {
@@ -323,7 +304,7 @@
   function closeModal() {
     document.getElementById('searchModal').classList.add('hidden');
     document.getElementById('searchInput').value = '';
-    document.getElementById('searchResults').innerHTML = '<div class="text-center text-sm text-slate-500 py-8">Digite algo para buscar nas proposições</div>';
+    document.getElementById('searchResults').innerHTML = '<div class="text-center text-sm text-slate-500 py-8">Digite algo para buscar nos processos</div>';
   }
 
   document.getElementById('searchInput').addEventListener('input', function(e) {
@@ -338,12 +319,12 @@
     document.getElementById('searchResults').innerHTML = '<div class="text-center text-sm text-slate-500 py-8">Buscando...</div>';
 
     searchTimeout = setTimeout(() => {
-      fetch(`/proposicoes/buscar/?q=${encodeURIComponent(query)}`)
+      fetch(`/processos/buscar/?q=${encodeURIComponent(query)}`)
         .then(res => res.json())
         .then(data => {
           const results = data.results;
           if (results.length === 0) {
-            document.getElementById('searchResults').innerHTML = '<div class="text-center text-sm text-slate-500 py-8">Nenhuma proposição encontrada.</div>';
+            document.getElementById('searchResults').innerHTML = '<div class="text-center text-sm text-slate-500 py-8">Nenhum processo encontrado.</div>';
             return;
           }
 
@@ -375,23 +356,7 @@
     btn.innerText = 'Adicionando...';
     btn.classList.add('opacity-50');
 
-    // Retrieve CSRF token from the cookie
-    const getCookie = (name) => {
-      let cookieValue = null;
-      if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-          const cookie = cookies[i].trim();
-          if (cookie.substring(0, name.length + 1) === (name + '=')) {
-            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-            break;
-          }
-        }
-      }
-      return cookieValue;
-    };
-
-    fetch('/proposicoes/acompanhar/', {
+    fetch('/processos/acompanhar/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -405,7 +370,6 @@
         btn.innerText = 'Acompanhado ✓';
         btn.classList.remove('bg-brand-primary', 'hover:bg-[#102a43]');
         btn.classList.add('bg-green-600');
-        // Reload page to show the new proposition in the list
         setTimeout(() => window.location.reload(), 1000);
       } else {
         alert('Erro: ' + data.message);
@@ -426,5 +390,4 @@
   animation: shimmer 2.5s infinite linear;
 }
 </style>
-
 {% endblock %}
