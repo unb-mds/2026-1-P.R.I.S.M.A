@@ -18,51 +18,122 @@
   </div>
 
   <div class="flex items-center gap-2 overflow-x-auto pb-2">
-    <a href="?status=todas" class="px-5 py-2 {% if status_atual == 'todas' %}bg-brand-primary text-white{% else %}bg-slate-200 text-slate-600 hover:bg-slate-300{% endif %} text-xs font-bold uppercase tracking-wider rounded-md shrink-0 transition-colors">Todas ({{ total_count }})</a>
-    <a href="?status=tramitacao_normal" class="px-5 py-2 {% if status_atual == 'tramitacao_normal' %}bg-brand-primary text-white{% else %}bg-slate-200 text-slate-600 hover:bg-slate-300{% endif %} text-xs font-bold uppercase tracking-wider rounded-md shrink-0 transition-colors">Em Tramitação Normal ({{ normal_count }})</a>
-    <a href="?status=estagnadas" class="px-5 py-2 {% if status_atual == 'estagnadas' %}bg-brand-primary text-white{% else %}bg-slate-200 text-slate-600 hover:bg-slate-300{% endif %} text-xs font-bold uppercase tracking-wider rounded-md shrink-0 transition-colors">Estagnadas (Atrasadas) ({{ estagnadas_count }})</a>
-    <a href="?status=urgencia" class="px-5 py-2 {% if status_atual == 'urgencia' %}bg-brand-primary text-white{% else %}bg-slate-200 text-slate-600 hover:bg-slate-300{% endif %} text-xs font-bold uppercase tracking-wider rounded-md shrink-0 transition-colors">Urgência ({{ urgencia_count }})</a>
+    <button class="px-5 py-2 bg-brand-primary text-white text-xs font-bold uppercase tracking-wider rounded-md shrink-0">Tudo (12)</button>
+    <button class="px-5 py-2 bg-slate-200 text-slate-600 text-xs font-bold uppercase tracking-wider rounded-md shrink-0 hover:bg-slate-300 transition-colors">Tributário (4)</button>
+    <button class="px-5 py-2 bg-slate-200 text-slate-600 text-xs font-bold uppercase tracking-wider rounded-md shrink-0 hover:bg-slate-300 transition-colors">Saúde (3)</button>
+    <button class="px-5 py-2 bg-slate-200 text-slate-600 text-xs font-bold uppercase tracking-wider rounded-md shrink-0 hover:bg-slate-300 transition-colors">Educação (2)</button>
+    <button class="px-5 py-2 bg-slate-200 text-slate-600 text-xs font-bold uppercase tracking-wider rounded-md shrink-0 hover:bg-slate-300 transition-colors">Infraestrutura (3)</button>
+    <button class="p-2 border border-slate-300 text-slate-500 rounded-md shrink-0 hover:bg-slate-50 transition-colors"><i data-lucide="plus" class="w-4 h-4"></i></button>
   </div>
 
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
     <div class="lg:col-span-2 space-y-4">
-      {% for processo in favoritos %}
-        <div class="bg-white border border-brand-outline hover:border-brand-primary rounded-md p-6 shadow-sm transition-colors cursor-pointer group mb-4">
-          <div class="flex justify-between items-start mb-4">
-            <div class="flex items-center gap-2">
-              <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">{{ processo.tipo_proposicao }} {{ processo.numero }}/{{ processo.ano }}</span>
-              <span class="text-[10px] font-bold bg-[#d1fae5] text-[#065f46] px-2 py-0.5 rounded uppercase tracking-wider border border-[#a7f3d0]">
-                {{ processo.dias_totais_tramitacao|default:"0" }} Dias em Trâmite
-              </span>
-            </div>
-            <i data-lucide="star" class="text-brand-primary fill-brand-primary w-5 h-5"></i>
+      <div class="bg-white border-2 border-brand-primary rounded-md p-6 shadow-sm">
+        <div class="flex justify-between items-start mb-4">
+          <div class="flex items-center gap-2">
+            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">PL 2345/2023 • Tributário</span>
+            <span class="text-[10px] font-bold bg-[#d1fae5] text-[#065f46] px-2 py-0.5 rounded uppercase tracking-wider border border-[#a7f3d0]">Alta Prioridade</span>
           </div>
+          <i data-lucide="star" class="text-brand-primary fill-brand-primary w-5 h-5"></i>
+        </div>
 
-          <h3 class="font-display font-semibold text-xl text-brand-text mb-6">{{ processo.ementa }}</h3>
+        <h3 class="font-display font-semibold text-xl text-brand-text mb-6">Reforma da Tributação sobre Consumo e Serviços Digitais</h3>
 
-          <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
-            <div>
-              <p class="text-[10px] uppercase font-semibold text-slate-500 tracking-wider mb-1">Status Atual</p>
-              <p class="text-sm font-medium flex items-center gap-1.5"><div class="w-2 h-2 rounded-full bg-brand-success"></div> {{ processo.status_atual }}</p>
-            </div>
-            <div>
-              <p class="text-[10px] uppercase font-semibold text-slate-500 tracking-wider mb-1">Última Movimentação</p>
-              <p class="text-sm font-medium text-brand-text">{{ processo.ultima_mov|date:"d/m/Y, H:i"|default:"Sem dados" }}</p>
-            </div>
+        <div class="grid grid-cols-3 gap-4 mb-6">
+          <div>
+            <p class="text-[10px] uppercase font-semibold text-slate-500 tracking-wider mb-1">Situação</p>
+            <p class="text-sm font-medium flex items-center gap-1.5"><div class="w-2 h-2 rounded-full bg-brand-success"></div> Em tramitação (CCJ)</p>
           </div>
-
-          <div class="flex items-center justify-end">
-            <div class="flex gap-3">
-              <button class="text-xs font-bold uppercase tracking-wider text-brand-text hover:text-brand-primary">Ver Detalhes</button>
-            </div>
+          <div>
+            <p class="text-[10px] uppercase font-semibold text-slate-500 tracking-wider mb-1">Relator</p>
+            <p class="text-sm font-medium text-brand-text">Dep. Roberto Silva</p>
+          </div>
+          <div>
+            <p class="text-[10px] uppercase font-semibold text-slate-500 tracking-wider mb-1">Última Atualização</p>
+            <p class="text-sm font-medium text-brand-text">Hoje, às 14:30</p>
           </div>
         </div>
-      {% empty %}
-        <div class="bg-slate-50 border-2 border-dashed border-slate-300 rounded-md p-8 text-center text-slate-500 flex flex-col items-center justify-center min-h-[200px]">
-           <i data-lucide="inbox" class="w-10 h-10 mb-4 opacity-50"></i>
-           <p class="text-sm font-medium">Nenhuma proposição encontrada para o filtro selecionado.</p>
+
+        <div class="bg-slate-50 border border-slate-100 rounded-md p-4 mb-6 flex gap-3">
+          <i data-lucide="history" class="text-slate-400 mt-0.5 shrink-0 w-[18px] h-[18px]"></i>
+          <div>
+            <p class="text-xs font-bold text-slate-600 uppercase tracking-wider mb-1">Histórico Recente</p>
+            <p class="text-sm text-slate-700">Relatório favorável apresentado na Comissão de Constituição e Justiça. Previsão de votação para a próxima terça-feira (24/10).</p>
+          </div>
         </div>
-      {% endfor %}
+
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <div class="flex -space-x-2">
+              <div class="w-8 h-8 rounded-full bg-slate-200 border-2 border-white flex items-center justify-center text-xs font-bold">R</div>
+              <div class="w-8 h-8 rounded-full bg-slate-300 border-2 border-white flex items-center justify-center text-xs font-bold">M</div>
+              <div class="w-8 h-8 rounded-full bg-slate-100 border-2 border-white flex items-center justify-center text-xs font-bold text-slate-500">+3</div>
+            </div>
+          </div>
+          <div class="flex gap-3">
+            <button class="text-xs font-bold uppercase tracking-wider text-brand-text hover:text-brand-primary">Ver Detalhes</button>
+            <button class="text-xs font-bold uppercase tracking-wider text-white bg-brand-primary hover:bg-[#102a43] px-4 py-2 rounded">Configurar Alertas</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div class="bg-white border border-brand-outline rounded-md p-5 shadow-sm hover:border-brand-primary transition-colors cursor-pointer group">
+          <div class="flex justify-between items-start mb-3">
+            <span class="text-[9px] font-bold text-slate-500 uppercase tracking-wider">PEC 45/2023 • Saúde</span>
+            <i data-lucide="star" class="text-brand-primary fill-brand-primary w-4 h-4"></i>
+          </div>
+          <h4 class="font-display font-semibold text-brand-text leading-tight mb-4 min-h-[40px]">Financiamento do Piso Nacional da Enfermagem</h4>
+          <div class="space-y-2 mb-4">
+            <div class="flex justify-between text-xs">
+              <span class="text-slate-500">Próximo Passo</span>
+              <span class="font-semibold text-brand-text">Comissão de Finanças</span>
+            </div>
+          </div>
+          <div class="pt-3 border-t border-slate-100">
+            <p class="text-xs text-brand-error flex items-center gap-1 font-medium"><i data-lucide="alert-triangle" class="w-3 h-3"></i> Prazo de emendas encerra em 2 dias</p>
+          </div>
+        </div>
+
+        <div class="bg-white border border-brand-outline rounded-md p-5 shadow-sm hover:border-brand-primary transition-colors cursor-pointer group">
+          <div class="flex justify-between items-start mb-3">
+            <span class="text-[9px] font-bold text-slate-500 uppercase tracking-wider">PL 121/2023 • Educação</span>
+            <i data-lucide="star" class="text-brand-primary fill-brand-primary w-4 h-4"></i>
+          </div>
+          <h4 class="font-display font-semibold text-brand-text leading-tight mb-4 min-h-[40px]">Implementação de Tecnologias de IA na Educação Básica</h4>
+          <div class="space-y-2 mb-4">
+            <div class="flex justify-between text-xs">
+              <span class="text-slate-500">Status</span>
+              <span class="font-semibold text-brand-text">Aprovado na Câmara</span>
+            </div>
+          </div>
+          <div class="pt-3 border-t border-slate-100">
+            <p class="text-xs text-brand-success flex items-center gap-1 font-medium"><div class="w-1.5 h-1.5 rounded-full bg-brand-success"></div> Enviado ao Senado Federal</p>
+          </div>
+        </div>
+
+        <div class="bg-white border border-brand-outline rounded-md p-5 shadow-sm hover:border-brand-primary transition-colors cursor-pointer group">
+          <div class="flex justify-between items-start mb-3">
+            <span class="text-[9px] font-bold text-slate-500 uppercase tracking-wider">PL 882/2021 • Infra</span>
+            <i data-lucide="star" class="text-slate-300 w-4 h-4"></i>
+          </div>
+          <h4 class="font-display font-semibold text-brand-text leading-tight mb-4 min-h-[40px]">Marco Legal das Ferrovias de Curta Distância</h4>
+          <div class="space-y-2 mb-4">
+            <div class="flex justify-between text-xs">
+              <span class="text-slate-500">Movimentação</span>
+              <span class="font-semibold text-brand-text">Designação de Relator</span>
+            </div>
+          </div>
+          <div class="pt-3 border-t border-slate-100">
+            <p class="text-xs text-slate-500 flex items-center gap-1 font-medium"><i data-lucide="history" class="w-3 h-3"></i> Sem novas ações em 15 dias</p>
+          </div>
+        </div>
+
+        <div class="bg-slate-50 border-2 border-dashed border-slate-300 rounded-md p-5 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] flex flex-col items-center justify-center hover:bg-slate-100 transition-colors cursor-pointer text-slate-400 hover:text-brand-primary hover:border-brand-primary min-h-[160px]">
+          <i data-lucide="plus" class="w-6 h-6 mb-2"></i>
+          <span class="text-sm font-semibold">Adicionar ao Monitoramento</span>
+        </div>
+      </div>
     </div>
 
     <div class="space-y-6">

@@ -21,11 +21,3 @@ exclude = '/(\.eggs|\.git|\.venv|venv|migrations|__pycache__)/'
 profile = "black"
 line_length = 88
 skip = ["venv", ".venv", "migrations"]
-
-[dependency-groups]
-dev = [
-    "playwright>=1.60.0",
-    "pytest>=9.1.1",
-    "pytest-django>=4.12.0",
-    "pytest-playwright>=0.8.0",
-]

@@ -106,12 +106,23 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.environ["DATABASE_NAME"],
-        "USER": os.environ["DATABASE_USERNAME"],
-        "PASSWORD": os.environ["DATABASE_PASSWORD"],
-        "HOST": _database_host(),
-        "PORT": _database_port(),
+        **(
+            {
+                "ENGINE": "django.db.backends.sqlite3",
+                "NAME": BASE_DIR / "db.sqlite3",
+            }
+            if os.getenv("DATABASE_HOST") == "db" and not _running_inside_container()
+            else {
+                "ENGINE": "django.db.backends.{}".format(
+                    os.getenv("DATABASE_ENGINE", "sqlite3")
+                ),
+                "NAME": os.getenv("DATABASE_NAME", "polls"),
+                "USER": os.getenv("DATABASE_USERNAME", "myprojectuser"),
+                "PASSWORD": os.getenv("DATABASE_PASSWORD", "password"),
+                "HOST": _database_host(),
+                "PORT": _database_port(),
+            }
+        ),
     }
 }
 

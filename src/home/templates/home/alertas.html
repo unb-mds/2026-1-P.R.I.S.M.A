@@ -1,7 +1,5 @@
-{% extends 'home/base.html' %}
-{% block title %}Alertas{% endblock %}
-{% block page_title %}Alertas{% endblock %}
-{% block content %}
+{% extends 'home/base.html' %} {% block title %}Alertas{% endblock %} {% block
+page_title %}Alertas{% endblock %} {% block content %}
 <div class="p-8 max-w-4xl mx-auto space-y-8">
   <div class="flex items-center justify-between">
     <p class="text-sm text-brand-text-muted">
@@ -34,13 +32,14 @@
       <p
         class="text-xs font-bold uppercase tracking-wider text-brand-error mb-2"
       >
-        Urgência Temporal
+        Urgência Alta
       </p>
       <h3 class="font-display font-semibold text-2xl text-brand-text">
-        {{ urgencia_temporal|default:"0" }} Notificações Pendentes
+        03 Prazos Críticos
       </h3>
       <p class="text-sm text-slate-600 mt-2 max-w-[80%]">
-        Notificações não lidas que exigem atenção imediata.
+        Vencimentos de emendas e pedidos de vista em projetos favoritos nas
+        próximas 24 horas.
       </p>
       <div class="flex gap-2 mt-4 text-brand-error">
         <div
@@ -60,16 +59,16 @@
       class="bg-white border border-brand-outline rounded-md p-5 shadow-sm text-center flex flex-col justify-center"
     >
       <p
-        class="text-[10px] font-bold uppercase tracking-wider text-blue-600 mb-2"
+        class="text-[10px] font-bold uppercase tracking-wider text-emerald-600 mb-2"
       >
-        Tempo Médio nas Comissões
+        Mencionados
       </p>
-      <h3 class="font-display font-bold text-4xl text-brand-text">{{ tempo_medio_comissoes|default:"0" }}</h3>
+      <h3 class="font-display font-bold text-4xl text-brand-text">12</h3>
       <p class="text-xs text-slate-500 mt-2 leading-tight">
-        Dias de tramitação<br />em média.
+        Menções em Pautas<br />de Comissões hoje.
       </p>
       <div class="w-full h-1 bg-slate-100 rounded-full mt-4 overflow-hidden">
-        <div class="h-full bg-blue-500 w-[100%]"></div>
+        <div class="h-full bg-emerald-500 w-[60%]"></div>
       </div>
     </div>
 
@@ -77,15 +76,21 @@
       class="bg-brand-primary text-white border border-brand-primary rounded-md p-5 shadow-sm"
     >
       <div class="flex justify-between items-start mb-4">
-        <p class="text-[10px] font-bold uppercase tracking-wider text-red-200">
-          Volume de Estagnação
+        <p class="text-[10px] font-bold uppercase tracking-wider text-blue-200">
+          Quórum em Tempo Real
         </p>
-        <i data-lucide="alert-circle" class="w-4 h-4 text-red-400"></i>
+        <i data-lucide="users" class="w-4 h-4 text-emerald-400"></i>
       </div>
       <div class="flex items-baseline gap-1">
-        <h3 class="font-display font-bold text-4xl">{{ volume_estagnacao|default:"0" }}</h3>
+        <h3 class="font-display font-bold text-4xl">84%</h3>
       </div>
-      <p class="text-xs text-slate-300 mt-1">Processos travados</p>
+      <p class="text-xs text-slate-300 mt-1">Plenário Principal</p>
+      <p
+        class="text-[10px] bg-white/10 text-emerald-300 px-2 py-1 rounded inline-block mt-4 flex items-center font-medium gap-1 w-fit"
+      >
+        <i data-lucide="trending-up" class="w-2.5 h-2.5"></i> +5 parlamentares
+        registrados
+      </p>
     </div>
   </div>
 
@@ -116,42 +121,175 @@
     <div
       class="bg-white rounded-b-md border-x border-b border-brand-outline shadow-sm"
     >
-      {% for notificacao in notificacoes %}
-      <div class="p-5 border-b border-slate-100 flex gap-4 hover:bg-slate-50 transition-colors {% if not notificacao.lida %}bg-brand-surface{% endif %}">
-        <div class="w-10 h-10 rounded {% if notificacao.tipo == 'ESTAGNACAO' %}bg-red-50 text-red-600 border border-red-100{% else %}bg-blue-50 text-blue-600 border border-blue-100{% endif %} flex items-center justify-center shrink-0 mt-1">
-          <i data-lucide="{% if notificacao.tipo == 'ESTAGNACAO' %}alert-circle{% else %}activity{% endif %}" class="w-5 h-5"></i>
+      <div
+        class="p-5 border-b border-slate-100 flex gap-4 hover:bg-slate-50 transition-colors"
+      >
+        <div
+          class="w-10 h-10 rounded bg-red-50 text-red-600 border border-red-100 flex items-center justify-center shrink-0 mt-1"
+        >
+          <i data-lucide="calendar-clock" class="w-5 h-5"></i>
         </div>
         <div class="flex-1">
           <div class="flex justify-between items-start">
             <div>
               <div class="flex items-center gap-2 mb-1">
-                <span class="text-[10px] font-bold uppercase tracking-wider {% if notificacao.tipo == 'ESTAGNACAO' %}text-red-600{% else %}text-blue-600{% endif %}">
-                  {{ notificacao.get_tipo_display }}
-                </span>
+                <span
+                  class="text-[10px] font-bold uppercase tracking-wider text-red-600"
+                  >Prazo Crítico</span
+                >
                 <span class="w-1 h-1 rounded-full bg-slate-300"></span>
-                <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500">{{ notificacao.data_criacao|date:"d M Y, H:i" }}</span>
+                <span
+                  class="text-[10px] font-bold uppercase tracking-wider text-slate-500"
+                  >Hoje, 18:00</span
+                >
               </div>
               <h4 class="font-semibold text-brand-text text-base">
-                {% if notificacao.processo %}
-                  {{ notificacao.processo.tipo_proposicao }} {{ notificacao.processo.numero }}/{{ notificacao.processo.ano }}
-                {% else %}
-                  Alerta do Sistema
-                {% endif %}
+                PL 2630/2020 - Prazo para entrega de parecer na CCJ
               </h4>
             </div>
+            <span class="text-xs text-slate-400">Há 15 min</span>
           </div>
           <div class="flex justify-between items-end mt-2">
             <p class="text-sm text-slate-600 max-w-xl">
-              {{ notificacao.mensagem }}
+              O prazo final para a apresentação do relatório alternativo pelo
+              Deputado Relator encerra-se no final do expediente de hoje.
             </p>
+            <div
+              class="flex items-center gap-2 bg-slate-50 px-2 py-1 rounded border border-slate-100"
+            >
+              <div
+                class="w-5 h-5 bg-slate-300 rounded-full overflow-hidden shrink-0"
+              ></div>
+              <span class="text-xs font-medium text-slate-700"
+                >Relator: Dep. Marcos S.</span
+              >
+            </div>
           </div>
         </div>
       </div>
-      {% empty %}
-      <div class="p-5 text-center text-slate-500">
-        Nenhuma notificação encontrada.
+
+      <div
+        class="p-5 border-b border-slate-100 flex gap-4 hover:bg-slate-50 transition-colors"
+      >
+        <div
+          class="w-10 h-10 rounded bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center shrink-0 mt-1"
+        >
+          <i data-lucide="message-circle" class="w-5 h-5"></i>
+        </div>
+        <div class="flex-1">
+          <div class="flex justify-between items-start">
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <span
+                  class="text-[10px] font-bold uppercase tracking-wider text-blue-600"
+                  >Menção em Pauta</span
+                >
+                <span class="w-1 h-1 rounded-full bg-slate-300"></span>
+                <span
+                  class="text-[10px] font-bold uppercase tracking-wider text-slate-500"
+                  >Comissão de Finanças</span
+                >
+              </div>
+              <h4 class="font-semibold text-brand-text text-base">
+                PEC 45/2019 - Incluída na Ordem do Dia
+              </h4>
+            </div>
+            <span class="text-xs text-slate-400">Há 1 hora</span>
+          </div>
+          <div class="flex justify-between items-end mt-2">
+            <p class="text-sm text-slate-600 max-w-xl">
+              A Reforma Tributária foi pautada para discussão extraordinária
+              amanhã às 09:00.
+            </p>
+            <span
+              class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-1 rounded uppercase tracking-wider border border-slate-200"
+              >Favorito</span
+            >
+          </div>
+        </div>
       </div>
-      {% endfor %}
+
+      <div
+        class="p-5 border-b border-slate-100 flex gap-4 hover:bg-slate-50 transition-colors"
+      >
+        <div
+          class="w-10 h-10 rounded bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center shrink-0 mt-1"
+        >
+          <i data-lucide="users" class="w-5 h-5"></i>
+        </div>
+        <div class="flex-1">
+          <div class="flex justify-between items-start">
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <span
+                  class="text-[10px] font-bold uppercase tracking-wider text-emerald-600"
+                  >Quórum</span
+                >
+                <span class="w-1 h-1 rounded-full bg-slate-300"></span>
+                <span
+                  class="text-[10px] font-bold uppercase tracking-wider text-slate-500"
+                  >Plenário</span
+                >
+              </div>
+              <h4 class="font-semibold text-brand-text text-base">
+                Quórum de Votação Atingido (257 deputados)
+              </h4>
+            </div>
+            <span class="text-xs text-slate-400">Há 2 horas</span>
+          </div>
+          <div class="flex justify-between items-end mt-2">
+            <p class="text-sm text-slate-600 max-w-xl">
+              Iniciada a ordem do dia com quórum suficiente para aprovação de
+              leis complementares.
+            </p>
+            <span
+              class="text-[10px] font-bold text-emerald-600 flex items-center gap-1 uppercase tracking-wider"
+              ><div
+                class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"
+              ></div>
+              Ao Vivo</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="p-5 flex gap-4 hover:bg-slate-50 transition-colors opacity-70"
+      >
+        <div
+          class="w-10 h-10 rounded bg-slate-100 text-slate-500 border border-slate-200 flex items-center justify-center shrink-0 mt-1"
+        >
+          <i data-lucide="git-commit" class="w-5 h-5"></i>
+        </div>
+        <div class="flex-1">
+          <div class="flex justify-between items-start">
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <span
+                  class="text-[10px] font-bold uppercase tracking-wider text-slate-600"
+                  >Movimentação</span
+                >
+                <span class="w-1 h-1 rounded-full bg-slate-300"></span>
+                <span
+                  class="text-[10px] font-bold uppercase tracking-wider text-slate-500"
+                  >Protocolo</span
+                >
+              </div>
+              <h4 class="font-semibold text-brand-text text-base">
+                PL 123/2024 - Nova Emenda Protocolada
+              </h4>
+            </div>
+            <span class="text-xs text-slate-400">Hoje, 09:12</span>
+          </div>
+          <div class="flex justify-between items-end mt-2">
+            <p class="text-sm text-slate-600 max-w-xl">
+              O Deputado Júlio C. protocolou emenda aditiva nº 45 ao projeto de
+              lei de diretrizes.
+            </p>
+            <span class="text-xs italic text-slate-400">Lido</span>
+          </div>
+        </div>
+      </div>
 
       <div
         class="bg-slate-50 p-3 border-t border-slate-100 text-center rounded-b-md"
