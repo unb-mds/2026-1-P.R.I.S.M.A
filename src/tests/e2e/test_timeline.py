@@ -80,6 +80,8 @@ def test_timeline_historico_tramitacao_e_acompanhamento(page, live_server, test_
         expect(page.locator("body")).to_contain_text("Testa a criação de uma linha do tempo")
         
         # 8. Clicar na proposição para ir para a página de Detalhes
+        #    Aguarda o HTMX concluir as substituições de linha antes de clicar
+        page.wait_for_load_state("networkidle", timeout=10000)
         page.locator("tr", has_text="PL 9999999/2023").click()
         
         # 9. Verificar a timeline na página de detalhes

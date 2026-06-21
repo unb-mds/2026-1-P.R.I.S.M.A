@@ -3,6 +3,7 @@ from django_filters.views import FilterView
 from Processos.filters import ProcessoFilter
 from django.views import View
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.db import models
@@ -88,11 +89,32 @@ class ProcessosView(LoginRequiredMixin, FilterView):
         ).values_list('id', flat=True)
         context["favoritos_ids"] = list(favoritos_ids)
         
-        # Sincroniza sob demanda os processos exibidos na página atual
-        for processo in context['processos']:
-            sync_processo_on_demand(processo)
-            
+        # NOTA: A sincronização on-demand foi movida para o endpoint
+        # /processos/<pk>/sync-status/ e é feita de forma assíncrona
+        # via HTMX para não bloquear o carregamento da página.
+        
         return context
+
+
+class ProcessoSyncStatusView(LoginRequiredMixin, View):
+    """Endpoint HTMX: sincroniza um processo com a API e retorna o partial
+    HTML da linha completa (<tr>) para substituição via hx-swap='outerHTML'."""
+
+    def get(self, request, pk, *args, **kwargs):
+        processo = get_object_or_404(ProcessoLegislativo, pk=pk)
+        sync_processo_on_demand(processo)
+        # Recarrega do banco para garantir dados frescos após sync
+        processo.refresh_from_db()
+
+        is_favorito = TermoMonitorado.objects.filter(
+            users=request.user,
+            processos=processo
+        ).exists()
+
+        return render(request, 'home/partials/processo_row_status.html', {
+            'processo': processo,
+            'is_favorito': is_favorito,
+        })
 
 
 class FavoritosView(LoginRequiredMixin, ListView):

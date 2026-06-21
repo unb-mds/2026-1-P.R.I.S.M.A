@@ -5,6 +5,7 @@ from django.urls import include
 from home.views import (
     DashboardView,
     ProcessosView,
+    ProcessoSyncStatusView,
     FavoritosView,
     AlertasView,
     UsuarioView,
@@ -51,6 +52,12 @@ urlpatterns = [
         "processos/<int:pk>/",
         ProcessoDetailView.as_view(),
         name="proposicao_detalhes"
+    ),
+
+    path(
+        "processos/<int:pk>/sync-status/",
+        ProcessoSyncStatusView.as_view(),
+        name="processo_sync_status"
     ),
 
     path(
