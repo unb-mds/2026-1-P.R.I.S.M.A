@@ -3,17 +3,19 @@
 {% block page_title %}Detalhes da Proposição{% endblock %} 
 {% block content %}
 <div class="p-8 max-w-container-max mx-auto space-y-6">
+  {% csrf_token %}
   
   <div class="flex items-center justify-between mb-2">
-    <a href="{% url 'proposicoes' %}" class="text-sm font-medium text-brand-primary hover:underline flex items-center gap-1">
-      <i data-lucide="arrow-left" class="w-4 h-4"></i> Voltar para Proposições
+    <a href="{% url 'processos' %}" class="text-sm font-medium text-brand-primary hover:underline flex items-center gap-1">
+      <i data-lucide="arrow-left" class="w-4 h-4"></i> Voltar para Processos
     </a>
     <div class="flex gap-2">
       <button class="bg-white border border-brand-outline hover:bg-slate-50 text-brand-text px-4 py-2 rounded-md text-sm font-medium flex items-center gap-2 transition-colors">
         <i data-lucide="file-text" class="w-4 h-4 text-slate-400"></i> Anotações Privadas
       </button>
-      <button class="bg-brand-primary hover:bg-[#102a43] text-white px-4 py-2 rounded-md text-sm font-medium flex items-center gap-2 transition-colors">
-        <i data-lucide="star" class="w-4 h-4"></i> Acompanhar Favorito
+      <button id="btnAcompanhar" onclick="toggleFavoritoDetalhes(event, {{ processo.id }}, this)" class="{% if is_favorito %}bg-[#102a43] text-yellow-400{% else %}bg-brand-primary hover:bg-[#102a43] text-white{% endif %} px-4 py-2 rounded-md text-sm font-medium flex items-center gap-2 transition-colors border border-transparent {% if is_favorito %}border-yellow-400/30{% endif %}">
+        <i data-lucide="star" class="w-4 h-4 {% if is_favorito %}fill-yellow-400{% endif %}"></i> 
+        <span id="btnAcompanharText">{% if is_favorito %}Acompanhando{% else %}Acompanhar Favorito{% endif %}</span>
       </button>
     </div>
   </div>
@@ -106,4 +108,77 @@
   animation: shimmer 2.5s infinite linear;
 }
 </style>
+
+<script>
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
+  function toggleFavoritoDetalhes(e, id, btn) {
+    e.preventDefault();
+    
+    // Lucide replaces <i> with <svg>, so we look for either
+    const icon = btn.querySelector('svg') || btn.querySelector('i');
+    const textSpan = btn.querySelector('#btnAcompanharText');
+    const originalText = textSpan.innerText;
+    
+    textSpan.innerText = "Aguarde...";
+    btn.classList.add('opacity-75', 'cursor-not-allowed');
+    btn.disabled = true;
+
+    fetch('{% url "toggle_favorito" %}', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+      },
+      body: JSON.stringify({ proposicao_id: id })
+    })
+    .then(res => {
+      if (!res.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return res.json();
+    })
+    .then(data => {
+      btn.classList.remove('opacity-75', 'cursor-not-allowed');
+      btn.disabled = false;
+      
+      if (data.status === 'success') {
+        if (data.action === 'added') {
+          btn.classList.remove('bg-brand-primary', 'text-white');
+          btn.classList.add('bg-[#102a43]', 'text-yellow-400', 'border-yellow-400/30');
+          icon.classList.add('fill-yellow-400');
+          textSpan.innerText = "Acompanhando";
+        } else {
+          btn.classList.remove('bg-[#102a43]', 'text-yellow-400', 'border-yellow-400/30');
+          btn.classList.add('bg-brand-primary', 'text-white');
+          icon.classList.remove('fill-yellow-400');
+          textSpan.innerText = "Acompanhar Favorito";
+        }
+      } else {
+        textSpan.innerText = originalText;
+        alert('Erro: ' + data.message);
+      }
+    })
+    .catch(err => {
+      btn.classList.remove('opacity-75', 'cursor-not-allowed');
+      btn.disabled = false;
+      textSpan.innerText = originalText;
+      alert('Erro de conexão ao tentar favoritar: ' + err.message);
+    });
+  }
+</script>
+
 {% endblock %}

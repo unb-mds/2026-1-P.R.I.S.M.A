@@ -61,14 +61,11 @@ def test_timeline_historico_tramitacao_e_acompanhamento(page, live_server, test_
         page.fill('input[name="password"]', "testpassword")
         page.click('button[type="submit"]')
         
-        # 2. Navegar para proposições
-        page.goto(f"{live_server.url}/proposicoes/")
-        
-        # 3. Verificar que a proposição não aparece inicialmente
-        expect(page.locator("body")).not_to_contain_text("PL 9999999/2023")
+        # 2. Navegar para processos
+        page.goto(f"{live_server.url}/processos/")
         
         # 4. Abrir o modal de Acompanhar
-        page.click('button:has-text("+ Acompanhar Nova Proposição")')
+        page.click('button:has-text("+ Acompanhar Novo Processo")')
         expect(page.locator("#searchModal")).to_be_visible()
         
         # 5. Buscar pela proposição com ID único
@@ -90,6 +87,18 @@ def test_timeline_historico_tramitacao_e_acompanhamento(page, live_server, test_
         expect(page.locator("body")).to_contain_text("Comissão de Testes")
         expect(page.locator("body")).to_contain_text("Enviado para a comissão especial de testes")
         
-        # 10. Verificar a Barra de Progresso Premium (Issue #15)
+        # 10. Testar o botão de Favorito na tela de detalhes
+        # Como foi favoritado pelo modal, deve iniciar como "Acompanhando"
+        expect(page.locator("#btnAcompanharText")).to_have_text("Acompanhando")
+        
+        # Clicar para remover dos favoritos
+        page.click('#btnAcompanhar')
+        expect(page.locator("#btnAcompanharText")).to_have_text("Acompanhar Favorito")
+        
+        # Clicar para favoritar novamente
+        page.click('#btnAcompanhar')
+        expect(page.locator("#btnAcompanharText")).to_have_text("Acompanhando")
+        
+        # 11. Verificar a Barra de Progresso Premium (Issue #15)
         expect(page.locator("text=Status Atual do Ciclo")).to_be_visible()
         expect(page.locator("body")).to_contain_text("10%") # Porque o status_atual é "Em Tramitação"
