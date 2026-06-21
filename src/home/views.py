@@ -4,6 +4,7 @@ from django.http import JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.db import models
+from Usuarios.models import Notificacao
 
 from .forms import SignUpForm
 from Processos.models import ProcessoLegislativo, TermoMonitorado
@@ -59,8 +60,13 @@ class FavoritosView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class AlertasView(LoginRequiredMixin, TemplateView):
+class AlertasView(LoginRequiredMixin, ListView):
     template_name = "home/alertas.html"
+    model = Notificacao
+    context_object_name = "notificacoes"
+
+    def get_queryset(self):
+        return Notificacao.objects.filter(user=self.request.user).order_by('-data_criacao')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
