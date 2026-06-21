@@ -58,6 +58,7 @@ ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "127.0.0.1").split(",")
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -86,14 +87,14 @@ ROOT_URLCONF = "config.urls"
 
 TEMPLATES = [
     {
-        "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
-        "APP_DIRS": True,
-        "OPTIONS": {
-            "context_processors": [
-                "django.template.context_processors.request",
-                "django.contrib.auth.context_processors.auth",
-                "django.contrib.messages.context_processors.messages",
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [BASE_DIR / 'templates'],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
             ],
         },
     },
@@ -156,6 +157,68 @@ STATIC_URL = "static/"
 STATICFILES_DIRS = [
     BASE_DIR / "home" / "static",
 ]
+# Adiciona biblioteca 'django_crontab' documentação disponível em https://pypi.org/project/django-crontab/ para agendamento de tarefas periódicas (cron jobs)
+INSTALLED_APPS += [
+    'django_crontab',
+]
+
+# Configuração do Django Crontab
+# Exemplo: Rodar de hora em hora. Pode ser ajustado usando a sintaxe clássica do cron.
+CRONJOBS = [
+    ('0 * * * *', 'Processos.cron.sincronizar_bases_cron', '>> /tmp/sincronizar_bases.log 2>&1')
+]
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'console': {
+            'format': '%(asctime)s %(levelname)s %(name)s %(message)s',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'console',
+        },
+    },
+    'loggers': {
+        'Processos': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
+    },
+}
+
+JAZZMIN_SETTINGS = {
+    "site_title": "P.R.I.S.M.A",
+    "site_header": "P.R.I.S.M.A",
+    "site_brand": "P.R.I.S.M.A",
+    "welcome_sign": "Bem-vindo ao P.R.I.S.M.A",
+    "copyright": "P.R.I.S.M.A Analytics",
+    "search_model": ["Processos.ProcessoLegislativo"],
+    "show_ui_builder": False,
+}
+
+JAZZMIN_UI_TWEAKS = {
+    "navbar": "navbar-dark",
+    "theme": "litera",
+    "sidebar": "sidebar-dark-primary",
+    "sidebar_nav_child_indent": True,
+    "sidebar_nav_compact_style": False,
+    "sidebar_nav_legacy_style": False,
+    "sidebar_nav_flat_style": False,
+    "theme_color": "default",
+    "dark_mode_theme": "darkly",
+    "button_classes": {
+        "primary": "btn-primary",
+        "secondary": "btn-secondary",
+        "info": "btn-info",
+        "warning": "btn-warning",
+        "danger": "btn-danger",
+        "success": "btn-success"
+    }
+}
 
 LOGIN_URL = "/accounts/login/"
 LOGIN_REDIRECT_URL = "/"
