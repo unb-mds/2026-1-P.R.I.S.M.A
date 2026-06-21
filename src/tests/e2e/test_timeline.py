@@ -75,3 +75,7 @@ def test_timeline_historico_tramitacao_e_acompanhamento(page, live_server, test_
     expect(page.locator("body")).to_contain_text("Linha do Tempo Legislativa: PL 1234/2023")
     expect(page.locator("body")).to_contain_text("Comissão de Testes")
     expect(page.locator("body")).to_contain_text("Enviado para a comissão especial de testes")
+    
+    # 8. Verificar as colunas de tracking de Tempo / SLA
+    expect(page.locator("body")).to_contain_text("0d total")
+    expect(page.locator("body")).to_contain_text("0d estagnado")
