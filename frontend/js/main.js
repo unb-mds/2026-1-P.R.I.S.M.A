@@ -12,11 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
         enterNav: document.getElementById('btn-enter-dashboard'),
         enterHero: document.getElementById('btn-hero-dashboard'),
         backHome: document.getElementById('btn-back-home'),
-        sync: document.getElementById('btn-sync')
-    };
-    
-    const inputs = {
-        token: document.getElementById('gh-token')
+        sync: document.getElementById('btn-sync') // Agora serve apenas para recarregar o gráfico
     };
 
     // --- 2. Lógica de Navegação (Transição de Telas) ---
@@ -33,44 +29,36 @@ document.addEventListener('DOMContentLoaded', () => {
     btns.enterHero.addEventListener('click', () => toggleView(views.landing, views.dashboard));
     btns.backHome.addEventListener('click', () => toggleView(views.dashboard, views.landing));
 
-    // --- 3. Gerenciamento do Token ---
-    const savedToken = localStorage.getItem('gh_token');
-    if (savedToken) inputs.token.value = savedToken;
-
-    inputs.token.addEventListener('change', (e) => {
-        const val = e.target.value.trim();
-        if (val) localStorage.setItem('gh_token', val);
-        else localStorage.removeItem('gh_token');
-    });
-
-    // --- 4. Ação de Sincronização (Conecta com app.js) ---
-    btns.sync.addEventListener('click', async () => {
-        const token = inputs.token.value.trim();
-        
-        if (!token) {
-            alert('Por favor, insira o Token de Acesso do GitHub para conectar ao motor PRISMA.');
-            return;
+    // --- 3. Carregamento Automático (Motor JAMstack) ---
+    const loadData = async () => {
+        if (btns.sync) {
+            btns.sync.textContent = 'Carregando...';
+            btns.sync.disabled = true;
+            btns.sync.style.opacity = '0.7';
         }
-
-        // Feedback Visual de Loading
-        btns.sync.textContent = 'Sincronizando...';
-        btns.sync.disabled = true;
-        btns.sync.style.opacity = '0.7';
 
         try {
-            // Executa a lógica central da aplicação
-            await PrismaApp.sync(token);
-            console.log("Sincronização com o motor backend concluída.");
+            // Executa a carga dos dados locais (dados.json) sem precisar de token
+            await PrismaApp.sync();
+            console.log("Sincronização com o pacote de dados estático concluída.");
         } catch (error) {
             console.error('Erro no fluxo de dados:', error);
-            alert(`Erro: ${error.message}`);
         } finally {
-            // Restaura o botão
-            btns.sync.textContent = 'Sincronizar';
-            btns.sync.disabled = false;
-            btns.sync.style.opacity = '1';
+            if (btns.sync) {
+                btns.sync.textContent = 'Atualizar Dados';
+                btns.sync.disabled = false;
+                btns.sync.style.opacity = '1';
+            }
         }
-    });
+    };
 
-    console.log("🚀 PRISMA Interface inicializada.");
+    // Inicia a busca dos dados automaticamente assim que a página carrega em background
+    loadData();
+
+    // Se o usuário clicar em atualizar, refaz a leitura do JSON
+    if (btns.sync) {
+        btns.sync.addEventListener('click', loadData);
+    }
+
+    console.log("🚀 PRISMA Interface JAMstack inicializada.");
 });
