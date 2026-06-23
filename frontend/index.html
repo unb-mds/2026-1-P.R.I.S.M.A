@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRISMA Insight</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/main.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <section id="landing-view" class="view active">
+        <nav class="navbar">
+            <div class="logo">
+                <div class="logo-icon"></div>
+                <span class="logo-text">PRISMA</span>
+            </div>
+            <button id="btn-enter-dashboard" class="btn-outline">Acessar Desenvolvimento</button>
+        </nav>
+
+        <header class="hero">
+            <div class="glow-bg"></div>
+            <h1>PRISMA</h1>
+            <p class="subtitle">Plataforma de rastreio, inteligência artificial e síntese de marcos e atos</p>
+            <p class="description">Transformando dados legislativos em decisões mais rápidas, transparentes e informadas.</p>
+            <button id="btn-hero-dashboard" class="btn-primary">Ver Dashboard de Dev</button>
+        </header>
+    </section>
+
+    <section id="dashboard-view" class="view hidden">
+        <header class="dash-header">
+            <div class="dash-logo">
+                <button id="btn-back-home" class="btn-icon" title="Voltar para Home">🏠</button>
+                <div class="logo-icon"></div>
+                <div>
+                    <h2>PRISMA Insight</h2>
+                    <p>unb-mds / 2026-1-P.R.I.S.M.A</p>
+                </div>
+            </div>
+            
+            <div class="dash-controls">
+                <div class="token-input-group">
+                    <label for="gh-token">Token de Acesso do Github</label>
+                    <input type="password" id="gh-token" placeholder="ghp_...">
+                </div>
+                <button id="btn-sync" class="btn-primary">Sincronizar</button>
+            </div>
+        </header>
+
+        <main class="dash-content">
+            <div class="metrics-grid">
+                <div class="card">
+                    <span class="card-title">Volume de Entregas</span>
+                    <div class="card-value"><span id="total-commits">0</span> <small class="text-cyan">Total</small></div>
+                </div>
+                <div class="card">
+                    <span class="card-title">Demandas Ativas</span>
+                    <div class="card-value"><span id="open-issues">0</span> <small class="text-amber">Pendentes</small></div>
+                    <div class="card-footer">Resolução Média: -- dias</div>
+                </div>
+                <div class="card">
+                    <span class="card-title">Colaboradores</span>
+                    <div class="card-value"><span id="total-collabs">0</span> <small class="text-emerald">Ativos</small></div>
+                </div>
+                <div class="card">
+                    <span class="card-title">Status do Build</span>
+                    <div class="card-value"><span>100%</span> <small class="text-cyan">Saudável</small></div>
+                    <div class="card-footer text-cyan flex-center"><span class="dot-pulse"></span> SISTEMA ESTÁVEL</div>
+                </div>
+            </div>
+
+            <div class="grid-row-2">
+                <div class="panel">
+                    <div class="panel-header">
+                        <div class="panel-title">
+                            <span class="icon-box">📊</span>
+                            <h3>Monitoramento Analítico</h3>
+                        </div>
+                        <div class="panel-legend">
+                            <span class="dot cyan"></span> Entregas
+                            <span class="dot dark"></span> Demandas
+                        </div>
+                    </div>
+                    <div class="charts-wrapper">
+                        <div class="canvas-container"><canvas id="commitsChart"></canvas></div>
+                        <div class="canvas-container"><canvas id="issuesChart"></canvas></div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">
+                        <div class="panel-title">
+                            <span class="icon-box text-amber">🔥</span>
+                            <h3>Atividade Geral</h3>
+                        </div>
+                    </div>
+                    <div class="heatmap-container">
+                        <div class="heatmap-header">
+                            <span>Mapa de calor de atividade (90 dias)</span>
+                            <div class="heatmap-legend">
+                                Menos
+                                <div class="heat-box lvl-0"></div>
+                                <div class="heat-box lvl-1"></div>
+                                <div class="heat-box lvl-2"></div>
+                                <div class="heat-box lvl-3"></div>
+                                <div class="heat-box lvl-4"></div>
+                                Mais
+                            </div>
+                        </div>
+                        <div id="heatmap-grid" class="heatmap-grid"></div>
+                        <div class="heatmap-footer">Logs combinados: Commits + Issues Abertas/Fechadas</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel" style="margin-bottom: 24px;">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <span class="icon-box">👥</span>
+                        <h3>Time de Desenvolvimento</h3>
+                    </div>
+                </div>
+                <div id="collaborators-grid" class="collaborators-grid">
+                    <div class="placeholder-text" style="padding: 24px; text-align: center; color: var(--text-muted); width: 100%;">
+                        Aguardando sincronização de dados do time...
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-row-3">
+                <div class="panel">
+                    <div class="panel-header">
+                        <div class="panel-title">
+                            <span class="icon-box">📅</span>
+                            <h3>Histórico de Sessões</h3>
+                        </div>
+                    </div>
+                    <div class="timeline-container">
+                        <div class="timeline-nav">
+                            <span class="nav-title">Timeline Semanal</span>
+                            <div class="nav-controls">
+                                <button id="btn-prev-week" class="nav-btn">&lt;</button>
+                                <span id="current-week-label" class="nav-date">--</span>
+                                <button id="btn-next-week" class="nav-btn" disabled>&gt;</button>
+                            </div>
+                        </div>
+                        <div class="timeline-stats">
+                            <div class="stat-box cyan-box">
+                                <span class="stat-label">⚲ Commits</span>
+                                <span id="week-commits-count" class="stat-num">0</span>
+                            </div>
+                            <div class="stat-box dark-box">
+                                <span class="stat-label">! Issues</span>
+                                <span id="week-issues-count" class="stat-num">0</span>
+                            </div>
+                        </div>
+                        <div class="timeline-logs">
+                            <h4 class="logs-title">Logs de Sessão</h4>
+                            <div id="weekly-logs-list" class="logs-list">
+                                <div class="placeholder-text">Silêncio no repositório nesta semana.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">
+                        <div class="panel-title">
+                            <span class="icon-box">🔀</span>
+                            <h3>Log de Atividade Git</h3>
+                        </div>
+                    </div>
+                    <div class="log-table-header">
+                        <div class="col-sha">REVISÃO</div>
+                        <div class="col-msg">MENSAGEM / AUTOR</div>
+                        <div class="col-date">DATA</div>
+                    </div>
+                    <div id="commit-log-container" class="log-container">
+                        <div class="placeholder-text">Aguardando sincronização...</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </section>
+
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>
