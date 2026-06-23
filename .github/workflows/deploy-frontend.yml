@@ -1,0 +1,54 @@
+name: Deploy Frontend to GitHub Pages
+
+# 1. GATILHOS
+on:
+  # Dispara em pushes para qualquer branch
+  push:
+    branches:
+      - '**' 
+
+  # Dispara em eventos de Pull Request
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+
+  # Dispara em eventos de Issues
+  issues:
+    types: [opened, edited, closed, reopened]
+
+  # Permite o disparo manual pela interface do GitHub
+  workflow_dispatch:
+
+# 2. PERMISSÕES NECESSÁRIAS
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 3. CONTROLE DE CONCORRÊNCIA
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+# 4. TRABALHO A SER EXECUTADO
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar o Pages
+        uses: actions/configure-pages@v4
+
+      - name: Fazer o Upload dos Artefatos (Pasta frontend)
+        uses: actions/upload-pages-artifact@v3
+        with:
+
+          path: './frontend'
+
+      - name: Fazer o Deploy para o GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
