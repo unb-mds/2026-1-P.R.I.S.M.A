@@ -37,10 +37,29 @@ export const PrismaApp = {
 
     // Orquestra a busca e o cálculo dos dados
     async sync(token) {
-        // Agora buscamos todas as páginas de commits
-        const allCommits = await this.fetchAllPages('commits', token);
-        const issues = await this.fetchFromGitHub('issues?state=all&per_page=100', token);
+        // 1. Puxa TODAS as branches usando paginação (remove a limitação de 30 branches)
+        const branches = await this.fetchAllPages('branches', token);
+        
+        let allCommitsRaw = [];
+        for (const branch of branches) {
+            // 2. Busca os commits resolvendo o bug do '#'
+            const branchCommits = await this.fetchAllPages(`commits?sha=${encodeURIComponent(branch.name)}`, token);
+            allCommitsRaw = allCommitsRaw.concat(branchCommits);
+        }
 
+        // 3. Remove duplicatas baseadas no hash único do commit
+        const uniqueCommitsMap = new Map();
+        allCommitsRaw.forEach(commit => {
+            if (commit && commit.sha) {
+                uniqueCommitsMap.set(commit.sha, commit);
+            }
+        });
+        
+        const allCommits = Array.from(uniqueCommitsMap.values()).sort((a, b) => 
+            new Date(b.commit.author.date) - new Date(a.commit.author.date)
+        );
+
+        const issues = await this.fetchAllPages('issues?state=all', token);
         const openIssues = issues.filter(issue => issue.state === 'open').length;
         
         const collaborators = new Set(
@@ -50,7 +69,7 @@ export const PrismaApp = {
         ).size;
 
         const metrics = {
-            total_commits: allCommits.length, // Agora contará o total real
+            total_commits: allCommits.length, 
             open_issues: openIssues,
             active_collaborators: collaborators,
             raw_commits: allCommits, 
@@ -61,25 +80,31 @@ export const PrismaApp = {
         return metrics;
     },
 
-    // Nova função para buscar todas as páginas (Paginação)
     async fetchAllPages(endpoint, token) {
         let allData = [];
         let page = 1;
         let hasMore = true;
 
         while (hasMore) {
-            const url = `${endpoint}?per_page=100&page=${page}`;
+            const separator = endpoint.includes('?') ? '&' : '?';
+            const url = `${endpoint}${separator}per_page=100&page=${page}`;
+            
             const data = await this.fetchFromGitHub(url, token);
             
-            if (data.length > 0) {
+            // Verifica se a API retornou um array válido
+            if (Array.isArray(data) && data.length > 0) {
                 allData = allData.concat(data);
-                page++;
+                
+                if (data.length < 100) {
+                    hasMore = false;
+                } else {
+                    page++;
+                }
             } else {
-                hasMore = false;
+                hasMore = false; 
             }
             
-            // Segurança: parar se chegar em 1000 commits para não estourar a memória
-            if (page > 10) hasMore = false; 
+            if (page > 50) hasMore = false; 
         }
         return allData;
     },
