@@ -40,13 +40,29 @@ jobs:
       - name: Checkout do código
         uses: actions/checkout@v4
 
+      # ========================================================
+      # INÍCIO DA ESTEIRA DE DADOS (ETL EM PYTHON)
+      # ========================================================
+      - name: Configurar o Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          
+      - name: Instalar Dependências (Requests)
+        run: pip install requests
+
+      - name: Executar ETL (Extrair, Tratar e Carregar Dados JSON)
+        env:
+          PRISMA_GITHUB_TOKEN: ${{ secrets.PRISMA_GITHUB_TOKEN }}
+        run: python backend/export_data.py
+      # ========================================================
+
       - name: Configurar o Pages
         uses: actions/configure-pages@v4
 
       - name: Fazer o Upload dos Artefatos (Pasta frontend)
         uses: actions/upload-pages-artifact@v3
         with:
-
           path: './frontend'
 
       - name: Fazer o Deploy para o GitHub Pages
