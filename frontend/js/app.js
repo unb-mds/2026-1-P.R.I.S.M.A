@@ -10,104 +10,47 @@ const REPO = '2026-1-P.R.I.S.M.A';
 const GH_API_BASE = 'https://api.github.com/repos';
 
 export const PrismaApp = {
-    // Função genérica para bater na API do GitHub
-    async fetchFromGitHub(endpoint, token) {
-        const headers = {
-            'Accept': 'application/vnd.github.v3+json'
-        };
-        
-        // Se o visitante inserir o token, injetamos no header para evitar Rate Limit
-        if (token) {
-            headers['Authorization'] = `Bearer ${token}`;
-        }
 
-        const response = await fetch(`${GH_API_BASE}/${OWNER}/${REPO}/${endpoint}`, { headers });
-        
-        if (!response.ok) {
-            // Tratamento específico de limite de requisições do GitHub (Rate Limit)
-            if (response.status === 403) {
-                throw new Error("Limite da API do GitHub excedido. Insira um Token para continuar.");
-            }
-            const error = await response.json().catch(() => ({}));
-            throw new Error(error.message || `Erro HTTP: ${response.status}`);
-        }
-        
-        return response.json();
-    },
 
     // Orquestra a busca e o cálculo dos dados
-    async sync(token) {
-        // 1. Puxa TODAS as branches usando paginação (remove a limitação de 30 branches)
-        const branches = await this.fetchAllPages('branches', token);
-        
-        let allCommitsRaw = [];
-        for (const branch of branches) {
-            // 2. Busca os commits resolvendo o bug do '#'
-            const branchCommits = await this.fetchAllPages(`commits?sha=${encodeURIComponent(branch.name)}`, token);
-            allCommitsRaw = allCommitsRaw.concat(branchCommits);
-        }
-
-        // 3. Remove duplicatas baseadas no hash único do commit
-        const uniqueCommitsMap = new Map();
-        allCommitsRaw.forEach(commit => {
-            if (commit && commit.sha) {
-                uniqueCommitsMap.set(commit.sha, commit);
+    async sync() {
+        try {
+            // O frontend agora é "burro" e extremamente rápido. Ele só lê o arquivo gerado pelo Python.
+            const response = await fetch('dados.json');
+            
+            if (!response.ok) {
+                throw new Error("Arquivo de dados não encontrado. O deploy do Actions já rodou?");
             }
-        });
-        
-        const allCommits = Array.from(uniqueCommitsMap.values()).sort((a, b) => 
-            new Date(b.commit.author.date) - new Date(a.commit.author.date)
-        );
 
-        const issues = await this.fetchAllPages('issues?state=all', token);
-        const openIssues = issues.filter(issue => issue.state === 'open').length;
-        
-        const collaborators = new Set(
-            allCommits
-                .filter(c => c.commit && c.commit.author)
-                .map(c => c.commit.author.email)
-        ).size;
-
-        const metrics = {
-            total_commits: allCommits.length, 
-            open_issues: openIssues,
-            active_collaborators: collaborators,
-            raw_commits: allCommits, 
-            raw_issues: issues
-        };
-
-        this.updateDashboard(metrics);
-        return metrics;
-    },
-
-    async fetchAllPages(endpoint, token) {
-        let allData = [];
-        let page = 1;
-        let hasMore = true;
-
-        while (hasMore) {
-            const separator = endpoint.includes('?') ? '&' : '?';
-            const url = `${endpoint}${separator}per_page=100&page=${page}`;
+            const data = await response.json();
             
-            const data = await this.fetchFromGitHub(url, token);
+            const allCommits = data.raw_commits;
+            const issues = data.raw_issues;
+
+            const openIssues = issues.filter(issue => issue.state === 'open').length;
+            const collaborators = new Set(
+                allCommits
+                    .filter(c => c.commit && c.commit.author)
+                    .map(c => c.commit.author.email)
+            ).size;
+
+            const metrics = {
+                total_commits: allCommits.length, 
+                open_issues: openIssues,
+                active_collaborators: collaborators,
+                raw_commits: allCommits, 
+                raw_issues: issues
+            };
+
+            this.updateDashboard(metrics);
+            return metrics;
             
-            // Verifica se a API retornou um array válido
-            if (Array.isArray(data) && data.length > 0) {
-                allData = allData.concat(data);
-                
-                if (data.length < 100) {
-                    hasMore = false;
-                } else {
-                    page++;
-                }
-            } else {
-                hasMore = false; 
-            }
-            
-            if (page > 50) hasMore = false; 
+        } catch (error) {
+            console.error("Erro ao carregar dados locais:", error);
+            alert("Os dados ainda estão sendo gerados pelo servidor. Volte em instantes!");
         }
-        return allData;
     },
+    // Você PODE APAGAR a função fetchAllPages e fetchFromGitHub do app.js! Elas não são mais necessárias.
     // Injeta os dados calculados no HTML e chama os componentes
     updateDashboard(data) {
         // 1. Atualiza os Cards Numéricos Superiores
