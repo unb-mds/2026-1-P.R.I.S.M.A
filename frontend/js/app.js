@@ -15,23 +15,26 @@ export const PrismaApp = {
     // Orquestra a busca e o cálculo dos dados
     async sync() {
         try {
-            // O frontend agora é "burro" e extremamente rápido. Ele só lê o arquivo gerado pelo Python.
             const response = await fetch('dados.json');
-            
-            if (!response.ok) {
-                throw new Error("Arquivo de dados não encontrado. O deploy do Actions já rodou?");
-            }
-
+            if (!response.ok) throw new Error("Arquivo não encontrado.");
             const data = await response.json();
             
-            const allCommits = data.raw_commits;
-            const issues = data.raw_issues;
+            const allCommits = data.raw_commits || [];
+            const issues = data.raw_issues || [];
+            
+            // Exibe a data real da geração no card correspondente
+            const timestampElement = document.getElementById('build-timestamp');
+            if (timestampElement) {
+                timestampElement.textContent = data.generated_at || "--/-- --:--";
+            }
 
             const openIssues = issues.filter(issue => issue.state === 'open').length;
+            
+            // Consolidação precisa de colaboradores baseada no login único do GitHub
             const collaborators = new Set(
                 allCommits
-                    .filter(c => c.commit && c.commit.author)
-                    .map(c => c.commit.author.email)
+                    .filter(c => c.author && c.author.login)
+                    .map(c => c.author.login)
             ).size;
 
             const metrics = {
@@ -47,7 +50,6 @@ export const PrismaApp = {
             
         } catch (error) {
             console.error("Erro ao carregar dados locais:", error);
-            alert("Os dados ainda estão sendo gerados pelo servidor. Volte em instantes!");
         }
     },
     // Você PODE APAGAR a função fetchAllPages e fetchFromGitHub do app.js! Elas não são mais necessárias.
