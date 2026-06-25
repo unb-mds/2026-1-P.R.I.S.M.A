@@ -17,7 +17,8 @@ export const renderHeatmap = (commits, issues) => {
         const totalActivity = dayCommits + dayIssuesOpen;
 
         const box = document.createElement('div');
-        box.title = `${dateStr}: ${totalActivity} atividades`;
+        box.className = `heat-box lvl-${nivel}`;
+        box.title = `Dia: ${dataFormatada} | Atividades: ${totalAcoes}`; 
         
         // Define o nível da cor (0 a 4)
         let lvl = 0;
