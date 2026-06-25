@@ -25,12 +25,19 @@ export const renderCommitLog = (commitsArray) => {
         const msg = item.commit.message.split('\n')[0].replace(/"/g, '&quot;');
         const author = item.commit.author.name;
         const date = formatDate(item.commit.author.date);
+        
+        // Constrói a URL exata do diff no repositório da disciplina
+        const diffUrl = `https://github.com/unb-mds/2026-1-P.R.I.S.M.A/commit/${item.sha}`;
 
         const row = document.createElement('div');
         row.className = 'commit-row';
 
         row.innerHTML = `
-            <div class="commit-sha">#${sha}</div>
+            <div class="commit-sha">
+                <a href="${diffUrl}" target="_blank" style="color: var(--text-cyan); text-decoration: none;" title="Ver detalhes no GitHub">
+                    #${sha} ↗
+                </a>
+            </div>
             <div class="commit-info">
                 <div class="commit-msg" title="${msg}">${msg}</div>
                 <div class="commit-author">${author}</div>
