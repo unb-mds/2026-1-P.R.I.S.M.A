@@ -18,24 +18,22 @@ export const renderCollaborators = (commits, issues) => {
         if (!users[login]) {
             users[login] = { 
                 name, login, avatar, 
-                commits: 0, closedIssues: 0, prs: 0, 
+                commits: 0, openIssues: 0, closedIssues: 0, 
                 lastMsg: c.commit.message 
             };
         }
         users[login].commits++;
     });
 
-    // 2. Varre as Issues (Para contar Issues fechadas e PRs)
+    // 2. Varre as Issues (Para contar Issues abertas e fechadas)
     issues.forEach(i => {
         const login = i.user?.login;
         if (!login || !users[login]) return;
 
-        // Se a issue tiver o objeto 'pull_request', é um PR
-        if (i.pull_request) {
-            users[login].prs++;
-        } 
-        // Conta quantas issues a pessoa tem listada como "fechada"
-        else if (i.state === 'closed') {
+        // Separa a contagem com base no status da Issue
+        if (i.state === 'open') {
+            users[login].openIssues++;
+        } else if (i.state === 'closed') {
             users[login].closedIssues++;
         }
     });
@@ -64,12 +62,12 @@ export const renderCollaborators = (commits, issues) => {
                     <span class="c-stat-val text-cyan">${u.commits}</span>
                 </div>
                 <div class="c-stat-box">
-                    <span class="c-stat-label">Demandas</span>
-                    <span class="c-stat-val text-amber" title="Issues Fechadas">${u.closedIssues}</span>
+                    <span class="c-stat-label">Abertas</span>
+                    <span class="c-stat-val text-amber" title="Issues Pendentes">${u.openIssues}</span>
                 </div>
                 <div class="c-stat-box">
-                    <span class="c-stat-label">PRs</span>
-                    <span class="c-stat-val text-emerald" title="Pull Requests">${u.prs}</span>
+                    <span class="c-stat-label">Fechadas</span>
+                    <span class="c-stat-val text-emerald" title="Issues Entregues">${u.closedIssues}</span>
                 </div>
             </div>
             <div class="collab-footer">
