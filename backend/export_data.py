@@ -9,13 +9,14 @@ REPO = "unb-mds/2026-1-P.R.I.S.M.A"
 BASE_URL = f"https://api.github.com/repos/{REPO}"
 HEADERS = {"Authorization": f"token {TOKEN}", "Accept": "application/vnd.github.v3+json"}
 
-# MÓDULO DE EXCLUSÃO DE USUÁRIOS
-
-EXCLUDED_USERS = [
-    "github-actions[bot]",
-    "dependabot[bot]",
-    "github-actions",
-    "login",
+# MÓDULO DE TIME
+# Apenas os commits e métricas destes usuários oficiais irão para o Dashboard
+TEAM_MEMBERS = [
+    "CauaoClemente",
+    "delvale412",
+    "kaikysousa",
+    "millapereira1",
+    "otheomls"
 ]
 
 def fetch_all_pages(endpoint):
@@ -39,10 +40,8 @@ def fetch_all_pages(endpoint):
 def main():
     print("Iniciando extração purificada de dados do PRISMA...")
     
-    # 1. Busca as branches
     branches = fetch_all_pages("branches")
     
-    # 2. Busca e filtra commits
     all_commits_raw = []
     for branch in branches:
         branch_name = quote(branch['name'])
@@ -52,27 +51,25 @@ def main():
     unique_commits = {}
     for c in all_commits_raw:
         if 'sha' in c:
-            # Aplica o filtro do Módulo de Exclusão
+            # Captura o login de quem fez o commit
             author_login = c.get('author', {}).get('login') if c.get('author') else None
-            if author_login in EXCLUDED_USERS:
-                continue
-            unique_commits[c['sha']] = c
+            
+            if author_login in TEAM_MEMBERS:
+                unique_commits[c['sha']] = c
 
     all_commits = sorted(list(unique_commits.values()), key=lambda x: x['commit']['author']['date'], reverse=True)
     
-    # 3. Busca e filtra Issues
     all_issues_raw = fetch_all_pages("issues?state=all")
     issues = []
     for i in all_issues_raw:
-        # Ignorar Pull Requests (o GitHub trata PRs como Issues na API de issues)
         if 'pull_request' in i:
             continue
+            
         user_login = i.get('user', {}).get('login')
-        if user_login in EXCLUDED_USERS:
-            continue
-        issues.append(i)
+
+        if user_login in TEAM_MEMBERS:
+            issues.append(i)
     
-    # 4. Monta o pacote final com metadados reais
     data_package = {
         "generated_at": datetime.now().strftime("%d/%m/%Y %H:%M"),
         "raw_commits": all_commits,
@@ -83,7 +80,7 @@ def main():
     with open(output_path, 'w', encoding='utf-8') as f:
         json.dump(data_package, f, ensure_ascii=False)
         
-    print(f"Sucesso! {len(all_commits)} commits limpos e {len(issues)} issues salvas.")
+    print(f"Sucesso! {len(all_commits)} commits e {len(issues)} issues processadas exclusivamente para o time oficial.")
 
 if __name__ == "__main__":
     main()
