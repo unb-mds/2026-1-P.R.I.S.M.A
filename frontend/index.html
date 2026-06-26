@@ -1,188 +1,336 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PRISMA Insight</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
-    
-    <link rel="stylesheet" href="css/main.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- ============================================================
+    META DADOS ESTRATÉGICOS
+    ============================================================ -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- SEO BÁSICO -->
+    <title>PRISMA Insight · Plataforma de Análise Legislativa</title>
+    <meta name="description" content="Dashboard inteligente para rastreamento de projetos de lei, métricas de equipe e análise de dados legislativos com foco em transparência e decisão." />
+    <meta name="robots" content="index, follow" />
+
+    <!-- OPEN GRAPH / REDES SOCIAIS -->
+    <meta property="og:title" content="PRISMA Insight" />
+    <meta property="og:description" content="Transformando dados legislativos em decisões mais rápidas e transparentes." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://unb-mds.github.io/2026-1-P.R.I.S.M.A/" />
+    <meta property="og:image" content="https://unb-mds.github.io/2026-1-P.R.I.S.M.A/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <!-- TEMA DE COR (DARK-FIRST) -->
+    <meta name="theme-color" content="#0f172a" />
+    <meta name="color-scheme" content="dark" />
+
+    <!-- ============================================================
+    FONTES E ESTILOS
+    ============================================================ -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,700;14..32,900&family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet" />
+
+    <!-- CSS PRINCIPAL (CRÍTICO) -->
+    <link rel="stylesheet" href="css/main.css" media="all" />
+
+    <!-- FAVICON (PREVENIR ERRO 404) -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔍</text></svg>" />
+
+    <!-- ============================================================
+    SCRIPTS (CARREGAMENTO ASSÍNCRONO)
+    ============================================================ -->
+    <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <script type="importmap">
+        {
+            "imports": {
+                "chart.js": "https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"
+            }
+        }
+    </script>
 </head>
 <body>
 
-    <section id="landing-view" class="view active">
-        <nav class="navbar">
-            <div class="logo">
-                <div class="logo-icon"></div>
+    <!-- ============================================================
+    LANDING PAGE (HOME)
+    ============================================================ -->
+    <section id="landing-view" class="view is-active" role="main" aria-label="Página inicial do PRISMA Insight">
+
+        <!-- NAVEGAÇÃO SUPERIOR -->
+        <header class="navbar" role="banner">
+            <div class="logo" aria-label="PRISMA Insight">
+                <div class="logo-icon" aria-hidden="true"></div>
                 <span class="logo-text">PRISMA</span>
             </div>
-            <button id="btn-enter-dashboard" class="btn-outline">Acessar Desenvolvimento</button>
-        </nav>
-
-        <header class="hero">
-            <div class="glow-bg"></div>
-            <h1>PRISMA</h1>
-            <p class="subtitle">Plataforma de rastreio, inteligência artificial e síntese de marcos e atos</p>
-            <p class="description">Transformando dados legislativos em decisões mais rápidas, transparentes e informadas.</p>
-            <button id="btn-hero-dashboard" class="btn-primary">Ver Dashboard de Dev</button>
+            <button id="btn-enter-dashboard" class="btn-outline" type="button">
+                Acessar Desenvolvimento
+            </button>
         </header>
+
+        <!-- CONTEÚDO PRINCIPAL DA LANDING -->
+        <div class="hero">
+            <div class="glow-bg" aria-hidden="true"></div>
+            <div class="stars">
+    <span class="star"></span>
+    <span class="star"></span>
+    <span class="star"></span>
+    <span class="star"></span>
+    <span class="star"></span>
+    <span class="star"></span>
+    <span class="star"></span>
+    <span class="star"></span>
+    <span class="star"></span>
+    <span class="star"></span>
+    <span class="star"></span>
+    <span class="star"></span>
+    <span class="star"></span>
+    <span class="star"></span>
+    <span class="star"></span>
+    <span class="star"></span>
+    <span class="star"></span>
+    <span class="star"></span>
+    <span class="star"></span>
+    <span class="star"></span>
+</div>
+
+    <!-- COMETAS / METEOROS -->
+<div class="comets">
+    <div class="comet"></div>
+    <div class="comet"></div>
+    <div class="comet"></div>
+    <div class="comet"></div>
+</div>
+
+            <h1>PRISMA</h1>
+            <p class="subtitle">Plataforma deRastreio · Inteligência Artificial  · Síntese de Marcos e Atos</p>
+            <p class="description">
+                Plataforma para acompanhamento de projetos legislativos com inteligência de dados e foco em transparência.
+            </p>
+            <button id="btn-hero-dashboard" class="btn-primary" type="button">
+                Ver Dashboard de Dev
+            </button>
+        </div>
     </section>
 
-    <section id="dashboard-view" class="view hidden">
-        <header class="dash-header">
+    <!-- ============================================================
+    DASHBOARD (ÁREA RESTRITA)
+    ============================================================ -->
+    <section id="dashboard-view" class="view" role="main" aria-label="Dashboard de desenvolvimento">
+
+        <!-- CABEÇALHO DO DASHBOARD -->
+        <header class="dash-header" role="banner">
             <div class="dash-logo">
-                <button id="btn-back-home" class="btn-icon" title="Voltar para Home">🏠</button>
-                <div class="logo-icon"></div>
+                <button id="btn-back-home" class="btn-icon" type="button" aria-label="Voltar para página inicial">
+                    <span aria-hidden="true">⌂</span>
+                </button>
+                <div class="logo-icon" aria-hidden="true"></div>
                 <div>
                     <h2>PRISMA Insight</h2>
                     <p>unb-mds / 2026-1-P.R.I.S.M.A</p>
                 </div>
             </div>
-            
+
             <div class="dash-controls">
-                <button id="btn-sync" class="btn-primary">Atualizar Dados</button>
+                <button id="btn-sync" class="btn-primary" type="button">
+                    Atualizar Dados
+                </button>
             </div>
         </header>
 
-        <main class="dash-content">
-            <div class="metrics-grid">
-                <div class="card">
-                    <span class="card-title">Volume de Entregas</span>
-                    <div class="card-value"><span id="total-commits">0</span> <small class="text-cyan">Total</small></div>
-                </div>
-                <div class="card">
-                    <span class="card-title">Issues Resolvidas</span>
-                    <div class="card-value"><span id="closed-issues">0</span> <small class="text-emerald">Entregues</small></div>
-                    <div class="card-footer">Foco no avanço do projeto</div>
-                </div>
-                <div class="card">
-                    <span class="card-title">Colaboradores</span>
-                    <div class="card-value"><span id="total-collabs">0</span> <small class="text-emerald">Ativos</small></div>
-                </div>
-                <div class="card">
-                    <span class="card-title">Última Sincronização</span>
-                    <div class="card-value"><span id="build-timestamp" style="font-size: 1.5rem; color: var(--text-cyan);">Carregando...</span></div>
-                    <div class="card-footer text-cyan flex-center"><span class="dot-pulse"></span> INTEGRAÇÃO CONTÍNUA</div>
-                </div>
-            </div>
+        <!-- CORPO DO DASHBOARD -->
+        <div class="dash-content">
 
+            <!-- ============================================================
+            CARDS DE MÉTRICAS (KPI)
+            ============================================================ -->
+            <section class="metrics-grid" aria-label="Indicadores principais">
+
+                <article class="card">
+                    <h3 class="card-title">Total de Commits</h3>
+                    <div class="card-value">
+                        <span id="total-commits" aria-live="polite">0</span>
+                        <small class="text-cyan">entregas</small>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <h3 class="card-title">Issues Resolvidas</h3>
+                    <div class="card-value">
+                        <span id="closed-issues" aria-live="polite">0</span>
+                        <small class="text-emerald">concluídas</small>
+                    </div>
+                    <footer class="card-footer">Foco no avanço do projeto</footer>
+                </article>
+
+                <article class="card">
+                    <h3 class="card-title">Colaboradores Ativos</h3>
+                    <div class="card-value">
+                        <span id="total-collabs" aria-live="polite">0</span>
+                        <small class="text-emerald">pessoas</small>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <h3 class="card-title">Última Sincronização</h3>
+                    <div class="card-value">
+                        <span id="build-timestamp" style="font-size: 1.5rem; color: var(--accent-cyan);">
+                            Carregando…
+                        </span>
+                    </div>
+                    <footer class="card-footer text-cyan flex-center">
+                        <span class="dot-pulse" aria-hidden="true"></span>
+                        Integração Contínua
+                    </footer>
+                </article>
+            </section>
+
+            <!-- ============================================================
+            GRÁFICOS + HEATMAP
+            ============================================================ -->
             <div class="grid-row-2">
-                <div class="panel">
-                    <div class="panel-header">
+
+                <!-- PAINEL: ANALYTICS OVERVIEW -->
+                <section class="panel" aria-label="Gráficos de commits e issues">
+                    <header class="panel-header">
                         <div class="panel-title">
-                            <span class="icon-box">📊</span>
-                            <h3>Monitoramento Analítico</h3>
+                            <span class="icon-box" aria-hidden="true">◆</span>
+                            <h3>Analytics Overview</h3>
                         </div>
                         <div class="panel-legend">
-                            <span class="dot cyan"></span> Commits
-                            <span class="dot dark"></span> Issues
+                            <span class="dot cyan" aria-hidden="true"></span> Commits
+                            <span class="dot dark" aria-hidden="true"></span> Issues
                         </div>
-                    </div>
+                    </header>
                     <div class="charts-wrapper">
-                        <div class="canvas-container"><canvas id="commitsChart"></canvas></div>
-                        <div class="canvas-container"><canvas id="issuesChart"></canvas></div>
+                        <figure class="canvas-container">
+                            <canvas id="commitsChart" aria-label="Gráfico de commits por dia"></canvas>
+                        </figure>
+                        <figure class="canvas-container">
+                            <canvas id="issuesChart" aria-label="Gráfico de issues abertas e fechadas por dia"></canvas>
+                        </figure>
                     </div>
-                </div>
+                </section>
 
-                <div class="panel">
-                    <div class="panel-header">
+                <!-- PAINEL: ACTIVITY HEATMAP -->
+                <section class="panel" aria-label="Mapa de calor de atividade dos últimos 90 dias">
+                    <header class="panel-header">
                         <div class="panel-title">
-                            <span class="icon-box text-amber">🔥</span>
-                            <h3>Atividade Geral</h3>
+                            <span class="icon-box" aria-hidden="true">●</span>
+                            <h3>Activity Heatmap</h3>
                         </div>
-                    </div>
+                    </header>
                     <div class="heatmap-container">
                         <div class="heatmap-header">
-                            <span>Mapa de calor de atividade (90 dias)</span>
+                            <span>Últimos 90 dias</span>
                             <div class="heatmap-legend">
                                 Menos
-                                <div class="heat-box lvl-0"></div>
-                                <div class="heat-box lvl-1"></div>
-                                <div class="heat-box lvl-2"></div>
-                                <div class="heat-box lvl-3"></div>
-                                <div class="heat-box lvl-4"></div>
+                                <span class="heat-box lvl-0" role="img" aria-label="Sem atividade"></span>
+                                <span class="heat-box lvl-1" role="img" aria-label="Baixa atividade"></span>
+                                <span class="heat-box lvl-2" role="img" aria-label="Média atividade"></span>
+                                <span class="heat-box lvl-3" role="img" aria-label="Alta atividade"></span>
+                                <span class="heat-box lvl-4" role="img" aria-label="Muito alta atividade"></span>
                                 Mais
                             </div>
                         </div>
-                        <div id="heatmap-grid" class="heatmap-grid"></div>
-                        <div class="heatmap-footer">Logs combinados: Commits + Issues Abertas/Fechadas</div>
+                        <div id="heatmap-grid" class="heatmap-grid" role="img" aria-label="Mapa de calor de atividade"></div>
+                        <footer class="heatmap-footer">
+                            Commits + Issues abertas/fechadas
+                        </footer>
                     </div>
-                </div>
+                </section>
             </div>
 
-            <div class="panel" style="margin-bottom: 24px;">
-                <div class="panel-header">
+            <!-- ============================================================
+            COLABORADORES
+            ============================================================ -->
+            <section class="panel" style="margin-bottom: 24px;" aria-label="Lista de colaboradores do projeto">
+                <header class="panel-header">
                     <div class="panel-title">
-                        <span class="icon-box">👥</span>
-                        <h3>Time de Desenvolvimento</h3>
+                        <span class="icon-box" aria-hidden="true">◈</span>
+                        <h3>Equipe de Desenvolvimento</h3>
                     </div>
-                </div>
-                <div id="collaborators-grid" class="collaborators-grid">
+                </header>
+                <div id="collaborators-grid" class="collaborators-grid" role="list">
                     <div class="placeholder-text" style="padding: 24px; text-align: center; color: var(--text-muted); width: 100%;">
-                        Aguardando sincronização de dados do time...
+                        Nenhum dado disponível
                     </div>
                 </div>
-            </div>
+            </section>
 
+            <!-- ============================================================
+            TIMELINE + LOG DE COMMITS
+            ============================================================ -->
             <div class="grid-row-3">
-                <div class="panel">
-                    <div class="panel-header">
+
+                <!-- PAINEL: SESSÕES SEMANAIS -->
+                <section class="panel" aria-label="Histórico de atividades semanais">
+                    <header class="panel-header">
                         <div class="panel-title">
-                            <span class="icon-box">📅</span>
-                            <h3>Histórico de Sessões</h3>
+                            <span class="icon-box" aria-hidden="true">◀</span>
+                            <h3>Sessões Semanais</h3>
                         </div>
-                    </div>
+                    </header>
                     <div class="timeline-container">
-                        <div class="timeline-nav">
-                            <span class="nav-title">Timeline Semanal</span>
+                        <nav class="timeline-nav" aria-label="Navegação entre semanas">
+                            <span class="nav-title">Timeline</span>
                             <div class="nav-controls">
-                                <button id="btn-prev-week" class="nav-btn">&lt;</button>
-                                <span id="current-week-label" class="nav-date">--</span>
-                                <button id="btn-next-week" class="nav-btn" disabled>&gt;</button>
+                                <button id="btn-prev-week" class="nav-btn" type="button" aria-label="Semana anterior">
+                                    ‹
+                                </button>
+                                <span id="current-week-label" class="nav-date" aria-live="polite">--</span>
+                                <button id="btn-next-week" class="nav-btn" type="button" aria-label="Próxima semana" disabled>
+                                    ›
+                                </button>
                             </div>
-                        </div>
+                        </nav>
+
                         <div class="timeline-stats">
                             <div class="stat-box cyan-box">
-                                <span class="stat-label">⚲ Commits</span>
+                                <span class="stat-label">Commits</span>
                                 <span id="week-commits-count" class="stat-num">0</span>
                             </div>
                             <div class="stat-box dark-box">
-                                <span class="stat-label">! Issues</span>
+                                <span class="stat-label">Issues</span>
                                 <span id="week-issues-count" class="stat-num">0</span>
                             </div>
                         </div>
+
                         <div class="timeline-logs">
-                            <h4 class="logs-title">Logs de Sessão</h4>
-                            <div id="weekly-logs-list" class="logs-list">
-                                <div class="placeholder-text">Silêncio no repositório nesta semana.</div>
+                            <h4 class="logs-title">Registro da Semana</h4>
+                            <div id="weekly-logs-list" class="logs-list" role="log" aria-live="polite">
+                                <div class="placeholder-text">Nenhuma atividade registrada nesta semana.</div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </section>
 
-                <div class="panel">
-                    <div class="panel-header">
+                <!-- PAINEL: HISTÓRICO DE COMMITS -->
+                <section class="panel" aria-label="Histórico de commits do repositório">
+                    <header class="panel-header">
                         <div class="panel-title">
-                            <span class="icon-box">🔀</span>
-                            <h3>Log de Atividade Git</h3>
+                            <span class="icon-box" aria-hidden="true">◉</span>
+                            <h3>Histórico de Commits</h3>
                         </div>
+                    </header>
+                    <div class="log-table-header" role="row">
+                        <span class="col-sha">Revisão</span>
+                        <span class="col-msg">Mensagem / Autor</span>
+                        <span class="col-date">Data</span>
                     </div>
-                    <div class="log-table-header">
-                        <div class="col-sha">REVISÃO</div>
-                        <div class="col-msg">MENSAGEM / AUTOR</div>
-                        <div class="col-date">DATA</div>
+                    <div id="commit-log-container" class="log-container" role="log" aria-live="polite">
+                        <div class="placeholder-text">Carregando dados…</div>
                     </div>
-                    <div id="commit-log-container" class="log-container">
-                        <div class="placeholder-text">Aguardando sincronização...</div>
-                    </div>
-                </div>
+                </section>
             </div>
-        </main>
+        </div>
     </section>
 
-    <script type="module" src="js/main.js"></script>
+    <!-- ============================================================
+    SCRIPTS (APLICAÇÃO)
+    ============================================================ -->
+    <script type="module" src="js/main.js" defer></script>
+
 </body>
 </html>
