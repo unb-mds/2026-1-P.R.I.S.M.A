@@ -9,9 +9,9 @@ app = FastAPI(title="Prisma Insight API")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://127.0.0.1:5500",      # VS Code Live Server
+        "http://127.0.0.1:5500",  # VS Code Live Server
         "http://localhost:5500",
-        "https://unb-mds.github.io"   # Futuro ambiente de produção do GitHub Pages
+        "https://unb-mds.github.io",  # Futuro ambiente de produção do GitHub Pages
     ],
     allow_credentials=True,
     allow_methods=["GET", "OPTIONS"],
@@ -20,6 +20,7 @@ app.add_middleware(
 
 # Registrando o controller corretamente
 app.include_router(github_router, prefix="/api/v1")
+
 
 @app.get("/")
 def health_check():

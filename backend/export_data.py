@@ -4,10 +4,13 @@ import requests
 from datetime import datetime
 from urllib.parse import quote
 
-TOKEN = os.getenv('PRISMA_GITHUB_TOKEN')
+TOKEN = os.getenv("PRISMA_GITHUB_TOKEN")
 REPO = "unb-mds/2026-1-P.R.I.S.M.A"
 BASE_URL = f"https://api.github.com/repos/{REPO}"
-HEADERS = {"Authorization": f"token {TOKEN}", "Accept": "application/vnd.github.v3+json"}
+HEADERS = {
+    "Authorization": f"token {TOKEN}",
+    "Accept": "application/vnd.github.v3+json",
+}
 
 # MÓDULO DE TIME
 # Apenas os commits e métricas destes usuários oficiais irão para o Dashboard
@@ -16,14 +19,15 @@ TEAM_MEMBERS = [
     "delvale412",
     "kaikysousa",
     "millapereira1",
-    "otheomls"
+    "otheomls",
 ]
+
 
 def fetch_all_pages(endpoint):
     all_data = []
     page = 1
     while True:
-        separator = '&' if '?' in endpoint else '?'
+        separator = "&" if "?" in endpoint else "?"
         url = f"{BASE_URL}/{endpoint}{separator}per_page=100&page={page}"
         response = requests.get(url, headers=HEADERS)
         if response.status_code != 200:
@@ -37,50 +41,60 @@ def fetch_all_pages(endpoint):
         page += 1
     return all_data
 
+
 def main():
     print("Iniciando extração purificada de dados do PRISMA...")
-    
+
     branches = fetch_all_pages("branches")
-    
+
     all_commits_raw = []
     for branch in branches:
-        branch_name = quote(branch['name'])
+        branch_name = quote(branch["name"])
         commits = fetch_all_pages(f"commits?sha={branch_name}")
         all_commits_raw.extend(commits)
-        
+
     unique_commits = {}
     for c in all_commits_raw:
-        if 'sha' in c:
+        if "sha" in c:
             # Captura o login de quem fez o commit
-            author_login = c.get('author', {}).get('login') if c.get('author') else None
-            
-            if author_login in TEAM_MEMBERS:
-                unique_commits[c['sha']] = c
+            author_login = c.get("author", {}).get("login") if c.get("author") else None
 
-    all_commits = sorted(list(unique_commits.values()), key=lambda x: x['commit']['author']['date'], reverse=True)
-    
+            if author_login in TEAM_MEMBERS:
+                unique_commits[c["sha"]] = c
+
+    all_commits = sorted(
+        list(unique_commits.values()),
+        key=lambda x: x["commit"]["author"]["date"],
+        reverse=True,
+    )
+
     all_issues_raw = fetch_all_pages("issues?state=all")
     issues = []
     for i in all_issues_raw:
-        if 'pull_request' in i:
+        if "pull_request" in i:
             continue
-            
-        user_login = i.get('user', {}).get('login')
+
+        user_login = i.get("user", {}).get("login")
 
         if user_login in TEAM_MEMBERS:
             issues.append(i)
-    
+
     data_package = {
         "generated_at": datetime.now().strftime("%d/%m/%Y %H:%M"),
         "raw_commits": all_commits,
-        "raw_issues": issues
+        "raw_issues": issues,
     }
-    
-    output_path = os.path.join(os.path.dirname(__file__), '..', 'frontend', 'dados.json')
-    with open(output_path, 'w', encoding='utf-8') as f:
+
+    output_path = os.path.join(
+        os.path.dirname(__file__), "..", "frontend", "dados.json"
+    )
+    with open(output_path, "w", encoding="utf-8") as f:
         json.dump(data_package, f, ensure_ascii=False)
-        
-    print(f"Sucesso! {len(all_commits)} commits e {len(issues)} issues processadas exclusivamente para o time oficial.")
+
+    print(
+        f"Sucesso! {len(all_commits)} commits e {len(issues)} issues processadas exclusivamente para o time oficial."
+    )
+
 
 if __name__ == "__main__":
     main()

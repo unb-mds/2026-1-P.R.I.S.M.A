@@ -1,0 +1,24 @@
+repos:
+  - repo: https://github.com/psf/black
+    rev: 24.4.2
+    hooks:
+      - id: black
+        exclude: 'node_modules/|__pycache__/|\.pyc$|\.env'
+  - repo: https://github.com/pycqa/flake8
+    rev: 7.1.0
+    hooks:
+      - id: flake8
+        exclude: 'node_modules/|__pycache__/|\.pyc$|\.env'
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+        exclude: 'node_modules/|__pycache__/|\.pyc$|\.env|\.cache/'
+      - id: end-of-file-fixer
+        exclude: 'node_modules/|__pycache__/|\.pyc$|\.env|\.cache/'
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v4.0.0-alpha.8
+    hooks:
+      - id: prettier
+        exclude: 'node_modules/|__pycache__/|\.pyc$|\.env|\.cache/|\.prettierignore|\.flake8|\.md$'
+        files: '\.(js|jsx|ts|tsx|css|scss|html|json)$'

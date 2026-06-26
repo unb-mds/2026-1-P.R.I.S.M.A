@@ -5,7 +5,7 @@ on:
   # Dispara em pushes para qualquer branch
   push:
     branches:
-      - '**' 
+      - '**'
 
   # Dispara em eventos de Pull Request
   pull_request:
@@ -47,7 +47,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          
+
       - name: Instalar Dependências (Requests)
         run: pip install requests
 
