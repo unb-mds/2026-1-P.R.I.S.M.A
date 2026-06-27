@@ -3,186 +3,291 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PRISMA Insight</title>
+    <title>PRISMA | Inteligência e Rastreio Legislativo</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="css/main.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        /* --- ESTILOS AVANÇADOS DA LANDING PAGE --- */
+        html { scroll-behavior: smooth; }
+        .landing-body {
+            background: #030712;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(34, 211, 238, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(129, 140, 248, 0.08) 0%, transparent 50%);
+            min-height: 100vh;
+            color: #f8fafc;
+        }
+        
+        .navbar-links {
+            display: flex;
+            gap: 2rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .navbar-links a { color: #94a3b8; text-decoration: none; transition: color 0.3s; }
+        .navbar-links a:hover { color: #22d3ee; }
+
+        .hero-enhanced {
+            text-align: center;
+            padding: 8rem 2rem 5rem;
+            position: relative;
+        }
+        
+        .text-gradient {
+            background: linear-gradient(135deg, #22d3ee 0%, #818cf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+        }
+
+        /* Barra de Autoridade */
+        .trust-bar {
+            display: flex;
+            justify-content: center;
+            gap: 4rem;
+            padding: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            background: rgba(15, 23, 42, 0.4);
+            flex-wrap: wrap;
+        }
+        .trust-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: #94a3b8;
+        }
+
+        .section-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 6rem 2rem;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        .section-header h2 { font-size: 2.5rem; margin-bottom: 1rem; }
+        .section-header p { color: #94a3b8; max-width: 600px; margin: 0 auto; line-height: 1.6; }
+
+        /* Grid de Benefícios */
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+        .b-card {
+            background: rgba(30, 41, 59, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 2.5rem;
+            border-radius: 16px;
+            transition: all 0.3s ease;
+        }
+        .b-card:hover { background: rgba(30, 41, 59, 0.6); border-color: rgba(34, 211, 238, 0.3); transform: translateY(-5px); }
+        .b-icon { font-size: 2rem; margin-bottom: 1.5rem; display: inline-block; padding: 1rem; background: rgba(15, 23, 42, 0.8); border-radius: 12px; }
+
+        /* Step-by-Step (Como Funciona) */
+        .workflow-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        .step-row {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+            background: linear-gradient(90deg, rgba(30,41,59,0.4) 0%, transparent 100%);
+            padding: 2rem;
+            border-radius: 16px;
+            border-left: 4px solid #22d3ee;
+        }
+        .step-number {
+            font-size: 4rem;
+            font-weight: 900;
+            color: rgba(255,255,255,0.05);
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .step-content h3 { font-size: 1.4rem; color: #f8fafc; margin-bottom: 0.5rem; }
+        .step-content p { color: #94a3b8; line-height: 1.6; font-size: 0.95rem; }
+
+        /* Personas (Para Quem) */
+        .personas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        .persona-card {
+            text-align: center;
+            padding: 2rem;
+            border-radius: 12px;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px dashed rgba(148, 163, 184, 0.2);
+        }
+
+        /* Tech Stack */
+        .tech-grid {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .tech-badge {
+            background: #1e293b;
+            color: #cbd5e1;
+            padding: 0.75rem 1.5rem;
+            border-radius: 99px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            border: 1px solid #334155;
+        }
+
+        .footer-institutional {
+            padding: 4rem 2rem;
+            text-align: center;
+            background: #020617;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+    </style>
 </head>
-<body>
+<body class="landing-body">
 
-    <section id="landing-view" class="view active">
-        <nav class="navbar">
-            <div class="logo">
-                <div class="logo-icon"></div>
-                <span class="logo-text">PRISMA</span>
-            </div>
-            <button id="btn-enter-dashboard" class="btn-outline">Acessar Desenvolvimento</button>
-        </nav>
+    <nav class="navbar" style="background: rgba(3, 7, 18, 0.8); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.05); padding: 1rem 2rem; position: sticky; top: 0; z-index: 50;">
+        <div class="logo">
+            <div class="logo-icon"></div>
+            <span class="logo-text">PRISMA</span>
+        </div>
+        <div class="navbar-links">
+            <a href="#proposita">Propósito</a>
+            <a href="#workflow">Como Funciona</a>
+            <a href="#publico">Público</a>
+        </div>
+    </nav>
 
-        <header class="hero">
-            <div class="glow-bg"></div>
-            <h1>PRISMA</h1>
-            <p class="subtitle">Plataforma de rastreio, inteligência artificial e síntese de marcos e atos</p>
-            <p class="description">Transformando dados legislativos em decisões mais rápidas, transparentes e informadas.</p>
-            <button id="btn-hero-dashboard" class="btn-primary">Ver Dashboard de Dev</button>
+    <main>
+        <header class="hero-enhanced">
+            <div class="glow-bg" style="opacity: 0.6; top: -20%;"></div>
+            <h1 style="font-size: clamp(3rem, 6vw, 5rem); letter-spacing: -2px; margin-bottom: 1rem; line-height: 1.1;">
+                O tempo de trâmite, <br><span class="text-gradient">descomplicado.</span>
+            </h1>
+            <p class="description" style="max-width: 750px; margin: 2rem auto 3rem; color: #94a3b8; font-size: 1.15rem; line-height: 1.8;">
+                O <strong>PRISMA</strong> é uma plataforma inteligente que extrai dados legislativos brutos, rastreia gargalos processuais e sintetiza linhas do tempo visuais para garantir transparência na administração pública.
+            </p>
+            <a href="dashboard.html" class="btn-primary" style="text-decoration: none; display: inline-block; padding: 1.2rem 3rem; font-size: 1.1rem; border-radius: 99px; box-shadow: 0 10px 30px rgba(34, 211, 238, 0.25);">
+                Acessar Dashboard do Projeto
+            </a>
         </header>
-    </section>
 
-    <section id="dashboard-view" class="view hidden">
-        <header class="dash-header">
-            <div class="dash-logo">
-                <button id="btn-back-home" class="btn-icon" title="Voltar para Home">🏠</button>
-                <div class="logo-icon"></div>
-                <div>
-                    <h2>PRISMA Insight</h2>
-                    <p>unb-mds / 2026-1-P.R.I.S.M.A</p>
+        <div class="trust-bar">
+            <div class="trust-item"><span style="color: #22d3ee;">✓</span> Monitoramento Constante</div>
+            <div class="trust-item"><span style="color: #22d3ee;">✓</span> Transparência Governamental</div>
+            <div class="trust-item"><span style="color: #22d3ee;">✓</span> 100% Open Source</div>
+            <div class="trust-item"><span style="color: #22d3ee;">✓</span> Arquitetura Serverless</div>
+        </div>
+
+        <section id="proposita" class="section-container">
+            <div class="section-header">
+                <h2>Do Caos à Clareza</h2>
+                <p>Nós transformamos o emaranhado burocrático dos diários oficiais em inteligência de dados acessível.</p>
+            </div>
+            <div class="benefits-grid">
+                <div class="b-card">
+                    <span class="b-icon">🧩</span>
+                    <h3 style="color: #f8fafc; margin-bottom: 1rem;">O Problema</h3>
+                    <p style="color: #94a3b8; line-height: 1.6;">Acompanhar pautas governamentais é um pesadelo logístico. Documentos em PDF, sites não padronizados e despachos longos fazem com que cidadãos e gestores percam o rastro de onde um projeto está travado e de quanto tempo falta para a sua aprovação.</p>
                 </div>
+                <div class="b-card">
+                    <span class="b-icon">⚡</span>
+                    <h3 style="color: #f8fafc; margin-bottom: 1rem;">A Solução PRISMA</h3>
+                    <p style="color: #94a3b8; line-height: 1.6;">Por meio de raspagem de dados e algoritmos de filtragem, o PRISMA coleta esses eventos isolados, estrutura as informações e cria uma linha do tempo unificada, convertendo a morosidade administrativa em métricas exatas e visuais.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="workflow" class="section-container" style="background: rgba(15, 23, 42, 0.3); border-radius: 24px; padding-top: 5rem; padding-bottom: 5rem;">
+            <div class="section-header">
+                <h2>O Fluxo do Dado</h2>
+                <p>Veja como o PRISMA processa a informação desde a fonte oficial até a tela do usuário.</p>
             </div>
             
-            <div class="dash-controls">
-                <button id="btn-sync" class="btn-primary">Atualizar Dados</button>
-            </div>
-        </header>
-
-        <main class="dash-content">
-            <div class="metrics-grid">
-                <div class="card">
-                    <span class="card-title">Volume de Entregas</span>
-                    <div class="card-value"><span id="total-commits">0</span> <small class="text-cyan">Total</small></div>
-                </div>
-                <div class="card">
-                    <span class="card-title">Issues Resolvidas</span>
-                    <div class="card-value"><span id="closed-issues">0</span> <small class="text-emerald">Entregues</small></div>
-                    <div class="card-footer">Foco no avanço do projeto</div>
-                </div>
-                <div class="card">
-                    <span class="card-title">Colaboradores</span>
-                    <div class="card-value"><span id="total-collabs">0</span> <small class="text-emerald">Ativos</small></div>
-                </div>
-                <div class="card">
-                    <span class="card-title">Última Sincronização</span>
-                    <div class="card-value"><span id="build-timestamp" style="font-size: 1.5rem; color: var(--text-cyan);">Carregando...</span></div>
-                    <div class="card-footer text-cyan flex-center"><span class="dot-pulse"></span> INTEGRAÇÃO CONTÍNUA</div>
-                </div>
-            </div>
-
-            <div class="grid-row-2">
-                <div class="panel">
-                    <div class="panel-header">
-                        <div class="panel-title">
-                            <span class="icon-box">📊</span>
-                            <h3>Monitoramento Analítico</h3>
-                        </div>
-                        <div class="panel-legend">
-                            <span class="dot cyan"></span> Commits
-                            <span class="dot dark"></span> Issues
-                        </div>
-                    </div>
-                    <div class="charts-wrapper">
-                        <div class="canvas-container"><canvas id="commitsChart"></canvas></div>
-                        <div class="canvas-container"><canvas id="issuesChart"></canvas></div>
+            <div class="workflow-steps" style="max-width: 900px; margin: 0 auto;">
+                <div class="step-row">
+                    <div class="step-number">01</div>
+                    <div class="step-content">
+                        <h3>Extração e Varredura</h3>
+                        <p>Robôs de automação monitoram constantemente bases de dados legislativas, diários oficiais e APIs públicas, capturando despachos, movimentações e atualizações de status no exato momento em que são publicados.</p>
                     </div>
                 </div>
-
-                <div class="panel">
-                    <div class="panel-header">
-                        <div class="panel-title">
-                            <span class="icon-box text-amber">🔥</span>
-                            <h3>Atividade Geral</h3>
-                        </div>
+                <div class="step-row">
+                    <div class="step-number">02</div>
+                    <div class="step-content">
+                        <h3>Estruturação Temporal</h3>
+                        <p>Os dados brutos passam por um pipeline de higienização. O sistema identifica as datas de entrada e saída de cada departamento, classificando a natureza do ato e organizando a vida útil da pauta em formato JSON padronizado.</p>
                     </div>
-                    <div class="heatmap-container">
-                        <div class="heatmap-header">
-                            <span>Mapa de calor de atividade (90 dias)</span>
-                            <div class="heatmap-legend">
-                                Menos
-                                <div class="heat-box lvl-0"></div>
-                                <div class="heat-box lvl-1"></div>
-                                <div class="heat-box lvl-2"></div>
-                                <div class="heat-box lvl-3"></div>
-                                <div class="heat-box lvl-4"></div>
-                                Mais
-                            </div>
-                        </div>
-                        <div id="heatmap-grid" class="heatmap-grid"></div>
-                        <div class="heatmap-footer">Logs combinados: Commits + Issues Abertas/Fechadas</div>
+                </div>
+                <div class="step-row">
+                    <div class="step-number">03</div>
+                    <div class="step-content">
+                        <h3>Métricas e Visualização</h3>
+                        <p>Com os dados limpos, o painel do PRISMA calcula o tempo médio de trâmite, destaca os principais gargalos processuais e apresenta mapas de calor e gráficos de resolução para facilitar a tomada de decisão.</p>
                     </div>
                 </div>
             </div>
+        </section>
 
-            <div class="panel" style="margin-bottom: 24px;">
-                <div class="panel-header">
-                    <div class="panel-title">
-                        <span class="icon-box">👥</span>
-                        <h3>Time de Desenvolvimento</h3>
-                    </div>
+        <section id="publico" class="section-container">
+            <div class="section-header">
+                <h2>Impacto Real</h2>
+                <p>O PRISMA foi desenhado para empoderar diferentes atores da sociedade civil e da gestão pública.</p>
+            </div>
+            <div class="personas-grid">
+                <div class="persona-card">
+                    <div style="font-size: 2.5rem; margin-bottom: 1rem;">👥</div>
+                    <h3 style="color: #e2e8f0; font-size: 1.1rem; margin-bottom: 0.5rem;">Cidadãos Ativos</h3>
+                    <p style="color: #64748b; font-size: 0.9rem; line-height: 1.5;">Para acompanhar de perto as leis que impactam o seu bairro ou categoria profissional, sem precisar de conhecimento jurídico.</p>
                 </div>
-                <div id="collaborators-grid" class="collaborators-grid">
-                    <div class="placeholder-text" style="padding: 24px; text-align: center; color: var(--text-muted); width: 100%;">
-                        Aguardando sincronização de dados do time...
-                    </div>
+                <div class="persona-card">
+                    <div style="font-size: 2.5rem; margin-bottom: 1rem;">📰</div>
+                    <h3 style="color: #e2e8f0; font-size: 1.1rem; margin-bottom: 0.5rem;">Jornalistas</h3>
+                    <p style="color: #64748b; font-size: 0.9rem; line-height: 1.5;">Para auditar a velocidade do governo, cruzar dados de votação e enriquecer reportagens investigativas com métricas exatas.</p>
+                </div>
+                <div class="persona-card">
+                    <div style="font-size: 2.5rem; margin-bottom: 1rem;">🏛️</div>
+                    <h3 style="color: #e2e8f0; font-size: 1.1rem; margin-bottom: 0.5rem;">Gestores Públicos</h3>
+                    <p style="color: #64748b; font-size: 0.9rem; line-height: 1.5;">Para identificar quais secretarias ou comissões estão represando processos, otimizando o fluxo de trabalho do Estado.</p>
                 </div>
             </div>
+        </section>
 
-            <div class="grid-row-3">
-                <div class="panel">
-                    <div class="panel-header">
-                        <div class="panel-title">
-                            <span class="icon-box">📅</span>
-                            <h3>Histórico de Sessões</h3>
-                        </div>
-                    </div>
-                    <div class="timeline-container">
-                        <div class="timeline-nav">
-                            <span class="nav-title">Timeline Semanal</span>
-                            <div class="nav-controls">
-                                <button id="btn-prev-week" class="nav-btn">&lt;</button>
-                                <span id="current-week-label" class="nav-date">--</span>
-                                <button id="btn-next-week" class="nav-btn" disabled>&gt;</button>
-                            </div>
-                        </div>
-                        <div class="timeline-stats">
-                            <div class="stat-box cyan-box">
-                                <span class="stat-label">⚲ Commits</span>
-                                <span id="week-commits-count" class="stat-num">0</span>
-                            </div>
-                            <div class="stat-box dark-box">
-                                <span class="stat-label">! Issues</span>
-                                <span id="week-issues-count" class="stat-num">0</span>
-                            </div>
-                        </div>
-                        <div class="timeline-logs">
-                            <h4 class="logs-title">Logs de Sessão</h4>
-                            <div id="weekly-logs-list" class="logs-list">
-                                <div class="placeholder-text">Silêncio no repositório nesta semana.</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="panel">
-                    <div class="panel-header">
-                        <div class="panel-title">
-                            <span class="icon-box">🔀</span>
-                            <h3>Log de Atividade Git</h3>
-                        </div>
-                    </div>
-                    <div class="log-table-header">
-                        <div class="col-sha">REVISÃO</div>
-                        <div class="col-msg">MENSAGEM / AUTOR</div>
-                        <div class="col-date">DATA</div>
-                    </div>
-                    <div id="commit-log-container" class="log-container">
-                        <div class="placeholder-text">Aguardando sincronização...</div>
-                    </div>
-                </div>
+        <section class="section-container" style="text-align: center; padding-top: 2rem;">
+            <p style="color: #64748b; font-size: 0.9rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1.5rem;">Stack Tecnológica</p>
+            <div class="tech-grid">
+                <div class="tech-badge">Python (ETL)</div>
+                <div class="tech-badge">GitHub Actions</div>
+                <div class="tech-badge">Arquitetura JAMstack</div>
+                <div class="tech-badge">Vanilla JS</div>
+                <div class="tech-badge">Chart.js</div>
             </div>
-        </main>
-    </section>
+        </section>
+    </main>
 
-    <script type="module" src="js/main.js"></script>
+    <footer class="footer-institutional">
+        <div style="max-width: 600px; margin: 0 auto;">
+            <h3 style="color: #f8fafc; margin-bottom: 1rem;">PRISMA Insight</h3>
+            <p style="color: #64748b; line-height: 1.6; margin-bottom: 2rem;">
+                Software desenvolvido como projeto de engenharia para a disciplina de <strong>Métodos de Desenvolvimento de Software (MDS)</strong>, abordando problemáticas reais de transparência e eficiência governamental.
+            </p>
+            <div style="padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.05); color: #475569; font-size: 0.85rem;">
+                Universidade de Brasília (UnB) &copy; 2026<br>Equipe de Desenvolvimento: unb-mds/2026-1-P.R.I.S.M.A
+            </div>
+        </div>
+    </footer>
+
 </body>
 </html>
