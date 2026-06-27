@@ -1,100 +1,114 @@
 // js/components/charts.js
 
-// Guardamos as instâncias para poder destruí-las antes de atualizar (evita sobreposição)
-let commitsChart = null;
-let issuesChart = null;
-
-// Função utilitária para gerar array dos últimos 30 dias no formato YYYY-MM-DD
-const getLast30Days = () => {
-    const dates = [];
-    for (let i = 29; i >= 0; i--) {
-        const d = new Date();
-        d.setDate(d.getDate() - i);
-        dates.push(d.toISOString().split('T')[0]);
-    }
-    return dates;
-};
-
-// Converte YYYY-MM-DD para DD/MM para o eixo X do gráfico
-const formatLabel = (dateString) => {
-    const [year, month, day] = dateString.split('-');
-    return `${day}/${month}`;
-};
+let commitsChartInstance = null;
+let issuesChartInstance = null;
 
 export const renderCharts = (commits, issues) => {
-    const last30Days = getLast30Days();
-    const labels = last30Days.map(formatLabel);
+    const ctxCommits = document.getElementById('commitsChart');
+    const ctxIssues = document.getElementById('issuesChart');
 
-    // --- 1. Agrupando Dados de Commits ---
-    const commitsData = last30Days.map(date => {
-        return commits.filter(c => c.commit.author.date.startsWith(date)).length;
-    });
+    if (!ctxCommits || !ctxIssues) return;
 
-    // --- 2. Agrupando Dados de Issues ---
-    const issuesOpenedData = last30Days.map(date => {
-        return issues.filter(i => i.created_at.startsWith(date)).length;
-    });
-    
-    const issuesClosedData = last30Days.map(date => {
-        return issues.filter(i => i.closed_at && i.closed_at.startsWith(date)).length;
-    });
+    // Destrói os gráficos antigos caso a pessoa clique em "Atualizar Dados"
+    if (commitsChartInstance) commitsChartInstance.destroy();
+    if (issuesChartInstance) issuesChartInstance.destroy();
 
-    // Configurações Globais Visuais do Chart.js para o tema escuro
-    Chart.defaults.color = '#94a3b8';
-    Chart.defaults.font.family = "'JetBrains Mono', monospace";
+    // 1. Agrupamento Semanal (Últimas 12 semanas = ~84 dias)
+    const weeks = 12;
+    const labels = [];
+    const commitsData = [];
+    const openIssuesData = [];
+    const closedIssuesData = [];
 
-    // --- 3. Renderizando Gráfico de Linha (Commits) ---
-    const ctxCommits = document.getElementById('commitsChart').getContext('2d');
-    if (commitsChart) commitsChart.destroy(); // Destrói o anterior se existir
+    const today = new Date();
+    today.setHours(23, 59, 59, 999);
 
-    commitsChart = new Chart(ctxCommits, {
+    for (let i = weeks - 1; i >= 0; i--) {
+        // Define o início e o fim da semana
+        const weekEnd = new Date(today);
+        weekEnd.setDate(today.getDate() - (i * 7));
+        
+        const weekStart = new Date(weekEnd);
+        weekStart.setDate(weekEnd.getDate() - 6);
+        weekStart.setHours(0, 0, 0, 0);
+
+        // Rótulo do eixo X: "15/06 - 21/06"
+        const formatData = (d) => `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}`;
+        labels.push(`${formatData(weekStart)}`);
+
+        // Filtra os commits que caem dentro desta janela de 7 dias
+        const weekCommits = commits.filter(c => {
+            const d = new Date(c.commit.author.date);
+            return d >= weekStart && d <= weekEnd;
+        }).length;
+
+        // Filtra as issues que caem dentro desta janela
+        const weekOpen = issues.filter(iss => {
+            const d = new Date(iss.created_at);
+            return d >= weekStart && d <= weekEnd;
+        }).length;
+
+        const weekClosed = issues.filter(iss => {
+            if (!iss.closed_at) return false;
+            const d = new Date(iss.closed_at);
+            return d >= weekStart && d <= weekEnd;
+        }).length;
+
+        commitsData.push(weekCommits);
+        openIssuesData.push(weekOpen);
+        closedIssuesData.push(weekClosed);
+    }
+
+    // 2. Renderiza o Gráfico de Commits (Linha Suavizada)
+    commitsChartInstance = new Chart(ctxCommits, {
         type: 'line',
         data: {
             labels: labels,
             datasets: [{
-                label: 'Entregas (Commits)',
+                label: 'Commits na Semana',
                 data: commitsData,
                 borderColor: '#22d3ee', // Cyan
                 backgroundColor: 'rgba(34, 211, 238, 0.1)',
                 borderWidth: 3,
-                pointBackgroundColor: '#0f172a',
+                pointBackgroundColor: '#030712',
                 pointBorderColor: '#22d3ee',
                 pointBorderWidth: 2,
                 pointRadius: 4,
-                tension: 0.4, // Suaviza a linha
-                fill: true
+                pointHoverRadius: 6,
+                fill: true,
+                tension: 0.4 // Aqui está a mágica do achatamento suavizado!
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            scales: {
-                y: { beginAtZero: true, grid: { color: '#334155', tickColor: 'transparent' }, border: { display: false } },
-                x: { grid: { display: false }, border: { display: false } }
+            plugins: {
+                legend: { display: false },
+                tooltip: { mode: 'index', intersect: false, backgroundColor: 'rgba(15, 23, 42, 0.9)' }
             },
-            plugins: { legend: { display: false } } // Escondemos a legenda para ficar minimalista
+            scales: {
+                y: { beginAtZero: true, grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { precision: 0 } },
+                x: { grid: { display: false } }
+            }
         }
     });
 
-    // --- 4. Renderizando Gráfico de Barras (Issues) ---
-    const ctxIssues = document.getElementById('issuesChart').getContext('2d');
-    if (issuesChart) issuesChart.destroy();
-
-    issuesChart = new Chart(ctxIssues, {
+    // 3. Renderiza o Gráfico de Issues (Barras)
+    issuesChartInstance = new Chart(ctxIssues, {
         type: 'bar',
         data: {
             labels: labels,
             datasets: [
                 {
                     label: 'Abertas',
-                    data: issuesOpenedData,
-                    backgroundColor: '#0891b2', // Cyan escuro
+                    data: openIssuesData,
+                    backgroundColor: 'rgba(34, 211, 238, 0.8)', // Cyan
                     borderRadius: 4
                 },
                 {
                     label: 'Fechadas',
-                    data: issuesClosedData,
-                    backgroundColor: '#334155', // Slate
+                    data: closedIssuesData,
+                    backgroundColor: 'rgba(71, 85, 105, 0.8)', // Slate (Cinza)
                     borderRadius: 4
                 }
             ]
@@ -102,12 +116,13 @@ export const renderCharts = (commits, issues) => {
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            scales: {
-                y: { beginAtZero: true, grid: { color: '#334155', tickColor: 'transparent' }, border: { display: false }, stacked: true },
-                x: { grid: { display: false }, border: { display: false }, stacked: true }
-            },
             plugins: {
-                legend: { position: 'top', align: 'end', labels: { boxWidth: 10, usePointStyle: true } }
+                legend: { display: false },
+                tooltip: { mode: 'index', intersect: false, backgroundColor: 'rgba(15, 23, 42, 0.9)' }
+            },
+            scales: {
+                y: { beginAtZero: true, grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { precision: 0 }, stacked: true },
+                x: { grid: { display: false }, stacked: true }
             }
         }
     });

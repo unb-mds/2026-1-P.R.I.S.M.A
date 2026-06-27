@@ -30,7 +30,7 @@ body {
 }
 
 /* =========================================
-   CONTROLE DE TELAS (SPA)
+   CONTROLE DE TELAS (SPA/MPA)
    ========================================= */
 .view { display: none; opacity: 0; transition: opacity 0.4s ease; }
 .view.active { display: block; opacity: 1; }
@@ -54,24 +54,16 @@ body {
 .btn-icon:hover { transform: scale(1.1); }
 
 /* =========================================
-   LANDING PAGE E HEADER DO DASHBOARD
+   HEADER DO DASHBOARD
    ========================================= */
 .navbar { display: flex; justify-content: space-between; align-items: center; padding: 20px 40px; border-bottom: 1px solid var(--border-color); background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(10px); }
-.hero { text-align: center; padding: 120px 20px; position: relative; }
-.glow-bg { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 600px; height: 400px; background: rgba(34, 211, 238, 0.05); filter: blur(100px); border-radius: 50%; z-index: -1; }
-.hero h1 { font-size: 6rem; font-weight: 900; font-style: italic; letter-spacing: -4px; margin-bottom: 20px; }
-.hero .subtitle { color: var(--accent-cyan); font-family: var(--font-mono); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 5px; font-weight: 700; margin-bottom: 30px; }
-.hero .description { color: var(--text-muted); font-size: 1.2rem; max-width: 600px; margin: 0 auto 40px auto; }
 
 .dash-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 32px; background: var(--bg-card); border-bottom: 1px solid var(--border-color); }
 .dash-logo { display: flex; align-items: center; gap: 16px; }
 .dash-logo h2 { font-size: 1.1rem; font-weight: 900; font-style: italic; text-transform: uppercase; }
 .dash-logo p { font-family: var(--font-mono); font-size: 0.65rem; color: var(--accent-cyan); text-transform: uppercase; letter-spacing: 2px; margin-top: 4px; }
 .dash-controls { display: flex; align-items: center; gap: 20px; }
-.token-input-group { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
-.token-input-group label { font-size: 0.6rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
-.token-input-group input { background: var(--bg-main); border: 1px solid var(--border-color); color: var(--accent-cyan); padding: 6px 12px; border-radius: 6px; font-family: var(--font-mono); font-size: 0.75rem; outline: none; transition: all 0.2s; width: 200px; }
-.token-input-group input:focus { border-color: var(--accent-cyan); width: 250px; }
+
 .dash-content { padding: 40px; max-width: 1400px; margin: 0 auto; }
 
 /* =========================================
@@ -113,13 +105,23 @@ body {
 .heatmap-header { display: flex; justify-content: space-between; font-size: 0.6rem; font-weight: 900; color: var(--text-muted); text-transform: uppercase; margin-bottom: 16px; }
 .heatmap-legend { display: flex; align-items: center; gap: 4px; }
 .heatmap-grid { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; max-width: 280px; margin: 0 auto; }
-.heat-box { width: 12px; height: 12px; border-radius: 2px; transition: transform 0.2s; cursor: pointer; }
-.heat-box:hover { transform: scale(1.5); z-index: 10; }
-.lvl-0 { background: #1e293b; }
-.lvl-1 { background: rgba(34, 211, 238, 0.4); }
-.lvl-2 { background: rgba(34, 211, 238, 0.6); }
-.lvl-3 { background: #22d3ee; }
-.lvl-4 { background: #67e8f9; }
+
+/* --- MAPA DE CALOR: Padrão GitHub Dark Theme (Cyan) --- */
+.heat-box { 
+    width: 14px; 
+    height: 14px; 
+    border-radius: 3px; 
+    transition: transform 0.2s; 
+    cursor: pointer; 
+    outline: 1px solid rgba(255,255,255, 0.05); 
+}
+.heat-box:hover { transform: scale(1.2); z-index: 10; }
+.heat-box.lvl-0 { background-color: #1e293b; } 
+.heat-box.lvl-1 { background-color: #083344; } 
+.heat-box.lvl-2 { background-color: #164e63; } 
+.heat-box.lvl-3 { background-color: #0891b2; } 
+.heat-box.lvl-4 { background-color: #22d3ee; box-shadow: 0 0 8px rgba(34, 211, 238, 0.4); } 
+
 .heatmap-footer { text-align: center; font-size: 0.6rem; color: var(--text-muted); margin-top: 24px; }
 
 .timeline-container { padding: 24px; }
