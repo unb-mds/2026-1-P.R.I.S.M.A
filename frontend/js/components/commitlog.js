@@ -11,11 +11,8 @@ const formatDate = (isoString) => {
 
 export const renderCommitLog = (commitsArray) => {
     const container = document.getElementById('commit-log-container');
-    const badge = document.getElementById('commit-count-badge');
     
     if (!container) return;
-
-    if (badge) badge.textContent = `${commitsArray.length} Registros`;
     container.innerHTML = '';
 
     const recentCommits = commitsArray.slice(0, 50);
@@ -23,10 +20,12 @@ export const renderCommitLog = (commitsArray) => {
     recentCommits.forEach(item => {
         const sha = item.sha.substring(0, 7);
         const msg = item.commit.message.split('\n')[0].replace(/"/g, '&quot;');
-        const author = item.commit.author.name;
+        
+        // MUDANÇA: Prioriza o @login do GitHub. Se for um bot sem login, usa o nome de fallback.
+        const author = item.author?.login ? `@${item.author.login}` : item.commit.author.name;
+        
         const date = formatDate(item.commit.author.date);
         
-        // Constrói a URL exata do diff no repositório da disciplina
         const diffUrl = `https://github.com/unb-mds/2026-1-P.R.I.S.M.A/commit/${item.sha}`;
 
         const row = document.createElement('div');
@@ -40,7 +39,7 @@ export const renderCommitLog = (commitsArray) => {
             </div>
             <div class="commit-info">
                 <div class="commit-msg" title="${msg}">${msg}</div>
-                <div class="commit-author">${author}</div>
+                <div class="commit-author" style="color: var(--text-muted); font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;">${author}</div>
             </div>
             <div class="commit-date">${date}</div>
         `;
