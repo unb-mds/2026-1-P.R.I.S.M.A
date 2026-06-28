@@ -1,3 +1,5 @@
+// js/components/timeline.js
+
 let currentWeekOffset = 0;
 let globalCommits = [];
 let globalIssues = [];
@@ -67,11 +69,6 @@ const renderCurrentWeek = () => {
     document.getElementById('week-commits-count').textContent = weekCommits.length;
     document.getElementById('week-issues-count').textContent = weekIssues.length;
 
-    // Renderiza a lista de logs visuais (mockup)
-    const listContainer = document.getElementById('weekly-logs-list');
-    if (weekCommits.length === 0 && weekIssues.length === 0) {
-        listContainer.innerHTML = '<div class="placeholder-text" style="padding-top: 20px; font-style: italic; font-size: 0.7rem; color: #94a3b8;">Silêncio no repositório nesta semana.</div>';
-    } else {
-        listContainer.innerHTML = '<div class="placeholder-text" style="padding-top: 20px; font-size: 0.7rem; color: #22d3ee;">Atividade detectada. (Logs renderizados aqui)</div>';
-    }
+    // O código antigo que tentava renderizar logs na div 'weekly-logs-list' foi removido.
+    // A renderização dos logs agora é gerenciada com excelência pelo userAudit.js!
 };
