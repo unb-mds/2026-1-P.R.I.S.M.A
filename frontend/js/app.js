@@ -68,6 +68,6 @@ export const PrismaApp = {
         if (typeof initTimeline === 'function') initTimeline(data.raw_commits, data.raw_issues);
         if (typeof renderCommitLog === 'function') renderCommitLog(data.raw_commits);
         if (typeof renderCollaborators === 'function') renderCollaborators(data.raw_commits, data.raw_issues);
-        if (typeof renderUserAudit === 'function') renderuseraudit(data.raw_commits, data.raw_issues);
+        if (typeof renderUserAudit === 'function') renderUserAudit(data.raw_commits, data.raw_issues);
     }
 };
