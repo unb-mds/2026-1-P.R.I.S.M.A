@@ -4,6 +4,7 @@ import { renderHeatmap } from './components/heatmap.js';
 import { initTimeline } from './components/timeline.js';
 import { renderCommitLog } from './components/commitlog.js';
 import { renderCollaborators } from './components/collaborators.js';
+import { renderUserAudit } from './components/useraudit.js';
 
 export const PrismaApp = {
 
@@ -67,5 +68,6 @@ export const PrismaApp = {
         if (typeof initTimeline === 'function') initTimeline(data.raw_commits, data.raw_issues);
         if (typeof renderCommitLog === 'function') renderCommitLog(data.raw_commits);
         if (typeof renderCollaborators === 'function') renderCollaborators(data.raw_commits, data.raw_issues);
+        if (typeof renderUserAudit === 'function') renderUserAudit(data.raw_commits, data.raw_issues);
     }
 };

@@ -139,10 +139,21 @@
                                 <span id="week-issues-count" class="stat-num">0</span>
                             </div>
                         </div>
-                        <div class="timeline-logs">
-                            <h4 class="logs-title">Logs de Sessão</h4>
-                            <div id="weekly-logs-list" class="logs-list">
-                                <div class="placeholder-text">Silêncio no repositório nesta semana.</div>
+                        <div class="timeline-logs" style="margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border-color);">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                                <h4 class="logs-title" style="margin: 0;">Auditoria Individual</h4>
+                                <select id="audit-user-select" style="background: rgba(15, 23, 42, 0.8); color: var(--accent-cyan); border: 1px solid var(--border-color); padding: 4px 8px; border-radius: 6px; font-family: var(--font-mono); font-size: 0.7rem; outline: none; cursor: pointer;">
+                                    <option value="all">Todos os Membros</option>
+                                </select>
+                            </div>
+                            
+                            <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+                                <span id="audit-badge-commits" style="background: rgba(34, 211, 238, 0.1); color: var(--accent-cyan); padding: 4px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: bold; border: 1px solid rgba(34, 211, 238, 0.2);">0 Commits</span>
+                                <span id="audit-badge-issues" style="background: rgba(16, 185, 129, 0.1); color: var(--accent-emerald); padding: 4px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: bold; border: 1px solid rgba(16, 185, 129, 0.2);">0 Issues/PRs</span>
+                            </div>
+                            
+                            <div id="audit-log-list" class="logs-list" style="max-height: 250px; overflow-y: auto; padding-right: 8px;">
+                                <div class="placeholder-text">Aguardando dados...</div>
                             </div>
                         </div>
                     </div>
