@@ -8,7 +8,7 @@ export const renderUserAudit = (commits, issues) => {
 
     if (!select || !logList) return;
 
-    // 1. Extrair usuários únicos do JSON
+    //Extrair usuários únicos do JSON
     const users = new Set();
     commits.forEach(c => {
         const login = c.author?.login || c.commit.author.name;
@@ -19,7 +19,7 @@ export const renderUserAudit = (commits, issues) => {
         if (login) users.add(login);
     });
 
-    // 2. Limpar e Popular o Select
+    //Limpar e Popular o Select
     select.innerHTML = '<option value="all">Todos os Membros</option>';
     Array.from(users).sort().forEach(user => {
         const option = document.createElement('option');
@@ -28,7 +28,7 @@ export const renderUserAudit = (commits, issues) => {
         select.appendChild(option);
     });
 
-    // 3. Função de Filtro e Renderização
+    //Função de Filtro e Renderização
     const updateAudit = (selectedUser) => {
         logList.innerHTML = '';
 
@@ -45,7 +45,7 @@ export const renderUserAudit = (commits, issues) => {
         if (badgeCommits) badgeCommits.textContent = `${userCommits.length} Commits`;
         if (badgeIssues) badgeIssues.textContent = `${userIssues.length} Issues/PRs`;
 
-        // 4. Junta Commits e Issues em uma lista só e ordena por data
+        //Junta Commits e Issues em uma lista só e ordena por data
         const combinedLog = [
             ...userCommits.map(c => ({
                 type: 'commit',
@@ -67,7 +67,7 @@ export const renderUserAudit = (commits, issues) => {
             return;
         }
 
-        // 5. Desenha a lista na tela
+        //Desenha a lista na tela
         combinedLog.forEach(item => {
             const dateStr = item.date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
             
