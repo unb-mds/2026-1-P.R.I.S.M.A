@@ -54,7 +54,7 @@ export const PrismaApp = {
         //Atualiza os Cards Numéricos Superiores
         const elements = {
             commits: document.getElementById('total-commits'),
-            issues: document.getElementById('closed-issues'), // Atualizado para o novo ID do HTML
+            issues: document.getElementById('closed-issues'), 
             collabs: document.getElementById('total-collabs')
         };
 
