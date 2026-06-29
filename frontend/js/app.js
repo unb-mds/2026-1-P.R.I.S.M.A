@@ -4,7 +4,7 @@ import { renderHeatmap } from './components/heatmap.js';
 import { initTimeline } from './components/timeline.js';
 import { renderCommitLog } from './components/commitlog.js';
 import { renderCollaborators } from './components/collaborators.js';
-import { renderUserAudit } from './components/userAudit.js';
+import { renderUserAudit } from './components/useraudit.js';
 
 export const PrismaApp = {
 
