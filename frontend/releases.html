@@ -92,6 +92,7 @@
         
         <a href="arquitetura.html" style="margin-left: auto; color: #818cf8;">Ver Arquitetura</a>
         <a href="docs.html" style="color: #22d3ee; font-weight: 600;">Ver Sprints ➔</a>
+        <a href="dashboard.html" style="margin-left: auto; color: #818cf8; border: 1px solid #818cf8; padding: 6px 16px; border-radius: 99px; font-weight: 600;">Dashboard ➔</a>
     </nav>
 
     <main class="doc-container" id="conteudo-doc">
@@ -104,7 +105,8 @@
             container.innerHTML = '<p style="text-align: center; color: #f59e0b; font-weight: 500; margin-top: 2rem;">⏳ Carregando Notas de Lançamento...</p>';
             
             try {
-                const baseUrl = 'https://raw.githubusercontent.com/unb-mds/2026-1-P.R.I.S-M.A/main/';
+                // URL corrigida com os pontos exatos do repositório
+                const baseUrl = 'https://raw.githubusercontent.com/unb-mds/2026-1-P.R.I.S.M.A/main/';
                 const response = await fetch(baseUrl + caminho);
                 
                 if (!response.ok) throw new Error('Nota de lançamento não encontrada no GitHub.');
@@ -122,7 +124,7 @@
             }
         }
 
-        // Inicializa abrindo a única release existente por omissão
+        // Inicializa abrindo a release note existente
         window.onload = () => carregarDoc('docs/releases/release_note_v0.1.0.md');
     </script>
 </body>
