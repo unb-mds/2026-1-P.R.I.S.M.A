@@ -139,14 +139,17 @@ class AlertasView(LoginRequiredMixin, ListView):
         
         qs = ProcessoLegislativo.objects.annotate(
             primeira_movimentacao=Min('movimentacoes__data_evento')
-        ).filter(primeira_movimentacao__isnull=False).annotate(
-            dias_tramitacao=ExpressionWrapper(
-                ExtractDay(timezone.now() - F('primeira_movimentacao')),
-                output_field=fields.IntegerField()
-            )
-        )
-        tempo_medio = qs.aggregate(media=Avg('dias_tramitacao'))['media']
-        context["tempo_medio_comissoes"] = int(tempo_medio) if tempo_medio is not None else 0
+        ).filter(primeira_movimentacao__isnull=False)
+        
+        processos = list(qs.values_list('primeira_movimentacao', flat=True))
+        if processos:
+            now = timezone.now()
+            soma_dias = sum((now - dt).days for dt in processos)
+            tempo_medio = soma_dias / len(processos)
+        else:
+            tempo_medio = 0
+            
+        context["tempo_medio_comissoes"] = int(tempo_medio)
         
         context["volume_estagnacao"] = Notificacao.objects.filter(
             user=self.request.user, tipo='ESTAGNACAO'
