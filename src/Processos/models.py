@@ -141,3 +141,29 @@ class AnotacaoPrivada(models.Model):
 
     def __str__(self):
         return f"Nota de {self.user} em {self.processo_id}"
+    
+class Marcador(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="marcadores"
+    )
+
+    nome_tag = models.CharField(max_length=50)
+
+    cor = models.CharField(
+        max_length=7,
+        default="#3B82F6"
+    )
+
+    processos = models.ManyToManyField(
+        ProcessoLegislativo,
+        related_name="marcadores",
+        blank=True
+    )
+
+    def __str__(self):
+        return self.nome_tag
+
+    class Meta:
+        ordering = ["nome_tag"]
