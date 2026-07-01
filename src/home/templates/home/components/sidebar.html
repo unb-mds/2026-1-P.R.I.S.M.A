@@ -13,16 +13,6 @@
 
   <nav class="flex-1 px-4 py-4 space-y-1 overflow-y-auto" id="sidebar-nav">
     <a
-      href="{% url 'dashboard' %}"
-      class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-md transition-colors text-sm font-medium {% if active_page == 'dashboard' %}bg-white/5 text-white border-brand-primary{% else %}text-slate-300 hover:text-white hover:bg-white/5 border-transparent{% endif %} border-l-2"
-    >
-      <i
-        data-lucide="layout-dashboard"
-        class="w-[18px] h-[18px] text-slate-400"
-      ></i>
-      Dashboard
-    </a>
-    <a
       href="{% url 'processos' %}"
       class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-md transition-colors text-sm font-medium {% if active_page == 'processos' %}bg-white/5 text-white border-brand-primary{% else %}text-slate-300 hover:text-white hover:bg-white/5 border-transparent{% endif %} border-l-2"
     >
