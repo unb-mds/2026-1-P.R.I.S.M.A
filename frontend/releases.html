@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRISMA | Notas de Lançamento</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/main.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <style>
+        body { 
+            background: #030712; 
+            color: #f8fafc; 
+            font-family: 'Inter', sans-serif; 
+        }
+        
+        .top-nav { 
+            background: rgba(15, 23, 42, 0.9); 
+            border-bottom: 1px solid rgba(245, 158, 11, 0.4); /* Destaque em âmbar para as Releases */
+            padding: 1rem 2rem; 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 1.5rem; 
+            align-items: center; 
+            position: sticky; 
+            top: 0; 
+            z-index: 50;
+            backdrop-filter: blur(10px);
+        }
+        .top-nav a { 
+            color: #94a3b8; 
+            text-decoration: none; 
+            font-weight: 500; 
+            cursor: pointer; 
+            transition: 0.3s; 
+            font-size: 0.95rem;
+        }
+        .top-nav a:hover, .top-nav a.active { color: #f59e0b; } /* Hover âmbar */
+        
+        .doc-container { 
+            max-width: 900px; 
+            margin: 40px auto; 
+            background: rgba(30, 41, 59, 0.4); 
+            padding: 40px; 
+            border-radius: 16px; 
+            border: 1px solid rgba(255,255,255,0.05); 
+            line-height: 1.7; 
+        }
+        .doc-container h1, .doc-container h2 { 
+            color: #f59e0b; 
+            margin-top: 2rem; 
+            margin-bottom: 1rem; 
+            border-bottom: 1px solid rgba(255,255,255,0.1); 
+            padding-bottom: 0.5rem;
+        }
+        .doc-container h3 { color: #f8fafc; margin-top: 1.5rem; }
+        .doc-container p, .doc-container li { color: #cbd5e1; margin-bottom: 1rem;}
+        .doc-container a { color: #22d3ee; text-decoration: none; }
+        .doc-container a:hover { text-decoration: underline; }
+        
+        .doc-container code { 
+            background: rgba(245, 158, 11, 0.1); 
+            padding: 2px 6px; 
+            border-radius: 4px; 
+            font-family: 'JetBrains Mono', monospace; 
+            color: #f59e0b; 
+            font-size: 0.85em;
+        }
+        .doc-container pre { 
+            background: #0f172a; 
+            padding: 1.5rem; 
+            border-radius: 8px; 
+            overflow-x: auto; 
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .doc-container pre code { background: transparent; color: #e2e8f0; padding: 0;}
+        .doc-container blockquote { border-left: 4px solid #f59e0b; padding-left: 1rem; color: #94a3b8; font-style: italic; margin-left: 0; }
+        .doc-container img { max-width: 100%; border-radius: 8px; margin: 1rem 0; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        .doc-container table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+        .doc-container th, .doc-container td { border: 1px solid rgba(255,255,255,0.1); padding: 0.75rem; text-align: left; color: #cbd5e1; }
+        .doc-container th { background: rgba(15, 23, 42, 0.8); color: #f8fafc; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <a href="index.html" style="font-weight: 700; color: #f8fafc; margin-right: 1rem;">⬅ Voltar para Home</a>
+        
+        <a onclick="carregarDoc('docs/releases/release_note_v0.1.0.md')">v0.1.0 (Atual)</a>
+        <a onclick="carregarDoc('docs/releases/release_note_v0.2.0.md')" style="color: #f59e0b;">v0.2.0 (Recente)</a>
+        
+        <a href="arquitetura.html" style="margin-left: auto; color: #818cf8;">Ver Arquitetura</a>
+        <a href="docs.html" style="color: #22d3ee; font-weight: 600;">Ver Sprints ➔</a>
+        <a href="dashboard.html" style="margin-left: auto; color: #818cf8; border: 1px solid #818cf8; padding: 6px 16px; border-radius: 99px; font-weight: 600;">Dashboard ➔</a>
+    </nav>
+
+    <main class="doc-container" id="conteudo-doc">
+        <h2 style="text-align: center; color: #64748b; margin-top: 2rem;">Selecione uma versão no menu superior.</h2>
+    </main>
+
+    <script>
+        async function carregarDoc(caminho) {
+            const container = document.getElementById('conteudo-doc');
+            container.innerHTML = '<p style="text-align: center; color: #f59e0b; font-weight: 500; margin-top: 2rem;">⏳ Carregando Notas de Lançamento...</p>';
+            
+            try {
+                // URL corrigida com os pontos exatos do repositório
+                const baseUrl = 'https://raw.githubusercontent.com/unb-mds/2026-1-P.R.I.S.M.A/main/';
+                const response = await fetch(baseUrl + caminho);
+                
+                if (!response.ok) throw new Error('Nota de lançamento não encontrada no GitHub.');
+                
+                const textoMarkdown = await response.text();
+                container.innerHTML = marked.parse(textoMarkdown);
+                
+            } catch (erro) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 2rem;">
+                        <span style="font-size: 3rem;">⚠️</span>
+                        <p style="color: #ef4444; margin-top: 1rem; font-weight: 600;">Erro ao carregar o documento.</p>
+                        <p style="color: #94a3b8; font-size: 0.9rem;">${erro.message}</p>
+                    </div>`;
+            }
+        }
+
+        // Inicializa abrindo a release note existente
+        window.onload = () => carregarDoc('docs/releases/release_note_v0.1.0.md');
+        window.onload = () => carregarDoc('docs/releases/release_note_v0.2.0.md');
+    </script>
+</body>
+</html>
