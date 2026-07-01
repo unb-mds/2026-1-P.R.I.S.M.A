@@ -44,6 +44,8 @@ docker compose -f compose.yml exec django-web python src/manage.py migrate
 docker compose -f compose.yml down
 ```
 
+O `dockerfile` usa `uv sync --frozen --no-dev` para instalar as dependências a partir de `pyproject.toml` e `uv.lock`, então atualizar a base do projeto passa a depender de regenerar o lockfile antes do build da imagem.
+
 ## Rodando sem Docker (PostgreSQL local, usando `uv`)
 
 As instruções abaixo mostram como executar o projeto localmente sem Docker, usando um PostgreSQL local e `uv` para gerenciar dependências e ambiente.
