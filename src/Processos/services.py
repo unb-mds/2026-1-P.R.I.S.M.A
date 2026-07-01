@@ -660,3 +660,8 @@ def previsao_tempo_conclusao(processo):
         return 180
     else:
         return 365
+
+# Compatibilidade: alguns módulos importam `sync_processo_on_demand` em inglês.
+# Mantemos o nome em português como implementação principal e expomos o alias
+# para evitar ImportError quando houver variação na nomenclatura do import.
+sync_processo_on_demand = sincronizar_processo_on_demand

@@ -13,26 +13,28 @@ WORKDIR /src
 # Set environment variables
 # Prevents Python from writing pyc files to disk
 ENV PYTHONDONTWRITEBYTECODE=1
-#Prevents Python from buffering stdout and stderr
+# Prevents Python from buffering stdout and stderr
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONPATH=/src
 
-# Upgrade pip
-RUN pip install --upgrade pip
+# Install uv and sync dependencies from the lockfile
+RUN pip install --upgrade pip uv
 
-# Copy the Django project  and install dependencies
-COPY requirements.txt  /src/
+# Copy dependency manifests first to maximize cache reuse
+COPY pyproject.toml uv.lock /src/
 
-# run this command to install all dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Copy the Django project source
+COPY src /src/src
 
-# Copy the Django project to the container
-COPY . /src/
-RUN chmod +x /src/entrypoint.sh
- 
+# Copy the container entrypoint that applies migrations before starting Django
+COPY docker-entrypoint.sh /src/docker-entrypoint.sh
+RUN chmod +x /src/docker-entrypoint.sh
+
+# Install project dependencies with uv
+RUN uv sync --frozen --no-dev
+
 # Expose the Django port
 EXPOSE 8000
- 
-# Entrypoint and Command
-ENTRYPOINT ["/src/entrypoint.sh"]
-CMD ["python", "src/manage.py", "runserver", "0.0.0.0:8000"]
+
+# Apply migrations on startup and then run Django's development server
+CMD ["/src/docker-entrypoint.sh"]
