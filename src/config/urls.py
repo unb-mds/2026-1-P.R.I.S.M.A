@@ -2,8 +2,9 @@ from django.contrib import admin
 from django.urls import path
 from django.urls import include
 
+from django.views.generic import RedirectView
+
 from home.views import (
-    DashboardView,
     ProcessosView,
     FavoritosView,
     AlertasView,
@@ -20,8 +21,8 @@ urlpatterns = [
 
     path(
         "",
-        DashboardView.as_view(),
-        name="dashboard"
+        RedirectView.as_view(url='/processos/', permanent=False),
+        name="home"
     ),
 
     path(
