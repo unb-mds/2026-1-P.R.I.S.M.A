@@ -1,12 +1,16 @@
 import pytest
 from playwright.sync_api import expect
 
-@pytest.mark.django_db
-def test_sanity_check_home(page):
-    """
-    Testa se a página inicial está carregando corretamente e contém o título 'P.R.I.S.M.A'.
-    Como a fixture 'page' já navega para a raiz (live_server.url), basta checar o conteúdo.
-    """
+@pytest.mark.django_db(transaction=True)
+def test_sanity_check_home(page, live_server):
+    from Usuarios.models import User
+    user = User.objects.create_user(username="sanity_tester", password="123")
+
+    page.goto(f"{live_server.url}/accounts/login/")
+    page.fill('input[name="username"]', 'sanity_tester')
+    page.fill('input[name="password"]', '123')
+    page.click('button[type="submit"]')
+
     # Verifica o título da página ou a presença de 'P.R.I.S.M.A' no body
     import re
     expect(page).to_have_title(re.compile(r"P\.R\.I\.S\.M\.A"), timeout=5000)

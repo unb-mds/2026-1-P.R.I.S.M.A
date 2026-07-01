@@ -221,5 +221,5 @@ JAZZMIN_UI_TWEAKS = {
 }
 
 LOGIN_URL = "/accounts/login/"
-LOGIN_REDIRECT_URL = "/"
+LOGIN_REDIRECT_URL = "/processos/"
 LOGOUT_REDIRECT_URL = "/accounts/login/"
