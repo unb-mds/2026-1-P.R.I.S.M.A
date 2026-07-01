@@ -39,33 +39,6 @@ class ProcessoDetailView(LoginRequiredMixin, DetailView):
         sync_processo_on_demand(self.object)
         return context
 
-class DashboardView(TemplateView):
-    template_name = "home/dashboard.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["active_page"] = "dashboard"
-        
-        # Tempo médio de tramitação
-        qs = ProcessoLegislativo.objects.annotate(
-            primeira_movimentacao=Min('movimentacoes__data_evento')
-        ).filter(primeira_movimentacao__isnull=False).annotate(
-            dias_tramitacao=ExpressionWrapper(
-                ExtractDay(timezone.now() - F('primeira_movimentacao')),
-                output_field=fields.IntegerField()
-            )
-        )
-        tempo_medio = qs.aggregate(media=Avg('dias_tramitacao'))['media']
-        context["tempo_medio"] = tempo_medio if tempo_medio is not None else 0
-
-        # Estagnados vs Em andamento
-        estagnados = Notificacao.objects.filter(tipo='ESTAGNACAO').values('processo').distinct().count()
-        total_processos = ProcessoLegislativo.objects.count()
-        context["estagnados"] = estagnados
-        context["em_andamento"] = total_processos - estagnados
-
-        return context
-
 
 class ProcessosView(LoginRequiredMixin, FilterView):
     template_name = "home/processos.html"
