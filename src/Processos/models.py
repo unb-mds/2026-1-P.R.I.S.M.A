@@ -51,6 +51,11 @@ class ProcessoLegislativo(models.Model):
     objetivo = models.CharField(max_length=100, null=True, blank=True,
                                 help_text="Revisora, Iniciadora")
 
+    # Campos de IA
+    estimativa_dias_conclusao = models.IntegerField(null=True, blank=True)
+    porcentagem_conclusao = models.FloatField(null=True, blank=True)
+    sla_status_ia = models.CharField(max_length=50, null=True, blank=True, help_text="Status do SLA classificado pela IA (Ex: Normal, Atenção, Estagnado)")
+
     class Meta:
         constraints = [
             models.UniqueConstraint(
@@ -77,6 +82,9 @@ class ProcessoLegislativo(models.Model):
 
     @property
     def progresso_percentual(self):
+        if self.porcentagem_conclusao is not None:
+            return self.porcentagem_conclusao
+            
         status = (self.status_atual or '').lower()
         if any(palavra in status for palavra in ['sancionad', 'promulgad', 'transformad', 'vetad', 'arquivad', 'retirad']):
             return 100
@@ -91,8 +99,20 @@ class ProcessoLegislativo(models.Model):
 
     @property
     def previsao_conclusao_dias(self):
-        from .services import previsao_tempo_conclusao
-        return previsao_tempo_conclusao(self)
+        if self.estimativa_dias_conclusao is not None:
+            return self.estimativa_dias_conclusao
+            
+        progresso = self.progresso_percentual
+        if progresso == 100:
+            return 0
+        elif progresso == 75:
+            return 30
+        elif progresso == 50:
+            return 60
+        elif progresso == 25:
+            return 180
+        else:
+            return 365
 
 class Movimentacao(models.Model):
     processo = models.ForeignKey(ProcessoLegislativo, on_delete=models.CASCADE, related_name='movimentacoes')

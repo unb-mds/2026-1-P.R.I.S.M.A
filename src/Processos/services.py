@@ -213,6 +213,8 @@ def atualizar_detalhes_camara(processo: ProcessoLegislativo, incluir_tramitacoes
                 continue
                 
             data_evento = _parse_datetime(data_hora_str)
+            if not data_evento:
+                continue
             
             descricao = tramitacao.get('despacho') or tramitacao.get('descricaoTramitacao') or "Movimentação registrada"
             comissao = tramitacao.get('siglaOrgao')
@@ -334,6 +336,8 @@ def _fetch_and_create_movimentacoes_senado(processo):
                         continue
                         
                     data_evento = _parse_datetime(data_hora_str)
+                    if not data_evento:
+                        continue
                     
                     descricao = informe.get('Descricao') or "Movimentação registrada"
                     local = informe.get('Local', {})
@@ -444,11 +448,16 @@ def atualizar_detalhes_senado(processo: ProcessoLegislativo, incluir_tramitacoes
 # ============================================================================
 
 def atualizar_detalhes_processo(processo: ProcessoLegislativo, incluir_tramitacoes: bool = True):
+    success = False
     if processo.origem_camara_ou_senado == 'CAMARA':
-        return atualizar_detalhes_camara(processo, incluir_tramitacoes=incluir_tramitacoes)
-    if processo.origem_camara_ou_senado == 'SENADO':
-        return atualizar_detalhes_senado(processo, incluir_tramitacoes=incluir_tramitacoes)
-    return False
+        success = atualizar_detalhes_camara(processo, incluir_tramitacoes=incluir_tramitacoes)
+    elif processo.origem_camara_ou_senado == 'SENADO':
+        success = atualizar_detalhes_senado(processo, incluir_tramitacoes=incluir_tramitacoes)
+    
+    if success:
+        previsao_tempo_conclusao(processo)
+        
+    return success
 
 # ============================================================================
 # Sincronização incremental e utilidades
@@ -633,33 +642,83 @@ def sincronizar_processo_on_demand(processo: ProcessoLegislativo) -> bool:
     
     logger.info(f"Processo {processo.id_externo} desatualizado. Buscando novas tramitações na API...")
     try:
-        if processo.origem_camara_ou_senado == 'CAMARA':
-            atualizar_detalhes_camara(processo, incluir_tramitacoes=True)
-        else:
-            atualizar_detalhes_senado(processo, incluir_tramitacoes=True)
-            
-        processo.detalhes_atualizados_em = agora
-        processo.save(update_fields=['detalhes_atualizados_em'])
-        return True
+        success = atualizar_detalhes_processo(processo, incluir_tramitacoes=True)
+        if success:
+            processo.detalhes_atualizados_em = agora
+            processo.save(update_fields=['detalhes_atualizados_em'])
+        return success
     except Exception as e:
         logger.error(f"Erro ao atualizar sob demanda o processo {processo.id_externo}: {e}")
         return False
 
 def previsao_tempo_conclusao(processo):
     """
-    Serviço simples para previsão de tempo de conclusão do processo.
+    Serviço para previsão de tempo de conclusão do processo usando IA (Ollama).
     """
-    progresso = getattr(processo, 'progresso_percentual', 0)
-    if progresso == 100:
-        return 0
-    elif progresso == 75:
-        return 30
-    elif progresso == 50:
-        return 60
-    elif progresso == 25:
-        return 180
-    else:
-        return 365
+    from django.conf import settings
+    
+    url = getattr(settings, "OLLAMA_URL", "http://localhost:11434/api/generate")
+    model = getattr(settings, "OLLAMA_MODEL", "llama3")
+    
+    movimentacoes = list(processo.movimentacoes.all().order_by('data_evento'))
+    historico = "\n".join([f"- {m.data_evento.strftime('%d/%m/%Y')}: {m.comissao_atual} - {m.descricao}" for m in movimentacoes])
+    
+    prompt = f"""Analise o histórico do processo legislativo abaixo.
+    
+Processo: {processo.tipo_proposicao} {processo.numero}/{processo.ano}
+Ementa: {processo.ementa}
+Status Atual: {processo.status_atual}
+Situação/Tramitação: {getattr(processo, 'descricao_situacao', '')} {getattr(processo, 'descricao_tramitacao', '')}
+Tramitando: {"Sim" if getattr(processo, 'tramitando') else "Não" if getattr(processo, 'tramitando') is False else "Desconhecido"}
+Histórico de Tramitação:
+{historico}
+
+Com base no histórico e na complexidade, estime:
+1. O número de dias restantes para a conclusão final do processo ("dias_restantes").
+2. A porcentagem de conclusão atual ("porcentagem").
+3. O status de SLA atual, classificando o andamento como "Normal", "Atenção" ou "Estagnado" ("sla_status").
+
+ATENÇÃO: 
+- Se o Status Atual, Situação ou Tramitando indicarem que o processo já foi FINALIZADO (ex: "TRAMITAÇÃO FINALIZADA", "Transformado em Norma Jurídica", Sancionado, Arquivado), responda SEMPRE com "dias_restantes": 0, "porcentagem": 100 e "sla_status": "Normal".
+
+Responda ESTRITAMENTE em formato JSON com as chaves "dias_restantes", "porcentagem" e "sla_status". Não inclua nenhum texto adicional. Exemplo: {{"dias_restantes": 30, "porcentagem": 45.5, "sla_status": "Atenção"}}"""
+
+    payload = {
+        "model": model,
+        "prompt": prompt,
+        "stream": False,
+        "format": "json"
+    }
+
+    try:
+        response = requests.post(url, json=payload, timeout=30)
+        response.raise_for_status()
+        
+        data = response.json()
+        response_text = data.get("response", "{}")
+        
+        result = json.loads(response_text)
+        
+        dias = result.get("dias_restantes")
+        porc = result.get("porcentagem")
+        sla = result.get("sla_status")
+        
+        update_fields = []
+        if dias is not None:
+            processo.estimativa_dias_conclusao = int(dias)
+            update_fields.append('estimativa_dias_conclusao')
+        if porc is not None:
+            processo.porcentagem_conclusao = float(porc)
+            update_fields.append('porcentagem_conclusao')
+        if sla is not None:
+            processo.sla_status_ia = str(sla)[:50]
+            update_fields.append('sla_status_ia')
+            
+        if update_fields:
+            processo.save(update_fields=update_fields)
+        
+    except Exception as e:
+        logger.error(f"Erro ao obter previsão de IA para o processo {processo.id_externo}: {e}")
 
 # Compatibilidade: alguns módulos importam `sync_processo_on_demand` em inglês.
 # Mantemos o nome em português como implementação principal e expomos o alias
