@@ -7,10 +7,19 @@ class ProcessoFilter(django_filters.FilterSet):
     numero = django_filters.CharFilter(lookup_expr='exact')
     tipo_proposicao = django_filters.CharFilter(lookup_expr='icontains')
     status_atual = django_filters.CharFilter(lookup_expr='icontains')
+    o = django_filters.OrderingFilter(
+        fields=(
+            ('tipo_proposicao', 'tipo_proposicao'),
+            ('primeira_mov', 'primeira_mov'),
+            ('ultima_mov', 'ultima_mov'),
+            ('sla_status_ia', 'sla_status_ia'),
+            ('status_atual', 'status_atual'),
+        )
+    )
 
     class Meta:
         model = ProcessoLegislativo
-        fields = ['q', 'tipo_proposicao', 'status_atual', 'ano', 'numero']
+        fields = ['q', 'tipo_proposicao', 'status_atual', 'ano', 'numero', 'o']
 
     def filter_q(self, queryset, name, value):
         from django.db.models import Q

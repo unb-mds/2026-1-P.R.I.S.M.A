@@ -6,7 +6,7 @@ from django.http import JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.db import models
-from django.db.models import Avg, Min, Max, F, ExpressionWrapper, fields
+from django.db.models import Prefetch, Count, Max, Min, F, ExpressionWrapper, fields
 from django.db.models.functions import ExtractDay
 from django.utils import timezone
 import datetime
@@ -48,7 +48,11 @@ class ProcessosView(LoginRequiredMixin, FilterView):
     filterset_class = ProcessoFilter
 
     def get_queryset(self):
-        qs = ProcessoLegislativo.objects.all().order_by('-ano', '-numero')
+        from django.db.models import Min, Max
+        qs = ProcessoLegislativo.objects.all().annotate(
+            primeira_mov=Min('movimentacoes__data_evento'),
+            ultima_mov=Max('movimentacoes__data_evento')
+        ).order_by('-ano', '-numero')
         return qs
 
     def get_context_data(self, **kwargs):
@@ -61,9 +65,15 @@ class ProcessosView(LoginRequiredMixin, FilterView):
         ).values_list('id', flat=True)
         context["favoritos_ids"] = list(favoritos_ids)
         
-        # Sincroniza sob demanda os processos exibidos na página atual
-        for processo in context['processos']:
-            sync_processo_on_demand(processo)
+        # Sincronização sob demanda removida daqui para não travar o carregamento inicial.
+        # Será feita via AJAX no frontend.
+        
+        # Obter os tipos de proposição e status únicos do banco
+        tipos = ProcessoLegislativo.objects.values_list('tipo_proposicao', flat=True).exclude(tipo_proposicao__isnull=True).exclude(tipo_proposicao='').distinct().order_by('tipo_proposicao')
+        status = ProcessoLegislativo.objects.values_list('status_atual', flat=True).exclude(status_atual__isnull=True).exclude(status_atual='').distinct().order_by('status_atual')
+        
+        context["tipos_disponiveis"] = list(tipos)
+        context["status_disponiveis"] = list(status)
             
         return context
 
@@ -77,16 +87,18 @@ class FavoritosView(LoginRequiredMixin, ListView):
             termos_monitorados__users=self.request.user
         ).distinct()
         
-        # Sincroniza os favoritos antes de calcular os metadados e filtros
-        for processo in base_qs:
-            sync_processo_on_demand(processo)
+        # Sincronização sob demanda removida daqui para não travar o carregamento inicial.
+        # Será feita via AJAX no frontend.
             
         qs = base_qs.prefetch_related('movimentacoes')
         
         status = self.request.GET.get('status', 'todas')
         limite = timezone.now() - datetime.timedelta(days=30)
         
-        qs = qs.annotate(ultima_mov=Max('movimentacoes__data_evento'))
+        qs = qs.annotate(
+            primeira_mov=Min('movimentacoes__data_evento'),
+            ultima_mov=Max('movimentacoes__data_evento')
+        )
         
         if status == 'estagnadas':
             qs = qs.filter(ultima_mov__lt=limite)
@@ -94,6 +106,10 @@ class FavoritosView(LoginRequiredMixin, ListView):
             qs = qs.filter(ultima_mov__gte=limite)
         elif status == 'urgencia':
             qs = qs.filter(notificacoes__lida=False).distinct()
+            
+        o = self.request.GET.get('o')
+        if o in ['tipo_proposicao', '-tipo_proposicao', 'sla_status_ia', '-sla_status_ia', 'status_atual', '-status_atual', 'primeira_mov', '-primeira_mov', 'ultima_mov', '-ultima_mov']:
+            return qs.order_by(o)
             
         return qs.order_by('-ultima_mov')
 
@@ -277,3 +293,45 @@ class SignUpView(CreateView):
     form_class = SignUpForm
     template_name = "registration/signup.html"
     success_url = reverse_lazy("login")
+
+class SyncProcessosBatchView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        try:
+            data = json.loads(request.body)
+            processos_ids = data.get('processos_ids', [])
+        except json.JSONDecodeError:
+            return JsonResponse({'status': 'error', 'message': 'JSON inválido'}, status=400)
+
+        if not processos_ids:
+            return JsonResponse({'status': 'error', 'message': 'IDs não fornecidos'}, status=400)
+
+        processos = ProcessoLegislativo.objects.filter(id__in=processos_ids)
+        results = {}
+
+        for p in processos:
+            sync_processo_on_demand(p)
+            # Re-fetch after sync to get updated properties
+            p.refresh_from_db()
+            
+            last_mov = p.movimentacoes.order_by('-data_evento').first()
+            data_mov = last_mov.data_evento.strftime("%d %b %Y").lower() if (last_mov and last_mov.data_evento) else "-"
+            comissao_mov = last_mov.comissao_atual if last_mov else ""
+            
+            sla_text = p.sla_status_ia or "Normal"
+            if sla_text.lower() == "estagnado":
+                sla_class = "bg-red-100 text-red-700 border-red-200"
+            elif sla_text.lower() == "atenção" or sla_text.lower() == "atencao":
+                sla_class = "bg-yellow-100 text-yellow-700 border-yellow-200"
+            else:
+                sla_class = "bg-green-100 text-green-700 border-green-200"
+
+            results[str(p.id)] = {
+                'dias_totais': p.dias_totais_tramitacao or 0,
+                'data_ultima_mov': data_mov,
+                'comissao_ultima_mov': f"Enviado à {comissao_mov}" if comissao_mov else "",
+                'sla_text': sla_text,
+                'sla_class': sla_class,
+                'status_atual': p.status_atual or ""
+            }
+
+        return JsonResponse({'status': 'success', 'data': results})
