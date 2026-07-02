@@ -14,6 +14,7 @@ from home.views import (
     AcompanharProposicaoView,
     ProcessoDetailView,
     ToggleFavoritoView,
+    SyncProcessosBatchView,
 )
 
 urlpatterns = [
@@ -64,6 +65,12 @@ urlpatterns = [
         "processos/toggle-favorito/",
         ToggleFavoritoView.as_view(),
         name="toggle_favorito"
+    ),
+
+    path(
+        "processos/api/sync-batch/",
+        SyncProcessosBatchView.as_view(),
+        name="sync_batch"
     ),
 
     path(

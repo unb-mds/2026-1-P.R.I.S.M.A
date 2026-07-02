@@ -21,6 +21,8 @@ services:
      - "8000:8000"
    depends_on:
      - db
+   extra_hosts:
+     - "host.docker.internal:host-gateway"
    environment:
      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
      DEBUG: ${DEBUG}
