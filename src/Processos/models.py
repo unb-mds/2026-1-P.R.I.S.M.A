@@ -121,3 +121,23 @@ class TermoMonitorado(models.Model):
         related_name='termos_monitorados',
         blank=True,
     )
+
+class AnotacaoPrivada(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="anotacoes"
+    )
+
+    processo = models.ForeignKey(
+        "ProcessoLegislativo",
+        on_delete=models.CASCADE,
+        related_name="anotacoes"
+    )
+
+    texto_nota = models.TextField()
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Nota de {self.user} em {self.processo_id}"
