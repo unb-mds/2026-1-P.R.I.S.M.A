@@ -136,6 +136,38 @@
     {% endfor %}
 </div>
 
+<hr class="my-8 border-brand-outline">
+
+<h4 class="font-semibold text-lg flex items-center gap-2 mb-6 text-brand-text">
+    <i data-lucide="tag" class="w-5 h-5 text-brand-primary"></i>
+    Marcadores
+</h4>
+
+<form method="post" class="space-y-4 mb-8">
+    {% csrf_token %}
+    {{ marcador_form.as_p }}
+
+    <button
+        type="submit"
+        class="bg-brand-primary hover:bg-[#102a43] text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
+        Criar marcador
+    </button>
+</form>
+
+<div class="flex flex-wrap gap-2">
+    {% for marcador in marcadores %}
+        <span      
+      class="px-3 py-1 rounded-full text-sm text-white"
+      style="background: {{ marcador.cor }};">
+      {{ marcador.nome_tag }}
+
+        </span>
+    {% empty %}
+        <p class="text-sm text-slate-500">
+            Nenhum marcador cadastrado.
+        </p>
+    {% endfor %}
+</div>
   </div>
   </div>
 </div>
