@@ -13,7 +13,7 @@
       <button class="bg-white border border-brand-outline hover:bg-slate-50 text-brand-text px-4 py-2 rounded-md text-sm font-medium flex items-center gap-2 transition-colors">
         <i data-lucide="file-text" class="w-4 h-4 text-slate-400"></i> Anotações Privadas
       </button>
-      <button id="btnAcompanhar" onclick="toggleFavoritoDetalhes(event, {{ processo.id }}, this)" class="{% if is_favorito %}bg-[#102a43] text-yellow-400{% else %}bg-brand-primary hover:bg-[#102a43] text-white{% endif %} px-4 py-2 rounded-md text-sm font-medium flex items-center gap-2 transition-colors border border-transparent {% if is_favorito %}border-yellow-400/30{% endif %}">
+      <button id="btnAcompanhar" data-processo-id="{{ processo.id }}" class="{% if is_favorito %}bg-[#102a43] text-yellow-400{% else %}bg-brand-primary hover:bg-[#102a43] text-white{% endif %} px-4 py-2 rounded-md text-sm font-medium flex items-center gap-2 transition-colors border border-transparent {% if is_favorito %}border-yellow-400/30{% endif %}">
         <i data-lucide="star" class="w-4 h-4 {% if is_favorito %}fill-yellow-400{% endif %}"></i> 
         <span id="btnAcompanharText">{% if is_favorito %}Acompanhando{% else %}Acompanhar Favorito{% endif %}</span>
       </button>
@@ -60,8 +60,7 @@
         </div>
       </div>
       <div class="relative w-full bg-slate-200 rounded-full h-3 shadow-inner overflow-hidden border border-slate-300/50">
-        <div class="absolute top-0 left-0 h-full rounded-full bg-gradient-to-r from-cyan-400 via-blue-500 to-brand-primary transition-all duration-1000 ease-out" 
-             style="width: {{ processo.progresso_percentual }}%">
+        <div id="progressoBarra" data-progress="{{ processo.progresso_percentual }}" class="absolute top-0 left-0 h-full rounded-full bg-gradient-to-r from-cyan-400 via-blue-500 to-brand-primary transition-all duration-1000 ease-out" style="width: 0%">
           <div class="absolute top-0 bottom-0 left-0 w-20 bg-white/20 -skew-x-12 animate-shimmer"></div>
         </div>
       </div>
@@ -95,7 +94,81 @@
       <p class="text-sm text-slate-600 pl-8">Nenhuma movimentação registrada para este processo.</p>
       {% endfor %}
     </div>
+    
+    {% empty %}
+<p class="text-sm text-slate-600 pl-8">Nenhuma movimentação registrada para este processo.</p>
+{% endfor %}
+</div>
 
+<hr class="my-8 border-brand-outline">
+
+<h4 class="font-semibold text-lg flex items-center gap-2 mb-6 text-brand-text">
+    <i data-lucide="file-text" class="w-5 h-5 text-brand-primary"></i>
+    Anotações Privadas
+</h4>
+
+<form method="post" class="space-y-4 mb-8">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button
+        type="submit"
+        class="bg-brand-primary hover:bg-[#102a43] text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
+        Salvar anotação
+    </button>
+</form>
+
+<div class="space-y-4">
+    {% for anotacao in anotacoes %}
+        <div class="border border-brand-outline rounded-md p-4 bg-slate-50">
+            <p class="text-sm text-brand-text">
+                {{ anotacao.texto_nota }}
+            </p>
+
+            <p class="text-xs text-slate-500 mt-2">
+                {{ anotacao.created_at|date:"d/m/Y H:i" }}
+            </p>
+        </div>
+    {% empty %}
+        <p class="text-sm text-slate-500">
+            Nenhuma anotação cadastrada.
+        </p>
+    {% endfor %}
+</div>
+
+<hr class="my-8 border-brand-outline">
+
+<h4 class="font-semibold text-lg flex items-center gap-2 mb-6 text-brand-text">
+    <i data-lucide="tag" class="w-5 h-5 text-brand-primary"></i>
+    Marcadores
+</h4>
+
+<form method="post" class="space-y-4 mb-8">
+    {% csrf_token %}
+    {{ marcador_form.as_p }}
+
+    <button
+        type="submit"
+        class="bg-brand-primary hover:bg-[#102a43] text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
+        Criar marcador
+    </button>
+</form>
+
+<div class="flex flex-wrap gap-2">
+    {% for marcador in marcadores %}
+        <span      
+      class="px-3 py-1 rounded-full text-sm text-white"
+      style="background: {{ marcador.cor }};">
+      {{ marcador.nome_tag }}
+
+        </span>
+    {% empty %}
+        <p class="text-sm text-slate-500">
+            Nenhum marcador cadastrado.
+        </p>
+    {% endfor %}
+</div>
+  </div>
   </div>
 </div>
 
@@ -179,6 +252,25 @@
       alert('Erro de conexão ao tentar favoritar: ' + err.message);
     });
   }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const btnAcompanhar = document.getElementById('btnAcompanhar');
+    if (btnAcompanhar) {
+      btnAcompanhar.addEventListener('click', function(event) {
+        toggleFavoritoDetalhes(event, this.dataset.processoId, this);
+      });
+    }
+
+    const progressoBarra = document.getElementById('progressoBarra');
+    if (progressoBarra) {
+      const progressValue = parseFloat(progressoBarra.dataset.progress);
+      if (!Number.isNaN(progressValue)) {
+        progressoBarra.style.width = progressValue + '%';
+      }
+    }
+  });
 </script>
 
 {% endblock %}
+
+

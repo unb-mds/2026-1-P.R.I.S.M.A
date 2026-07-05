@@ -1,5 +1,8 @@
+from multiprocessing import context
+
 from django.views.generic import TemplateView, CreateView, ListView, DetailView
 from django_filters.views import FilterView
+from urllib3 import request
 from Processos.filters import ProcessoFilter
 from django.views import View
 from django.http import JsonResponse
@@ -14,10 +17,11 @@ import json
 from Usuarios.models import Notificacao, UserProfile
 
 from .forms import SignUpForm
-from Processos.models import ProcessoLegislativo, TermoMonitorado
-from Processos.services import sync_processo_on_demand
-
-
+from Processos.models import ProcessoLegislativo, TermoMonitorado, AnotacaoPrivada
+from Processos.services import sincronizar_processo_on_demand
+from Processos.forms import AnotacaoPrivadaForm
+from Processos.models import Marcador
+from Processos.forms import MarcadorForm
 class ProcessoDetailView(LoginRequiredMixin, DetailView):
     model = ProcessoLegislativo
     template_name = "home/proposicao_detalhes.html"
@@ -36,9 +40,46 @@ class ProcessoDetailView(LoginRequiredMixin, DetailView):
         ).exists()
         context["is_favorito"] = is_favorito
         
-        sync_processo_on_demand(self.object)
+        sincronizar_processo_on_demand(self.object)
+
+        context["form"] = AnotacaoPrivadaForm()
+        context["anotacoes"] = AnotacaoPrivada.objects.filter(
+            user=self.request.user,
+            processo=self.object
+        ).order_by("-created_at")
+
+        context["marcador_form"] = MarcadorForm()
+        context["marcadores"] = Marcador.objects.filter(
+            user=self.request.user,
+            processos=self.object
+)
         return context
 
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+
+        if "nome_tag" in request.POST:
+            form = MarcadorForm(request.POST)
+
+            if form.is_valid():
+                marcador = form.save(commit=False)
+                marcador.user = request.user
+                marcador.save()
+                marcador.processos.add(self.object)
+            return self.get(request, *args, **kwargs)
+
+        
+        if "texto" in request.POST or "conteudo" in request.POST:
+            form = AnotacaoPrivadaForm(request.POST)
+
+            if form.is_valid():
+                anotacao = form.save(commit=False)
+                anotacao.user = request.user
+                anotacao.processo = self.object
+                anotacao.save()
+
+            return self.get(request, *args, **kwargs)
+        return self.get(request, *args, **kwargs)
 
 class ProcessosView(LoginRequiredMixin, FilterView):
     template_name = "home/processos.html"
@@ -63,7 +104,7 @@ class ProcessosView(LoginRequiredMixin, FilterView):
         
         # Sincroniza sob demanda os processos exibidos na página atual
         for processo in context['processos']:
-            sync_processo_on_demand(processo)
+            sincronizar_processo_on_demand(processo)
             
         return context
 
@@ -79,7 +120,7 @@ class FavoritosView(LoginRequiredMixin, ListView):
         
         # Sincroniza os favoritos antes de calcular os metadados e filtros
         for processo in base_qs:
-            sync_processo_on_demand(processo)
+            sincronizar_processo_on_demand(processo)
             
         qs = base_qs.prefetch_related('movimentacoes')
         
@@ -223,7 +264,7 @@ class AcompanharProposicaoView(LoginRequiredMixin, View):
             proposicao = ProcessoLegislativo.objects.get(id=proposicao_id)
             
             # Sincroniza sob demanda no momento em que é adicionado para acompanhar
-            sync_processo_on_demand(proposicao)
+            sincronizar_processo_on_demand(proposicao)
             
             termo, created = TermoMonitorado.objects.get_or_create(
                 palavra_chave=f"proposicao_{proposicao.id_externo}"
@@ -268,7 +309,7 @@ class ToggleFavoritoView(LoginRequiredMixin, View):
                 )
                 termo.users.add(request.user)
                 termo.processos.add(proposicao)
-                sync_processo_on_demand(proposicao)
+                sincronizar_processo_on_demand(proposicao)
                 return JsonResponse({'status': 'success', 'action': 'added'})
         except ProcessoLegislativo.DoesNotExist:
             return JsonResponse({'status': 'error', 'message': 'Proposição não encontrada'}, status=404)
@@ -277,3 +318,5 @@ class SignUpView(CreateView):
     form_class = SignUpForm
     template_name = "registration/signup.html"
     success_url = reverse_lazy("login")
+
+    
