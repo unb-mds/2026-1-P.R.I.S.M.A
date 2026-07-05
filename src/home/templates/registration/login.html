@@ -1,32 +1,44 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Login - P.R.I.S.M.A</title>
-</head>
-<body>
+{% extends "registration/base_auth.html" %}
 
-<h1>Entrar</h1>
+{% block title %}Entrar{% endblock %}
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
+{% block content %}
+<div class="glass-card text-center">
+    <div class="mb-8">
+        <h2 class="text-3xl font-display font-bold text-brand-text mb-2">Bem-vindo de volta</h2>
+        <p class="text-brand-text-muted text-sm">Acesse sua conta para continuar</p>
+    </div>
 
-    <button type="submit">
-        Entrar
-    </button>
-</form>
+    <form method="post" class="auth-form mb-6">
+        {% csrf_token %}
+        
+        {% if form.non_field_errors %}
+        <div class="bg-red-50 text-brand-error p-3 rounded-lg text-sm mb-4 text-left border border-red-200">
+            {{ form.non_field_errors }}
+        </div>
+        {% endif %}
 
-<p>
-    Não possui conta?
-    <a href="{% url 'signup' %}">
-        Cadastre-se
-    </a>
+        {{ form.as_p }}
 
-    <a href="{% url 'password_reset' %}">
-        Esqueci minha senha
-    </a>
+        <div class="flex items-center justify-between mt-2 mb-6">
+            <div class="flex items-center">
+                <!-- Checkbox "Lembrar de mim" poderia ir aqui se o form suportar, senão espaço vazio -->
+            </div>
+            <a href="{% url 'password_reset' %}" class="text-sm font-medium text-brand-primary hover:text-brand-secondary hover:underline transition-colors">
+                Esqueci minha senha
+            </a>
+        </div>
 
-</p>
+        <button type="submit" class="auth-btn">
+            Entrar no P.R.I.S.M.A
+        </button>
+    </form>
 
-</body>
-</html>
+    <div class="text-sm text-brand-text-muted">
+        Não possui conta? 
+        <a href="{% url 'signup' %}" class="font-medium text-brand-primary hover:text-brand-secondary hover:underline transition-colors">
+            Cadastre-se agora
+        </a>
+    </div>
+</div>
+{% endblock %}

@@ -1,27 +1,35 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Cadastro - P.R.I.S.M.A</title>
-</head>
-<body>
+{% extends "registration/base_auth.html" %}
 
-<h1>Cadastro</h1>
+{% block title %}Cadastro{% endblock %}
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
+{% block content %}
+<div class="glass-card text-center">
+    <div class="mb-8">
+        <h2 class="text-3xl font-display font-bold text-brand-text mb-2">Crie sua conta</h2>
+        <p class="text-brand-text-muted text-sm">Junte-se ao P.R.I.S.M.A para monitorar prazos</p>
+    </div>
 
-    <button type="submit">
-        Cadastrar
-    </button>
-</form>
+    <form method="post" class="auth-form mb-6 text-left">
+        {% csrf_token %}
+        
+        {% if form.non_field_errors %}
+        <div class="bg-red-50 text-brand-error p-3 rounded-lg text-sm mb-4 border border-red-200">
+            {{ form.non_field_errors }}
+        </div>
+        {% endif %}
 
-<p>
-    Já possui conta?
-    <a href="{% url 'login' %}">
-        Entrar
-    </a>
-</p>
+        {{ form.as_p }}
 
-</body>
-</html>
+        <button type="submit" class="auth-btn mt-4">
+            Cadastrar
+        </button>
+    </form>
+
+    <div class="text-sm text-brand-text-muted">
+        Já possui conta? 
+        <a href="{% url 'login' %}" class="font-medium text-brand-primary hover:text-brand-secondary hover:underline transition-colors">
+            Entrar
+        </a>
+    </div>
+</div>
+{% endblock %}
