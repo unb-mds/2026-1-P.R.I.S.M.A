@@ -20,27 +20,15 @@
             <i data-lucide="shield" class="w-4 h-4 text-emerald-600"></i>
           </div>
           <h3 class="font-semibold text-brand-text text-lg">
-            Acesso e Credenciais
+            Último Acesso
           </h3>
-          <p class="text-xs text-slate-500 mt-1 mb-6">
-            Último login: Hoje, 08:42 • Brasília, BR
+          <p class="text-xs text-slate-500 mt-1">
+            {% if request.user.last_login %}
+              Último login: {{ request.user.last_login|date:"d/m/Y \à\s H:i" }}
+            {% else %}
+              Último login: Primeiro acesso
+            {% endif %}
           </p>
-          <div class="space-y-3">
-            <button
-              class="w-full flex justify-between items-center p-3 border border-slate-200 rounded text-sm font-medium text-brand-text hover:bg-slate-50 transition-colors"
-            >
-              Alterar Senha
-              <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
-            </button>
-            <button
-              class="w-full flex justify-between items-center p-3 border border-slate-200 bg-slate-50 rounded text-sm font-medium text-brand-text hover:bg-slate-100 transition-colors"
-            >
-              Autenticação de Dois Fatores
-              <span class="text-[10px] text-emerald-600 font-bold uppercase"
-                >Ativo</span
-              >
-            </button>
-          </div>
         </div>
       </div>
 
@@ -94,27 +82,15 @@
         <div class="flex items-center justify-between pt-4 pb-8">
           <div class="flex items-center gap-6 text-sm">
             <button
-              type="button"
+              type="submit"
+              form="logout-form"
               class="text-brand-error font-medium hover:underline flex items-center gap-1"
             >
               <i data-lucide="log-out" class="w-4 h-4"></i>
               Encerrar Sessão
             </button>
-            <button type="button" class="text-slate-500 hover:text-brand-text">
-              Termos de Uso
-            </button>
-            <button type="button" class="text-slate-500 hover:text-brand-text">
-              Privacidade
-            </button>
           </div>
           <div class="flex gap-4">
-            <button
-              type="button"
-              onclick="window.location.reload()"
-              class="px-6 py-2 border border-slate-300 rounded font-medium text-sm hover:bg-slate-50 transition-colors text-brand-text"
-            >
-              Descartar Alterações
-            </button>
             <button
               type="submit"
               class="px-6 py-2 bg-brand-primary text-white rounded font-medium text-sm hover:bg-[#102a43] transition-colors"
@@ -129,4 +105,8 @@
 
   </div>
 </div>
+
+<form id="logout-form" method="post" action="{% url 'logout' %}" class="hidden">
+  {% csrf_token %}
+</form>
 {% endblock %}

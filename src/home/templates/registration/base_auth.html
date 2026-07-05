@@ -1,0 +1,79 @@
+<!doctype html>
+{% load static %}
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>P.R.I.S.M.A - {% block title %}Autenticação{% endblock %}</title>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+    <script src="{% static 'home/js/tailwind-config.js' %}"></script>
+    <link href="{% static 'home/css/global.css' %}" rel="stylesheet" />
+
+    <style type="text/tailwindcss">
+      .auth-form p {
+        @apply mb-4 flex flex-col gap-1.5 text-left;
+      }
+      .auth-form label {
+        @apply text-sm font-medium text-brand-text-muted;
+      }
+      .auth-form input[type="text"],
+      .auth-form input[type="email"],
+      .auth-form input[type="password"] {
+        @apply w-full px-4 py-2.5 border border-brand-outline rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent transition-all shadow-sm;
+      }
+      .auth-form .helptext {
+        @apply text-xs text-brand-text-muted mt-1;
+      }
+      .auth-form ul.errorlist {
+        @apply text-sm text-brand-error mt-1 list-none p-0;
+      }
+      .auth-btn {
+        @apply w-full bg-brand-primary text-white font-semibold py-2.5 px-4 rounded-lg hover:bg-brand-secondary transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary shadow-md;
+      }
+      .glass-card {
+        @apply bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-white/20 p-8 w-full max-w-md mx-auto;
+      }
+    </style>
+  </head>
+  <body class="bg-brand-surface text-brand-text h-screen flex">
+    <!-- Lado Esquerdo: Branding / Informacional -->
+    <div class="hidden lg:flex flex-1 bg-brand-primary relative overflow-hidden flex-col justify-center items-center text-white p-12">
+      <!-- Decoração de fundo -->
+      <div class="absolute -top-24 -left-24 w-96 h-96 bg-brand-secondary rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob"></div>
+      <div class="absolute top-1/2 -right-24 w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
+      <div class="absolute -bottom-24 left-1/2 w-96 h-96 bg-brand-surface rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
+      
+      <div class="relative z-10 text-center max-w-lg">
+        <h1 class="font-display font-bold text-5xl mb-4 tracking-tight">P.R.I.S.M.A</h1>
+        <p class="text-xl text-blue-100 font-light mb-8">Plataforma de Rastreamento e Inteligência Sistêmica de Metas e Alertas</p>
+        
+        <div class="flex items-center justify-center space-x-2 text-sm text-blue-200/80">
+          <i data-lucide="shield-check" class="w-5 h-5"></i>
+          <span>Acesso Seguro</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lado Direito: Formulário -->
+    <div class="flex-1 flex flex-col justify-center items-center p-6 bg-brand-surface relative">
+      <!-- Elemento decorativo sutil na versão mobile -->
+      <div class="lg:hidden absolute top-6 left-6 text-brand-primary">
+        <h1 class="font-display font-bold text-2xl tracking-tight">P.R.I.S.M.A</h1>
+      </div>
+
+      <main class="w-full max-w-md animate-fade-in-up">
+        {% block content %}{% endblock %}
+      </main>
+
+      <footer class="absolute bottom-6 text-xs text-brand-text-muted">
+        &copy; {% now "Y" %} P.R.I.S.M.A Analytics. Todos os direitos reservados.
+      </footer>
+    </div>
+
+    <script>
+      lucide.createIcons();
+    </script>
+  </body>
+</html>
