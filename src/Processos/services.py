@@ -9,6 +9,7 @@ from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
 from Processos.models import ProcessoLegislativo, Movimentacao
+from config import settings
 
 CAMARA_API_BASE = "https://dadosabertos.camara.leg.br/api/v2"
 SENADO_API_BASE = "https://legis.senado.leg.br/dadosabertos"
@@ -654,11 +655,12 @@ def sincronizar_processo_on_demand(processo: ProcessoLegislativo) -> bool:
 def previsao_tempo_conclusao(processo):
     """
     Serviço para previsão de tempo de conclusão do processo usando IA (Ollama).
+    Blindado contra erros de formatação de LLM e falhas de conexão.
     """
     from django.conf import settings
     
-    url = getattr(settings, "OLLAMA_URL", "http://localhost:11434/api/generate")
-    model = getattr(settings, "OLLAMA_MODEL", "llama3")
+    url = getattr(settings, "OLLAMA_URL", "http://ollama:11434/api/generate")
+    model = getattr(settings, "OLLAMA_MODEL", "llama3.2")
     
     movimentacoes = list(processo.movimentacoes.all().order_by('data_evento'))
     historico = "\n".join([f"- {m.data_evento.strftime('%d/%m/%Y')}: {m.comissao_atual} - {m.descricao}" for m in movimentacoes])
@@ -681,21 +683,27 @@ Com base no histórico e na complexidade, estime:
 ATENÇÃO: 
 - Se o Status Atual, Situação ou Tramitando indicarem que o processo já foi FINALIZADO (ex: "TRAMITAÇÃO FINALIZADA", "Transformado em Norma Jurídica", Sancionado, Arquivado), responda SEMPRE com "dias_restantes": 0, "porcentagem": 100 e "sla_status": "Normal".
 
-Responda ESTRITAMENTE em formato JSON com as chaves "dias_restantes", "porcentagem" e "sla_status". Não inclua nenhum texto adicional. Exemplo: {{"dias_restantes": 30, "porcentagem": 45.5, "sla_status": "Atenção"}}"""
+Responda ESTRITAMENTE em formato JSON puro, contendo apenas as chaves "dias_restantes", "porcentagem" e "sla_status". 
+Não inclua markdown, não use blocos de código e não dê explicações. 
+Exemplo: {{"dias_restantes": 30, "porcentagem": 45.5, "sla_status": "Atenção"}}"""
 
     payload = {
         "model": model,
         "prompt": prompt,
         "stream": False,
-        "format": "json"
+        #"format": "json"
     }
 
     try:
-        response = requests.post(url, json=payload, timeout=30)
+        # Timeout expandido de 30 para 60 segundos
+        response = requests.post(url, json=payload, timeout=180)
         response.raise_for_status()
         
         data = response.json()
         response_text = data.get("response", "{}")
+        
+        # Limpeza defensiva do JSON
+        response_text = response_text.strip().strip('`').removeprefix('json').strip()
         
         result = json.loads(response_text)
         
@@ -705,20 +713,28 @@ Responda ESTRITAMENTE em formato JSON com as chaves "dias_restantes", "porcentag
         
         update_fields = []
         if dias is not None:
-            processo.estimativa_dias_conclusao = int(dias)
+            processo.estimativa_dias_conclusao = int(float(dias))
             update_fields.append('estimativa_dias_conclusao')
+            
         if porc is not None:
             processo.porcentagem_conclusao = float(porc)
             update_fields.append('porcentagem_conclusao')
+            
         if sla is not None:
-            processo.sla_status_ia = str(sla)[:50]
+            processo.sla_status_ia = str(sla).strip()[:50]
             update_fields.append('sla_status_ia')
             
         if update_fields:
             processo.save(update_fields=update_fields)
-        
+            
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Falha de conexão com o Ollama no processo {processo.id_externo}: {e}")
+    except json.JSONDecodeError as e:
+        logger.error(f"IA retornou JSON inválido no processo {processo.id_externo}. Resposta: {response_text}. Erro: {e}")
+    except ValueError as e:
+        logger.error(f"IA retornou valores não numéricos no processo {processo.id_externo}. Result: {result}. Erro: {e}")
     except Exception as e:
-        logger.error(f"Erro ao obter previsão de IA para o processo {processo.id_externo}: {e}")
+        logger.error(f"Erro inesperado da IA no processo {processo.id_externo}: {e}")
 
 # Compatibilidade: alguns módulos importam `sync_processo_on_demand` em inglês.
 # Mantemos o nome em português como implementação principal e expomos o alias
