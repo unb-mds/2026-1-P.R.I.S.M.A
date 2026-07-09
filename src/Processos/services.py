@@ -632,16 +632,21 @@ def sincronizar_processo_on_demand(processo: ProcessoLegislativo) -> bool:
     Sempre faz a consulta na API, ignorando cache, para garantir a atualização.
     """
     agora = timezone.now()
-    
-    logger.info(f"Processo {processo.id_externo} desatualizado. Buscando novas tramitações na API...")
+
+    logger.info(
+        f"Processo {processo.id_externo} desatualizado. Buscando novas tramitações na API..."
+    )
     try:
         if processo.origem_camara_ou_senado == 'CAMARA':
             atualizar_detalhes_camara(processo, incluir_tramitacoes=True)
         else:
             atualizar_detalhes_senado(processo, incluir_tramitacoes=True)
-            
+
+        previsao_tempo_conclusao(processo)
+
         processo.detalhes_atualizados_em = agora
-        processo.save(update_fields=['detalhes_atualizados_em'])
+        processo.save(update_fields=["detalhes_atualizados_em"])
+
         return True
     except Exception as e:
         logger.error(f"Erro ao atualizar sob demanda o processo {processo.id_externo}: {e}")
@@ -649,23 +654,89 @@ def sincronizar_processo_on_demand(processo: ProcessoLegislativo) -> bool:
 
 def previsao_tempo_conclusao(processo):
     """
-    Prepara o histórico de tramitação que será enviado ao Ollama.
+    Calcula uma previsão de conclusão utilizando um modelo local do Ollama.
     """
-
-    movimentacoes = processo.movimentacoes.order_by("data_evento")
-
     historico = []
 
-    for movimentacao in movimentacoes:
-        data = movimentacao.data_evento.strftime("%d/%m/%Y %H:%M")
-
+    for mov in processo.movimentacoes.order_by("data_evento"):
         historico.append(
-            f"{data} - {movimentacao.descricao}"
+            f"{mov.data_evento.strftime('%d/%m/%Y')} - {mov.descricao}"
         )
 
-    historico_texto = "\n".join(historico)
+    prompt = f"""
+    
+    Você é um especialista em tramitação legislativa brasileira.
 
-    return historico_texto
+    Analise o histórico abaixo e estime:
+
+    1. Quantos dias faltam para a conclusão.
+    2. Qual o percentual atual de conclusão.
+
+    Responda SOMENTE com um objeto JSON válido.
+
+    Não escreva explicações.
+    Não utilize markdown.
+    Não utilize ```json.
+    Não escreva nenhum texto antes ou depois do JSON.
+
+    Formato obrigatório:
+
+{{
+    "dias_restantes": 120,
+    "porcentagem": 63
+}}
+
+    Histórico:
+
+{chr(10).join(historico)}
+"""
+    
+    try:
+        response = requests.post(
+            "http://localhost:11434/api/generate",
+            json={
+                "model": "llama3.2",
+                "prompt": prompt,
+                "stream": False,
+            },
+            timeout=30,
+        )
+
+        response.raise_for_status()
+
+        resposta_ollama = response.json()["response"].strip()
+
+        resultado = json.loads(resposta_ollama)
+
+        processo.estimativa_dias_conclusao = resultado.get("dias_restantes")
+        processo.porcentagem_conclusao = resultado.get("porcentagem")
+
+        processo.save(
+            update_fields=[
+                "estimativa_dias_conclusao",
+                "porcentagem_conclusao",
+            ]
+        )
+
+        return resultado
+
+    except (
+        requests.RequestException,
+        json.JSONDecodeError,
+        KeyError,
+        ValueError,
+    ):
+        processo.estimativa_dias_conclusao = None
+        processo.porcentagem_conclusao = None
+
+        processo.save(
+            update_fields=[
+                "estimativa_dias_conclusao",
+                "porcentagem_conclusao",
+            ]
+        )
+
+        return None
 
 # Compatibilidade: alguns módulos importam `sync_processo_on_demand` em inglês.
 # Mantemos o nome em português como implementação principal e expomos o alias
