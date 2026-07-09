@@ -649,19 +649,23 @@ def sincronizar_processo_on_demand(processo: ProcessoLegislativo) -> bool:
 
 def previsao_tempo_conclusao(processo):
     """
-    Serviço simples para previsão de tempo de conclusão do processo.
+    Prepara o histórico de tramitação que será enviado ao Ollama.
     """
-    progresso = getattr(processo, 'progresso_percentual', 0)
-    if progresso == 100:
-        return 0
-    elif progresso == 75:
-        return 30
-    elif progresso == 50:
-        return 60
-    elif progresso == 25:
-        return 180
-    else:
-        return 365
+
+    movimentacoes = processo.movimentacoes.order_by("data_evento")
+
+    historico = []
+
+    for movimentacao in movimentacoes:
+        data = movimentacao.data_evento.strftime("%d/%m/%Y %H:%M")
+
+        historico.append(
+            f"{data} - {movimentacao.descricao}"
+        )
+
+    historico_texto = "\n".join(historico)
+
+    return historico_texto
 
 # Compatibilidade: alguns módulos importam `sync_processo_on_demand` em inglês.
 # Mantemos o nome em português como implementação principal e expomos o alias
