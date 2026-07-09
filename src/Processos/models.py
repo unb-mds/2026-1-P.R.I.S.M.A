@@ -30,6 +30,8 @@ class ProcessoLegislativo(models.Model):
     descricao_identificacao = models.CharField(max_length=255, null=True, blank=True)
     data_status = models.DateTimeField(null=True, blank=True)
     detalhes_atualizados_em = models.DateTimeField(null=True, blank=True)
+    estimativa_dias_conclusao = models.IntegerField(null=True, blank=True)
+    porcentagem_conclusao = models.FloatField(null=True, blank=True)
     tramitacao_json = models.TextField(null=True, blank=True)
     dados_extra_json = models.TextField(null=True, blank=True)
 
