@@ -20,6 +20,8 @@ DEFAULT_ANO_INICIO = 2000
 REQUEST_TIMEOUT = 30
 BULK_INSERT_SIZE = 1000
 RATE_LIMIT_DELAY = 0.2  # 200ms entre chamadas individuais de detalhes
+OLLAMA_URL = "http://localhost:11434/api/generate"
+OLLAMA_MODEL = "llama3.2"
 
 logger = logging.getLogger(__name__)
 
